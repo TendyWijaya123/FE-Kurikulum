@@ -290,3 +290,154 @@ export const deleteJurusan = async (id) => {
 		throw error;
 	}
 };
+
+export const getJurusanDropdown = async () => {
+	try {
+		const token = localStorage.getItem("authToken");
+
+		const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+		const response = await api.get("/jurusans/dropdown", { headers });
+
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching Jurusan dropdown:", error);
+		throw error;
+	}
+};
+
+/* -----------------------------Kurikulum API----------------------------- */
+export const getKurikulums = async (page) => {
+	try {
+		const token = localStorage.getItem("authToken");
+
+		const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+		const response = await api.get("/kurikulum", {
+			params: { page },
+			headers,
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching Kurikulum list:", error);
+		throw error;
+	}
+};
+
+export const createKurikulum = async (kurikulumData) => {
+	try {
+		const token = localStorage.getItem("authToken");
+
+		const headers = {
+			"Content-Type": "application/json",
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+		};
+
+		const response = await api.post("/kurikulum", kurikulumData, { headers });
+
+		return response.data;
+	} catch (error) {
+		console.error("Error creating Kurikulum:", error);
+		throw error;
+	}
+};
+
+export const updateKurikulum = async (id, kurikulumData) => {
+	try {
+		const token = localStorage.getItem("authToken");
+
+		const headers = {
+			"Content-Type": "application/json",
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+		};
+
+		const response = await api.put(`/kurikulum/${id}`, kurikulumData, {
+			headers,
+		});
+
+		return response.data;
+	} catch (error) {
+		console.error("Error updating Kurikulum:", error);
+		throw error;
+	}
+};
+
+/* -----------------------------Misi Jurusan API----------------------------- */
+
+// Upsert Misi Jurusan
+export const upsertMisiJurusan = async (misiJurusanData) => {
+	try {
+		const token = localStorage.getItem("authToken");
+
+		const headers = {
+			"Content-Type": "application/json",
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+		};
+
+		const response = await api.post("/misi-jurusan/upsert", misiJurusanData, {
+			headers,
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error upserting Misi Jurusan:", error);
+		throw error;
+	}
+};
+
+// Delete Misi Jurusan
+export const deleteMisiJurusan = async (id) => {
+	try {
+		const token = localStorage.getItem("authToken");
+
+		const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+		const response = await api.delete(`/misi-jurusan/delete/${id}`, {
+			headers,
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error deleting Misi Jurusan:", error);
+		throw error;
+	}
+};
+
+/* -----------------------------Vmt Jurusan API----------------------------- */
+
+export const firstOrCreateVmtJurusan = async () => {
+	try {
+		const token = localStorage.getItem("authToken");
+
+		const headers = {
+			"Content-Type": "application/json",
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+		};
+
+		const response = await api.post("/vmt-jurusans", {}, { headers });
+		return response.data;
+	} catch (error) {
+		console.error(
+			"Error creating Vmt Jurusan:",
+			error.response?.data || error.message
+		);
+		throw error;
+	}
+};
+
+export const updateVmtJurusan = async (id, vmtJurusanData) => {
+	try {
+		const token = localStorage.getItem("authToken");
+
+		const headers = {
+			"Content-Type": "application/json",
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+		};
+
+		const response = await api.put(`/vmt-jurusan/${id}`, vmtJurusanData, {
+			headers,
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error updating Vmt Jurusan:", error);
+		throw error;
+	}
+};

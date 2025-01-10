@@ -1,22 +1,21 @@
 import React from "react";
 import { Alert } from "@mui/material"; // Import Alert component from MUI
-import useCreateUser from "../../../hooks/Users/useCreateUser";
+import useCreateKurikulum from "../../../hooks/Kurikulum/useCreateKurikulum";
 
-const CreateUserForm = () => {
+const CreateKurikulumForm = () => {
 	const {
 		loading,
 		prodiList,
-		roleList,
 		alert,
 		formData,
 		handleChangeForm,
 		handleSubmit,
-	} = useCreateUser();
+	} = useCreateKurikulum();
 
 	return (
 		<div className="w-full ml-3 bg-white p-6 rounded-lg shadow-lg">
 			<h2 className="text-2xl font-semibold text-start mb-4">
-				Create New User
+				Create New Kurikulum
 			</h2>
 
 			{/* Display Alert if available */}
@@ -29,15 +28,15 @@ const CreateUserForm = () => {
 			<form onSubmit={handleSubmit}>
 				<div className="mb-4">
 					<label
-						htmlFor="name"
+						htmlFor="tahun_awal"
 						className="block text-sm font-medium text-gray-700">
-						Name
+						Tahun Awal
 					</label>
 					<input
-						id="name"
-						type="text"
-						name="name"
-						value={formData.name}
+						id="tahun_awal"
+						type="number"
+						name="tahun_awal"
+						value={formData.tahun_awal}
 						onChange={handleChangeForm}
 						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 						required
@@ -46,32 +45,15 @@ const CreateUserForm = () => {
 
 				<div className="mb-4">
 					<label
-						htmlFor="email"
+						htmlFor="tahun_akhir"
 						className="block text-sm font-medium text-gray-700">
-						Email
+						Tahun Akhir
 					</label>
 					<input
-						id="email"
-						type="email"
-						name="email"
-						value={formData.email}
-						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-						required
-					/>
-				</div>
-
-				<div className="mb-4">
-					<label
-						htmlFor="password"
-						className="block text-sm font-medium text-gray-700">
-						Password
-					</label>
-					<input
-						id="password"
-						type="password"
-						name="password"
-						value={formData.password}
+						id="tahun_akhir"
+						type="number"
+						name="tahun_akhir"
+						value={formData.tahun_akhir}
 						onChange={handleChangeForm}
 						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 						required
@@ -89,33 +71,12 @@ const CreateUserForm = () => {
 						name="prodi_id"
 						value={formData.prodi_id}
 						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+						required>
 						<option value="">Select Prodi</option>
 						{prodiList.map((prodi) => (
 							<option key={prodi.id} value={prodi.id}>
 								{prodi.name}
-							</option>
-						))}
-					</select>
-				</div>
-
-				<div className="mb-4">
-					<label
-						htmlFor="role_id"
-						className="block text-sm font-medium text-gray-700">
-						Role
-					</label>
-					<select
-						id="role_id"
-						name="role_id"
-						value={formData.role_id}
-						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-						required>
-						<option value="">Select Role</option>
-						{roleList.map((role) => (
-							<option key={role.id} value={role.id}>
-								{role.name}
 							</option>
 						))}
 					</select>
@@ -126,7 +87,7 @@ const CreateUserForm = () => {
 						type="submit"
 						className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
 						disabled={loading}>
-						{loading ? "Creating..." : "Create User"}
+						{loading ? "Creating..." : "Create Kurikulum"}
 					</button>
 				</div>
 			</form>
@@ -134,4 +95,4 @@ const CreateUserForm = () => {
 	);
 };
 
-export default CreateUserForm;
+export default CreateKurikulumForm;

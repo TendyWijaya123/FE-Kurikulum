@@ -4,7 +4,7 @@ import MenuSidebar from "../components/Menu/MenuSidebar";
 const Sidebar = ({ isOpen }) => {
 	return (
 		<div
-			className={`w-64 flex flex-col items-center min-h-screen h-full bg-slate-800 absolute top-0 transition-all duration-300   ${
+			className={`w-64 flex flex-col items-center h-full bg-slate-800 fixed top-0 transition-all duration-300 ${
 				isOpen ? "left-0" : "-left-64"
 			}`}>
 			<div className="flex items-center justify-center flex-col mt-5">
