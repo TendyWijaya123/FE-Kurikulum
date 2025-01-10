@@ -8,12 +8,13 @@ import Users from "./pages/Users/Users";
 import CreateUser from "./pages/Users/CreateUser";
 import EditUser from "./pages/Users/EditUser";
 import Jurusans from "./pages/Jurusans/Jurusans";
-import CreateJurusan from "./pages/Jurusans/CreateJurusan";
+import CreateJurusan from "./pages/Jurusans/Jurusans";
 import Prodis from "./pages/Prodi/Prodis";
 import CreateProdi from "./pages/Prodi/CreateProdi";
 import Kurikulums from "./pages/Kurikulum.jsx/Kurikulums";
 import CreateKurikulum from "./pages/Kurikulum.jsx/CreateKurikulum";
 import VMT from "./pages/VMT/VMT";
+import BenchKurikulums from "./pages/BenchKurikulums";
 
 function App() {
 	return (
@@ -128,8 +129,17 @@ function App() {
 				<Route
 					path="/analisis-konsideran/sksu"
 					element={
-						<ProtectedRoute requiredPermission="view-lala">
+						<ProtectedRoute requiredPermission="view-users">
 							<SKSU />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/analisis-konsideran/bench-kurikulums"
+					element={
+						<ProtectedRoute requiredPermission="view-users">
+							<BenchKurikulums />
 						</ProtectedRoute>
 					}
 				/>

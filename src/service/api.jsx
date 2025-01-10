@@ -16,7 +16,6 @@ export const getUsers = async (page) => {
 		const token = localStorage.getItem("authToken");
 
 		const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
 		const response = await api.get(`/users`, {
 			params: { page },
 			headers,
