@@ -59,6 +59,34 @@ const MenuSidebar = () => {
 				/>
 			</MenuItemSidebar>
 
+			{/* Prodi */}
+			<MenuItemSidebar title="Prodi" icon={<DashboardCustomize />}>
+				<MenuItemSidebar
+					url="/prodis"
+					title="Prodi"
+					icon={<DashboardCustomize />}
+				/>
+				<MenuItemSidebar
+					url="/prodis/create"
+					title="Create Prodi"
+					icon={<DashboardCustomize />}
+				/>
+			</MenuItemSidebar>
+
+			{/* Kurikulum */}
+			<MenuItemSidebar title="Kurikulum" icon={<DashboardCustomize />}>
+				<MenuItemSidebar
+					url="/kurikulums"
+					title="Kurikulum"
+					icon={<DashboardCustomize />}
+				/>
+				<MenuItemSidebar
+					url="/kurikulum/create"
+					title="Create Kurikulum"
+					icon={<DashboardCustomize />}
+				/>
+			</MenuItemSidebar>
+
 			{/* Analisis Konsideran Page */}
 			<MenuItemSidebar
 				title="Analisis Konsideran"
@@ -70,6 +98,11 @@ const MenuSidebar = () => {
 						icon={<DashboardCustomize />}
 					/>
 				</VisibleMenu>
+			</MenuItemSidebar>
+
+			{/* Model  dan Konstruksi Prauji */}
+			<MenuItemSidebar title="Model  Konstruksi" icon={<DashboardCustomize />}>
+				<MenuItemSidebar url="/vmt" title="VMT" icon={<DashboardCustomize />} />
 			</MenuItemSidebar>
 		</ul>
 	);
