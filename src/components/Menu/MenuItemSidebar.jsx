@@ -3,7 +3,7 @@ import { ExpandMore, ExpandLess } from "@mui/icons-material";
 import { useLocation } from "react-router-dom";
 
 const MenuItemSidebar = ({ url, title, children, icon }) => {
-	const [isOpen, setIsOpen] = useState(true);
+	const [isOpen, setIsOpen] = useState(false);
 	const location = useLocation();
 	const isActive = location.pathname === url;
 

@@ -8,6 +8,7 @@ import Users from "./pages/Users/Users";
 import CreateUser from "./pages/Users/CreateUser";
 import EditUser from "./pages/Users/EditUser";
 import Jurusans from "./pages/Jurusans/Jurusans";
+import BenchKurikulums from "./pages/BenchKurikulums";
 
 function App() {
 	return (
@@ -64,8 +65,17 @@ function App() {
 				<Route
 					path="/analisis-konsideran/sksu"
 					element={
-						<ProtectedRoute requiredPermission="view-lala">
+						<ProtectedRoute requiredPermission="view-users">
 							<SKSU />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/analisis-konsideran/bench-kurikulums"
+					element={
+						<ProtectedRoute requiredPermission="view-users">
+							<BenchKurikulums />
 						</ProtectedRoute>
 					}
 				/>
