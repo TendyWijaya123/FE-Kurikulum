@@ -8,6 +8,7 @@ import Users from "./pages/Users/Users";
 import CreateUser from "./pages/Users/CreateUser";
 import EditUser from "./pages/Users/EditUser";
 import Jurusans from "./pages/Jurusans/Jurusans";
+import Ipteks from "./pages/Ipteks";
 
 function App() {
 	return (
@@ -64,8 +65,16 @@ function App() {
 				<Route
 					path="/analisis-konsideran/sksu"
 					element={
-						<ProtectedRoute requiredPermission="view-lala">
+						<ProtectedRoute requiredPermission="view-sksu">
 							<SKSU />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/analisis-konsideran/ipteks"
+					element={
+						<ProtectedRoute>
+							<Ipteks />
 						</ProtectedRoute>
 					}
 				/>

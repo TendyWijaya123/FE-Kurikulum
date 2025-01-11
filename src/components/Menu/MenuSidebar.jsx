@@ -63,12 +63,19 @@ const MenuSidebar = () => {
 			<MenuItemSidebar
 				title="Analisis Konsideran"
 				icon={<DashboardCustomize />}>
-				<VisibleMenu requiredPermission="view-sksu">
+				<VisibleMenu>
 					<MenuItemSidebar
 						url="/analisis-konsideran/sksu"
 						title="SKSU"
 						icon={<DashboardCustomize />}
 					/>
+					<VisibleMenu>
+						<MenuItemSidebar
+							url="/analisis-konsideran/ipteks"
+							title="IPTEKS"
+							icon={<DashboardCustomize />}
+						/>
+					</VisibleMenu>
 				</VisibleMenu>
 			</MenuItemSidebar>
 		</ul>
