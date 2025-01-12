@@ -441,3 +441,73 @@ export const updateVmtJurusan = async (id, vmtJurusanData) => {
 		throw error;
 	}
 };
+
+
+/* -----------------------------IPTEKS API----------------------------- */
+export const getIpteks = async (prodiId) => {
+    try {
+		console.log(prodiId);
+        const token = localStorage.getItem("authToken");
+        
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        
+        const response = await api.get("/ipteks", { headers, params:{prodiId}});
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching IPTEKS data:", error);
+        throw error;
+    }
+};
+
+export const createIpteks = async (type, data) => {
+    try {
+        const token = localStorage.getItem("authToken");
+        
+        const headers = {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        };
+
+        // Kirim data langsung tanpa parameter prodiId
+        const response = await api.post(`/ipteks/${type}`, data, { headers });
+        return response.data;
+    } catch (error) {
+        console.error(`Error creating IPTEKS ${type}:`, error);
+        throw error;
+    }
+};
+
+
+export const updateIpteks = async (type, id, data) => {
+    try {
+        const token = localStorage.getItem("authToken");
+
+        const headers = {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        };
+
+        const response = await api.put(`/ipteks/${type}/${id}`, data, { headers });
+        return response.data;
+    } catch (error) {
+        console.error(`Error updating IPTEKS ${type}:`, error);
+        throw error;
+    }
+};
+
+export const deleteIpteks = async (type, id) => {
+    try {
+        const token = localStorage.getItem("authToken");
+
+        const headers = {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        };
+
+        const response = await api.delete(`/ipteks/${type}/${id}`, { headers });
+        return response.data;
+    } catch (error) {
+        console.error(`Error deleting IPTEKS ${type}:`, error);
+        throw error;
+    }
+};

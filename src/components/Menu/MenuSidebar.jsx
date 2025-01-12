@@ -102,6 +102,13 @@ const MenuSidebar = () => {
 						title="BenchKurikulums"
 						icon={<DashboardCustomize />}
 					/>
+					<VisibleMenu>
+						<MenuItemSidebar
+							url="/analisis-konsideran/ipteks"
+							title="IPTEKS"
+							icon={<DashboardCustomize />}
+						/>
+					</VisibleMenu>
 				</VisibleMenu>
 			</MenuItemSidebar>
 

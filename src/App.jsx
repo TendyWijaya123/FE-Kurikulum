@@ -15,6 +15,7 @@ import Kurikulums from "./pages/Kurikulum.jsx/Kurikulums";
 import CreateKurikulum from "./pages/Kurikulum.jsx/CreateKurikulum";
 import VMT from "./pages/VMT/VMT";
 import BenchKurikulums from "./pages/BenchKurikulums";
+import Ipteks from "./pages/Ipteks";
 
 function App() {
 	return (
@@ -140,6 +141,14 @@ function App() {
 					element={
 						<ProtectedRoute requiredPermission="view-users">
 							<BenchKurikulums />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/analisis-konsideran/ipteks"
+					element={
+						<ProtectedRoute>
+							<Ipteks />
 						</ProtectedRoute>
 					}
 				/>
