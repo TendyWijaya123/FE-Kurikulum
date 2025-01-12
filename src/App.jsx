@@ -8,6 +8,13 @@ import Users from "./pages/Users/Users";
 import CreateUser from "./pages/Users/CreateUser";
 import EditUser from "./pages/Users/EditUser";
 import Jurusans from "./pages/Jurusans/Jurusans";
+import CreateJurusan from "./pages/Jurusans/Jurusans";
+import Prodis from "./pages/Prodi/Prodis";
+import CreateProdi from "./pages/Prodi/CreateProdi";
+import Kurikulums from "./pages/Kurikulum.jsx/Kurikulums";
+import CreateKurikulum from "./pages/Kurikulum.jsx/CreateKurikulum";
+import VMT from "./pages/VMT/VMT";
+import BenchKurikulums from "./pages/BenchKurikulums";
 import Ipteks from "./pages/Ipteks";
 
 function App() {
@@ -17,6 +24,7 @@ function App() {
 				<Route path="/" element={<Login />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/unauthorized" element={<Unauthorized />} />
+				<Route path="/coba" element={<Dashboard />} />
 				{/* User Pages */}
 				<Route
 					path="/users"
@@ -55,6 +63,63 @@ function App() {
 					}
 				/>
 				<Route
+					path="/jurusans/create"
+					element={
+						<ProtectedRoute>
+							<CreateJurusan />
+						</ProtectedRoute>
+					}
+				/>
+
+				{/* Prodi */}
+				<Route
+					path="/prodis"
+					element={
+						<ProtectedRoute>
+							<Prodis />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/prodis/create"
+					element={
+						<ProtectedRoute>
+							<CreateProdi />
+						</ProtectedRoute>
+					}
+				/>
+
+				{/* Kurikulum */}
+
+				<Route
+					path="/kurikulums"
+					element={
+						<ProtectedRoute>
+							<Kurikulums />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/kurikulum/create"
+					element={
+						<ProtectedRoute>
+							<CreateKurikulum />
+						</ProtectedRoute>
+					}
+				/>
+
+				{/* VMT */}
+
+				<Route
+					path="/vmt"
+					element={
+						<ProtectedRoute>
+							<VMT />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
 					path="/dashboard"
 					element={
 						<ProtectedRoute requiredPermission="view-dashboard">
@@ -65,8 +130,17 @@ function App() {
 				<Route
 					path="/analisis-konsideran/sksu"
 					element={
-						<ProtectedRoute requiredPermission="view-sksu">
+						<ProtectedRoute requiredPermission="view-users">
 							<SKSU />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/analisis-konsideran/bench-kurikulums"
+					element={
+						<ProtectedRoute requiredPermission="view-users">
+							<BenchKurikulums />
 						</ProtectedRoute>
 					}
 				/>
