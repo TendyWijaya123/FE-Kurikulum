@@ -2,50 +2,50 @@ import { useState, useEffect } from "react";
 import useVmt from "../../../hooks/Vmt/useVmt";
 import DeleteButton from "../../Button/DeleteButton";
 
-const MisiJurusan = () => {
+const TujuanPolban = () => {
 	const {
-		vmtJurusan,
-		handleDeleteMisiJurusan,
-		handleUpsertMisiJurusans,
+		vmtPolban,
+		handleDeleteTujuanPolban,
+		handleUpsertTujuanPolbans,
 		loading,
 	} = useVmt();
 
-	const [misiJurusan, setMisiJurusan] = useState([]);
+	const [tujuanPolban, setTujuanPolban] = useState([]);
 
 	useEffect(() => {
-		if (vmtJurusan?.misi_jurusans) {
-			setMisiJurusan(vmtJurusan.misi_jurusans);
+		if (vmtPolban?.tujuan_polbans) {
+			setTujuanPolban(vmtPolban.tujuan_polbans);
 		}
-	}, [vmtJurusan]);
+	}, [vmtPolban]);
 
 	const handleAddPoint = () => {
-		setMisiJurusan([
-			...misiJurusan,
-			{ misi_jurusan: "", vmt_jurusan_id: vmtJurusan.id },
+		setTujuanPolban([
+			...tujuanPolban,
+			{ tujuan_polban: "", vmt_polban_id: vmtPolban.id },
 		]);
 	};
 
 	const handleChangePoint = (index, event) => {
-		const newMisiJurusan = event.target.value;
-		setMisiJurusan((prevMisiJurusan) =>
-			prevMisiJurusan.map((item, idx) =>
-				idx === index ? { ...item, misi_jurusan: newMisiJurusan } : item
+		const newTujuanPolban = event.target.value;
+		setTujuanPolban((prevTujuanPolban) =>
+			prevTujuanPolban.map((item, idx) =>
+				idx === index ? { ...item, tujuan_polban: newTujuanPolban } : item
 			)
 		);
 	};
 
 	const handleDeletePoint = async (index) => {
-		const misi = misiJurusan[index];
+		const tujuan = tujuanPolban[index];
 
-		if (!misi.id) {
-			setMisiJurusan((prevMisiJurusan) =>
-				prevMisiJurusan.filter((_, idx) => idx !== index)
+		if (!tujuan.id) {
+			setTujuanPolban((prevTujuanPolban) =>
+				prevTujuanPolban.filter((_, idx) => idx !== index)
 			);
 		} else {
-			await handleDeleteMisiJurusan(misi.id);
+			await handleDeleteTujuanPolban(tujuan.id);
 
-			setMisiJurusan((prevMisiJurusan) =>
-				prevMisiJurusan.filter((_, idx) => idx !== index)
+			setTujuanPolban((prevTujuanPolban) =>
+				prevTujuanPolban.filter((_, idx) => idx !== index)
 			);
 		}
 	};
@@ -59,22 +59,22 @@ const MisiJurusan = () => {
 	}
 
 	return (
-		<div className="w-full bg-white p-6 rounded-lg shadow-lg">
+		<div className="w-full bg-white p-6 rounded-lg shadow-lg mb-4">
 			<h2 className="text-3xl font-semibold text-center mb-6 text-gray-800">
-				Misi Jurusan
+				Tujuan Polban
 			</h2>
 
 			<div className="space-y-4">
-				{misiJurusan.map((item, index) => (
+				{tujuanPolban.map((item, index) => (
 					<div
 						key={index}
 						className="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50">
 						<input
 							type="text"
-							value={item.misi_jurusan}
+							value={item.tujuan_polban}
 							onChange={(e) => handleChangePoint(index, e)}
 							className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-							placeholder="Masukkan Misi Jurusan"
+							placeholder="Masukkan Tujuan Polban"
 						/>
 						<DeleteButton
 							onDelete={() => handleDeletePoint(index)}
@@ -96,7 +96,7 @@ const MisiJurusan = () => {
 
 				<div className="mt-6 text-center">
 					<button
-						onClick={() => handleUpsertMisiJurusans(misiJurusan)}
+						onClick={() => handleUpsertTujuanPolbans(tujuanPolban)}
 						className="px-6 py-3 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition duration-300">
 						Simpan
 					</button>
@@ -106,4 +106,4 @@ const MisiJurusan = () => {
 	);
 };
 
-export default MisiJurusan;
+export default TujuanPolban;
