@@ -15,6 +15,7 @@ import Kurikulums from "./pages/Kurikulum.jsx/Kurikulums";
 import CreateKurikulum from "./pages/Kurikulum.jsx/CreateKurikulum";
 import VMT from "./pages/VMT/VMT";
 import BenchKurikulums from "./pages/BenchKurikulums";
+import CplPpmVm from "./pages/ModelKonstruksi/CPLPPMVM/CplPpmVm";
 
 function App() {
 	return (
@@ -118,6 +119,16 @@ function App() {
 						</ProtectedRoute>
 					}
 				/>
+
+				<Route
+					path="/cpl-ppm-vm"
+					element={
+						<ProtectedRoute>
+							<CplPpmVm />
+						</ProtectedRoute>
+					}
+				/>
+
 				<Route
 					path="/dashboard"
 					element={
