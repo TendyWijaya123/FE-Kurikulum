@@ -1,7 +1,7 @@
-import DefaultLayout from "../layouts/DefaultLayout";
+import DefaultLayout from "../../layouts/DefaultLayout";
 import { Table, Input, Button, message, Popconfirm, Select, Tooltip, Spin } from 'antd';
 import { UndoOutlined } from '@ant-design/icons';
-import { useBCData } from "../hooks/AnalisisKonsideran/useBCData";
+import { useBCData } from "../../hooks/AnalisisKonsideran/useBCData";
 
 const BenchKurikulums = ()=> {
     const {

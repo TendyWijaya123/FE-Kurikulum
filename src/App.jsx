@@ -3,7 +3,7 @@ import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import ProtectedRoute from "./ProtectedRoute";
 import Unauthorized from "./pages/Unauthorized";
-import SKSU from "./pages/SKSU";
+import SKSU from "./pages/AnalisisKonsideran/SKSU";
 import Users from "./pages/Users/Users";
 import CreateUser from "./pages/Users/CreateUser";
 import EditUser from "./pages/Users/EditUser";
@@ -14,7 +14,9 @@ import CreateProdi from "./pages/Prodi/CreateProdi";
 import Kurikulums from "./pages/Kurikulum.jsx/Kurikulums";
 import CreateKurikulum from "./pages/Kurikulum.jsx/CreateKurikulum";
 import VMT from "./pages/VMT/VMT";
-import BenchKurikulums from "./pages/BenchKurikulums";
+import BenchKurikulums from "./pages/AnalisisKonsideran/BenchKurikulums";
+import KKNI from "./pages/AnalisisKonsideran/KKNI";
+import MateriPembelajaran from "./pages/MateriPembelajaran";
 
 function App() {
 	return (
@@ -140,6 +142,24 @@ function App() {
 					element={
 						<ProtectedRoute requiredPermission="view-users">
 							<BenchKurikulums />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/analisis-konsideran/kkni"
+					element={
+						<ProtectedRoute requiredPermission="view-users">
+							<KKNI />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/mp"
+					element={
+						<ProtectedRoute requiredPermission="view-users">
+							<MateriPembelajaran />
 						</ProtectedRoute>
 					}
 				/>

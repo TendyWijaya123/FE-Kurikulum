@@ -1,7 +1,7 @@
-import DefaultLayout from "../layouts/DefaultLayout";
+import DefaultLayout from "../../layouts/DefaultLayout";
 import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin } from 'antd';
 import { UndoOutlined } from '@ant-design/icons';
-import { useSKSUData } from "../hooks/AnalisisKonsideran/useSKSUData";
+import { useSKSUData } from "../../hooks/AnalisisKonsideran/useSKSUData";
 
 const SKSU = () => {
     const {

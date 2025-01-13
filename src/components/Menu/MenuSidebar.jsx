@@ -102,6 +102,11 @@ const MenuSidebar = () => {
 						title="BenchKurikulums"
 						icon={<DashboardCustomize />}
 					/>
+					<MenuItemSidebar
+						url="/analisis-konsideran/kkni"
+						title="KKNI"
+						icon={<DashboardCustomize />}
+					/>
 				</VisibleMenu>
 			</MenuItemSidebar>
 
@@ -109,6 +114,9 @@ const MenuSidebar = () => {
 			<MenuItemSidebar title="Model  Konstruksi" icon={<DashboardCustomize />}>
 				<MenuItemSidebar url="/vmt" title="VMT" icon={<DashboardCustomize />} />
 			</MenuItemSidebar>
+
+			
+			<MenuItemSidebar url="/mp" title="Materi Pembelajaran" icon={<DashboardCustomize />} />
 		</ul>
 	);
 };
