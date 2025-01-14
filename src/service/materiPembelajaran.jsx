@@ -38,7 +38,6 @@ export const postMateriPembelajaran = async (data) => {
         const token = localStorage.getItem("authToken");
 
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        console.log(data);
         const response = await api.post(`/materi-pembelajaran`, data, {headers});
 
         return response.data;

@@ -17,6 +17,9 @@ import VMT from "./pages/VMT/VMT";
 import BenchKurikulums from "./pages/AnalisisKonsideran/BenchKurikulums";
 import KKNI from "./pages/AnalisisKonsideran/KKNI";
 import MateriPembelajaran from "./pages/MateriPembelajaran";
+import Ipteks from "./pages/Ipteks";
+import CplPpmVm from "./pages/ModelKonstruksi/CPLPPMVM/CplPpmVm";
+import MatriksCplHasIea from "./pages/MatriksCplHasIea/MatriksCplHasIea";
 
 function App() {
 	return (
@@ -120,6 +123,16 @@ function App() {
 						</ProtectedRoute>
 					}
 				/>
+
+				<Route
+					path="/cpl-ppm-vm"
+					element={
+						<ProtectedRoute>
+							<CplPpmVm />
+						</ProtectedRoute>
+					}
+				/>
+
 				<Route
 					path="/dashboard"
 					element={
@@ -160,6 +173,22 @@ function App() {
 					element={
 						<ProtectedRoute requiredPermission="view-users">
 							<MateriPembelajaran />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/matriks-cpl-iea"
+					element={
+						<ProtectedRoute requiredPermission="view-users">
+							<MatriksCplHasIea />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/analisis-konsideran/ipteks"
+					element={
+						<ProtectedRoute>
+							<Ipteks />
 						</ProtectedRoute>
 					}
 				/>
