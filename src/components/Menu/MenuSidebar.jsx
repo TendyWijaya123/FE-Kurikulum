@@ -126,6 +126,11 @@ const MenuSidebar = () => {
 					icon={<DashboardCustomize />}
 				/>
 			</MenuItemSidebar>
+
+			{/* Pengetahuan Page */}
+			<MenuItemSidebar title="Pengetahuan" icon={<DashboardCustomize />}>
+				<MenuItemSidebar url="/pengetahuan" title="Pengetahuan" icon={<DashboardCustomize />} />
+			</MenuItemSidebar>
 		</ul>
 	);
 };

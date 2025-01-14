@@ -18,6 +18,7 @@ import BenchKurikulums from "./pages/BenchKurikulums";
 import Ipteks from "./pages/Ipteks";
 import CplPpmVm from "./pages/ModelKonstruksi/CPLPPMVM/CplPpmVm";
 import MatrixCplPpm from "./pages/ModelKonstruksi/MatrixCplPpm/MatrixCplPpm";
+import Pengetahuan from "./pages/Pengetahuan";
 
 function App() {
 	return (
@@ -170,6 +171,16 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<Ipteks />
+						</ProtectedRoute>
+					}
+				/>
+				{/* Pengetahuan */}
+
+				<Route
+					path="/pengetahuan"
+					element={
+						<ProtectedRoute>
+							<Pengetahuan />
 						</ProtectedRoute>
 					}
 				/>

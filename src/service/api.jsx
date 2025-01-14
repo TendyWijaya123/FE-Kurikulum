@@ -416,3 +416,49 @@ export const deleteMisiPolban = async (id) => {
 		throw error;
 	}
 };
+
+/* -----------------------------Pengetahuan API----------------------------- */
+export const getPengetahuan = async () => {
+    try {
+        const response = await api.get("/pengetahuan");
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching Pengetahuan data:", error);
+        throw error;
+    }
+};
+
+export const createPengetahuan = async (data) => {
+    try {
+        const response = await api.post("/pengetahuan", data );
+        
+        if (!response.data) {
+            throw new Error("Tidak ada response dari server");
+        }
+        
+        return response.data;
+    } catch (error) {
+        console.error("Error creating Pengetahuan:", error);
+        throw error.response?.data || error;
+    }
+};
+
+export const updatePengetahuan = async (id, data) => {
+    try {
+        const response = await api.put(`/pengetahuan/${id}`, data );
+        return response.data;
+    } catch (error) {
+        console.error("Error updating Pengetahuan:", error);
+        throw error;
+    }
+};
+
+export const deletePengetahuan = async (id) => {
+    try {
+        const response = await api.delete(`/pengetahuan/${id}` );
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting Pengetahuan:", error);
+        throw error;
+    }
+};
