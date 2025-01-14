@@ -17,6 +17,7 @@ import VMT from "./pages/VMT/VMT";
 import BenchKurikulums from "./pages/BenchKurikulums";
 import Ipteks from "./pages/Ipteks";
 import CplPpmVm from "./pages/ModelKonstruksi/CPLPPMVM/CplPpmVm";
+import MatrixCplPpm from "./pages/ModelKonstruksi/MatrixCplPpm/MatrixCplPpm";
 
 function App() {
 	return (
@@ -126,6 +127,15 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<CplPpmVm />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/matrix-cpl-ppm"
+					element={
+						<ProtectedRoute>
+							<MatrixCplPpm />
 						</ProtectedRoute>
 					}
 				/>
