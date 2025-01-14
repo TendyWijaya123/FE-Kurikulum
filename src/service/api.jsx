@@ -511,3 +511,79 @@ export const deleteIpteks = async (type, id) => {
         throw error;
     }
 };
+
+/* -----------------------------Pengetahuan API----------------------------- */
+export const getPengetahuan = async () => {
+    try {
+        const token = localStorage.getItem("authToken");
+        if (!token) throw new Error("Token tidak tersedia");
+        
+        const response = await api.get("/pengetahuan", { 
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching Pengetahuan data:", error);
+        throw error;
+    }
+};
+
+export const createPengetahuan = async (data) => {
+    try {
+        const token = localStorage.getItem("authToken");
+        if (!token) throw new Error("Token tidak tersedia");
+
+        const response = await api.post("/pengetahuan", data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            }
+        });
+        
+        if (!response.data) {
+            throw new Error("Tidak ada response dari server");
+        }
+        
+        return response.data;
+    } catch (error) {
+        console.error("Error creating Pengetahuan:", error);
+        throw error.response?.data || error;
+    }
+};
+
+export const updatePengetahuan = async (id, data) => {
+    try {
+        const token = localStorage.getItem("authToken");
+        if (!token) throw new Error("Token tidak tersedia");
+
+        const response = await api.put(`/pengetahuan/${id}`, data, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error updating Pengetahuan:", error);
+        throw error;
+    }
+};
+
+export const deletePengetahuan = async (id) => {
+    try {
+        const token = localStorage.getItem("authToken");
+        if (!token) throw new Error("Token tidak tersedia");
+
+        const response = await api.delete(`/pengetahuan/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                "Content-Type": "application/json",
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting Pengetahuan:", error);
+        throw error;
+    }
+};

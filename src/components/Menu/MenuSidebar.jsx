@@ -116,6 +116,11 @@ const MenuSidebar = () => {
 			<MenuItemSidebar title="Model  Konstruksi" icon={<DashboardCustomize />}>
 				<MenuItemSidebar url="/vmt" title="VMT" icon={<DashboardCustomize />} />
 			</MenuItemSidebar>
+
+			{/* Pengetahuan Page */}
+			<MenuItemSidebar title="Pengetahuan" icon={<DashboardCustomize />}>
+				<MenuItemSidebar url="/pengetahuan" title="Pengetahuan" icon={<DashboardCustomize />} />
+			</MenuItemSidebar>
 		</ul>
 	);
 };

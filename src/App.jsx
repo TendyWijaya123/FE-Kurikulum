@@ -16,6 +16,7 @@ import CreateKurikulum from "./pages/Kurikulum.jsx/CreateKurikulum";
 import VMT from "./pages/VMT/VMT";
 import BenchKurikulums from "./pages/BenchKurikulums";
 import Ipteks from "./pages/Ipteks";
+import Pengetahuan from "./pages/Pengetahuan";
 
 function App() {
 	return (
@@ -149,6 +150,16 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<Ipteks />
+						</ProtectedRoute>
+					}
+				/>
+				{/* Pengetahuan */}
+
+				<Route
+					path="/pengetahuan"
+					element={
+						<ProtectedRoute>
+							<Pengetahuan />
 						</ProtectedRoute>
 					}
 				/>
