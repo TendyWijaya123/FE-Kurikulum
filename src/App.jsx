@@ -16,6 +16,8 @@ import CreateKurikulum from "./pages/Kurikulum.jsx/CreateKurikulum";
 import VMT from "./pages/VMT/VMT";
 import BenchKurikulums from "./pages/BenchKurikulums";
 import Ipteks from "./pages/Ipteks";
+import CplPpmVm from "./pages/ModelKonstruksi/CPLPPMVM/CplPpmVm";
+import MatrixCplPpm from "./pages/ModelKonstruksi/MatrixCplPpm/MatrixCplPpm";
 import Pengetahuan from "./pages/Pengetahuan";
 
 function App() {
@@ -120,6 +122,25 @@ function App() {
 						</ProtectedRoute>
 					}
 				/>
+
+				<Route
+					path="/cpl-ppm-vm"
+					element={
+						<ProtectedRoute>
+							<CplPpmVm />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/matrix-cpl-ppm"
+					element={
+						<ProtectedRoute>
+							<MatrixCplPpm />
+						</ProtectedRoute>
+					}
+				/>
+
 				<Route
 					path="/dashboard"
 					element={

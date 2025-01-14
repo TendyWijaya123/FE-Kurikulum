@@ -28,22 +28,22 @@ const MenuSidebar = () => {
 			</MenuItemSidebar>
 
 			{/* Users */}
-			<MenuItemSidebar title="Users" icon={<DashboardCustomize />}>
-				<VisibleMenu requiredPermission="view-users">
+			<VisibleMenu requiredPermission="view-user">
+				<MenuItemSidebar title="Users" icon={<DashboardCustomize />}>
 					<MenuItemSidebar
 						url="/users"
 						title="Users"
 						icon={<DashboardCustomize />}
 					/>
-				</VisibleMenu>
-				<VisibleMenu>
-					<MenuItemSidebar
-						url="/user/create"
-						title="Create User"
-						icon={<DashboardCustomize />}
-					/>
-				</VisibleMenu>
-			</MenuItemSidebar>
+					<VisibleMenu>
+						<MenuItemSidebar
+							url="/user/create"
+							title="Create User"
+							icon={<DashboardCustomize />}
+						/>
+					</VisibleMenu>
+				</MenuItemSidebar>
+			</VisibleMenu>
 
 			{/* Jurusan */}
 			<MenuItemSidebar title="Jurusan" icon={<DashboardCustomize />}>
@@ -115,6 +115,16 @@ const MenuSidebar = () => {
 			{/* Model  dan Konstruksi Prauji */}
 			<MenuItemSidebar title="Model  Konstruksi" icon={<DashboardCustomize />}>
 				<MenuItemSidebar url="/vmt" title="VMT" icon={<DashboardCustomize />} />
+				<MenuItemSidebar
+					url="/cpl-ppm-vm"
+					title="CPL-PPM-VM"
+					icon={<DashboardCustomize />}
+				/>
+				<MenuItemSidebar
+					url="/matrix-cpl-ppm"
+					title="Matriks CPL-PPM"
+					icon={<DashboardCustomize />}
+				/>
 			</MenuItemSidebar>
 
 			{/* Pengetahuan Page */}
