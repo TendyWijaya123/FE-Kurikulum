@@ -120,6 +120,11 @@ const MenuSidebar = () => {
 					title="CPL-PPM-VM"
 					icon={<DashboardCustomize />}
 				/>
+				<MenuItemSidebar
+					url="/matrix-cpl-ppm"
+					title="Matriks CPL-PPM"
+					icon={<DashboardCustomize />}
+				/>
 			</MenuItemSidebar>
 		</ul>
 	);
