@@ -1,8 +1,14 @@
 import { useState, useEffect, useContext } from "react";
-import { getBenchKurikulums, deleteBenchKurikulums, postBenchKurikulms,  deleteBK } from "../../service/AnalisisKonsideran/benchKurikulums";
+import { getBenchKurikulums,
+         deleteBenchKurikulums,
+         postBenchKurikulms,
+         deleteBK 
+        } from "../../service/AnalisisKonsideran/benchKurikulums";
+import { getProdiDropdown } from "../../service/api";
 import { AuthContext } from "../../context/AuthProvider";
 import { message } from 'antd';
 import { data } from "react-router-dom";
+import { set } from "react-hook-form";
 
 export const useBCData = () => {
     const [benchKurikulums, setBenchKurikulums] = useState([]);
@@ -12,6 +18,8 @@ export const useBCData = () => {
     const [saving, setSaving] = useState(false);
     const [undoStack, setUndoStack] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [prodiDropdown, setProdiDropdown] = useState([]);
+    const [selectedProdi, setSelectedProdi] = useState(null);
 
     // Fetch data
     useEffect(() => {
@@ -21,6 +29,9 @@ export const useBCData = () => {
                 if (user?.prodiId) {
                     const data = await getBenchKurikulums(user.prodiId);
                     setBenchKurikulums(data);
+                }else{
+                    const prodis = await getProdiDropdown();
+                    setProdiDropdown(prodis);
                 }
             } catch (error) {
                 console.error("Error fetching bench kurikulums:", error);
@@ -49,9 +60,23 @@ export const useBCData = () => {
                         : [],
                 }))
             );
-            console.log(dataSource);
+        } else {
+            setDataSource([]);
         }
     }, [benchKurikulums]);
+
+    const handleProdiChange = async (value) => {
+            setSelectedProdi(value);
+            setLoading(true);
+            try {
+                const data = await getBenchKurikulums(value); // Ambil data berdasarkan prodiId
+                setBenchKurikulums(data);
+            } catch (error) {
+                console.error("Error fetching SKSU for selected prodi:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
 
     // Save undo state
     const saveToUndoStack = (data) => {
@@ -100,7 +125,7 @@ export const useBCData = () => {
             kategori: '',
             cpl: [],
             ppm: [],
-            prodiId: user.prodiId,
+            prodiId: selectedProdi || user.prodiId,
         };
     
         setDataSource([...dataSource, newRow]);
@@ -176,6 +201,8 @@ export const useBCData = () => {
     };       
 
     return {
+        prodiDropdown,
+        selectedProdi,
         benchKurikulums,
         loading,
         dataSource,
@@ -188,6 +215,7 @@ export const useBCData = () => {
         handleAddRow,
         handleDeleteRow,
         handleSaveData,
-        handleDeleteBenchKurikulums
+        handleDeleteBenchKurikulums,
+        handleProdiChange
     };
 };

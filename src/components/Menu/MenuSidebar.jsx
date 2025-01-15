@@ -1,15 +1,38 @@
 import { DashboardCustomize } from "@mui/icons-material";
 import MenuItemSidebar from "./MenuItemSidebar";
 import VisibleMenu from "./VisibleMenu";
+import React, { useState, useEffect } from "react";
 
 const MenuSidebar = () => {
+	const [openMenu, setOpenMenu] = useState(null);
+
+	useEffect(() => {
+		const savedMenu = localStorage.getItem("openMenu");
+		if (savedMenu) {
+			setOpenMenu(savedMenu);
+		}
+	}, []);
+
+	const handleMenuToggle = (menuId) => {
+		const newOpenMenu = openMenu === menuId ? null : menuId;
+		setOpenMenu(newOpenMenu);
+		if (newOpenMenu) {
+			localStorage.setItem("openMenu", newOpenMenu);
+		} else {
+			localStorage.removeItem("openMenu");
+		}
+	};
+
 	return (
 		<ul>
 			{/* Dashboard */}
 			<MenuItemSidebar
 				url="/dashboard"
 				title="Dashboard"
-				icon={<DashboardCustomize />}>
+				icon={<DashboardCustomize />}
+				isOpen={openMenu === "dashboard"}
+				onToggle={() => handleMenuToggle("dashboard")}
+				>
 				<MenuItemSidebar
 					url="/dashboard/overview"
 					title="Overview"
@@ -29,7 +52,12 @@ const MenuSidebar = () => {
 
 			{/* Users */}
 			<VisibleMenu requiredPermission="view-user">
-				<MenuItemSidebar title="Users" icon={<DashboardCustomize />}>
+				<MenuItemSidebar 
+					title="Users" 
+					icon={<DashboardCustomize />}
+					isOpen={openMenu === "users"}
+					onToggle={() => handleMenuToggle("users")}
+				>
 					<MenuItemSidebar
 						url="/users"
 						title="Users"
@@ -46,7 +74,11 @@ const MenuSidebar = () => {
 			</VisibleMenu>
 
 			{/* Jurusan */}
-			<MenuItemSidebar title="Jurusan" icon={<DashboardCustomize />}>
+			<MenuItemSidebar 
+				title="Jurusan" 
+				icon={<DashboardCustomize />}
+				isOpen={openMenu === "jurusan"}
+				onToggle={() => handleMenuToggle("jurusan")}>
 				<MenuItemSidebar
 					url="/jurusans"
 					title="Jurusan"
@@ -60,7 +92,11 @@ const MenuSidebar = () => {
 			</MenuItemSidebar>
 
 			{/* Prodi */}
-			<MenuItemSidebar title="Prodi" icon={<DashboardCustomize />}>
+			<MenuItemSidebar 
+				title="Prodi" 	
+				icon={<DashboardCustomize />} 
+				isOpen={openMenu === "prodi"}
+				onToggle={() => handleMenuToggle("prodi")}>
 				<MenuItemSidebar
 					url="/prodis"
 					title="Prodi"
@@ -74,7 +110,11 @@ const MenuSidebar = () => {
 			</MenuItemSidebar>
 
 			{/* Kurikulum */}
-			<MenuItemSidebar title="Kurikulum" icon={<DashboardCustomize />}>
+			<MenuItemSidebar 
+				title="Kurikulum" 
+				icon={<DashboardCustomize />}
+				isOpen={openMenu === "kurikulums"}
+				onToggle={() => handleMenuToggle("kurikulums")}>
 				<MenuItemSidebar
 					url="/kurikulums"
 					title="Kurikulum"
@@ -90,7 +130,9 @@ const MenuSidebar = () => {
 			{/* Analisis Konsideran Page */}
 			<MenuItemSidebar
 				title="Analisis Konsideran"
-				icon={<DashboardCustomize />}>
+				icon={<DashboardCustomize />}
+				isOpen={openMenu === "analisisKonsideran"}
+				onToggle={() => handleMenuToggle("analisisKonsideran")}>
 				<VisibleMenu requiredPermission="view-users">
 					<MenuItemSidebar
 						url="/analisis-konsideran/sksu"
@@ -100,6 +142,11 @@ const MenuSidebar = () => {
 					<MenuItemSidebar
 						url="/analisis-konsideran/bench-kurikulums"
 						title="BenchKurikulums"
+						icon={<DashboardCustomize />}
+					/>
+					<MenuItemSidebar
+						url="/analisis-konsideran/kkni"
+						title="KKNI"
 						icon={<DashboardCustomize />}
 					/>
 					<VisibleMenu>
@@ -113,7 +160,12 @@ const MenuSidebar = () => {
 			</MenuItemSidebar>
 
 			{/* Model  dan Konstruksi Prauji */}
-			<MenuItemSidebar title="Model  Konstruksi" icon={<DashboardCustomize />}>
+			<MenuItemSidebar 
+				title="Model  Konstruksi" 
+				icon={<DashboardCustomize />}
+				isOpen={openMenu === "modelKonstruksi"}
+				onToggle={() => handleMenuToggle("modelKonstruksi")}
+				>
 				<MenuItemSidebar url="/vmt" title="VMT" icon={<DashboardCustomize />} />
 				<MenuItemSidebar
 					url="/cpl-ppm-vm"
@@ -128,9 +180,18 @@ const MenuSidebar = () => {
 			</MenuItemSidebar>
 
 			{/* Pengetahuan Page */}
-			<MenuItemSidebar title="Pengetahuan" icon={<DashboardCustomize />}>
+			<MenuItemSidebar 
+				title="Pengetahuan" 
+				icon={<DashboardCustomize />}
+				isOpen={openMenu === "pengetahuan"}
+				onToggle={() => handleMenuToggle("pengetahuan")}>
 				<MenuItemSidebar url="/pengetahuan" title="Pengetahuan" icon={<DashboardCustomize />} />
 			</MenuItemSidebar>
+
+			
+			<MenuItemSidebar url="/mp" title="Materi Pembelajaran" icon={<DashboardCustomize />} />
+			<MenuItemSidebar url="/matriks-cpl-iea" title="Matriks CPL IEA" icon={<DashboardCustomize />} />
+
 		</ul>
 	);
 };

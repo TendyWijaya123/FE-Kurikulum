@@ -99,7 +99,6 @@ export const updateProdi = async (id, prodiData) => {
 export const deleteProdi = async (id) => {
 	try {
 		const response = await api.delete(`/prodis/${id}`);
-		return response.data;
 	} catch (error) {
 		console.error("Error deleting Prodi:", error);
 		throw error;
@@ -109,6 +108,7 @@ export const deleteProdi = async (id) => {
 export const getProdiDropdown = async () => {
 	try {
 		const response = await api.get("/prodi/dropdown");
+		console.log(response.data);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching Prodi dropdown:", error);

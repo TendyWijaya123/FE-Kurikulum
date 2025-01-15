@@ -10,52 +10,56 @@ const api = axios.create({
 	},
 });
 
-export const getSksu = async (prodiId) => {
+export const getMateriPembelajarans = async (prodiId) => {
     try {
-        console.log(prodiId);
         const token = localStorage.getItem("authToken");
 
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-        const response = await api.get(`/sksu`, {
+        const response = await api.get(`/materi-pembelajaran`, {
             params: { prodiId },
             headers,
         });
         return response.data;
     } catch (error) {
-        console.error("Error fetching sksu:", error);
-        throw error;
+        if(error.response) {
+            console.error("Error Get materi pembelajaran:", error.response.data);
+		} else {
+			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
+			console.error("Error Get materi pembelajaran:", error.message);
+		}
+		throw error;
     }
 };
 
-export const postSksu = async (data) => {
+export const postMateriPembelajaran = async (data) => {
     try
     {
         const token = localStorage.getItem("authToken");
 
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        const response = await api.post(`/sksu`, data, {headers});
+        const response = await api.post(`/materi-pembelajaran`, data, {headers});
 
         return response.data;
     } catch (error) {
         if(error.response) {
-            console.error("Error creating sksu:", error.response.data);
+            console.error("Error creating materi pembelajaran:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
-			console.error("Error creating sksu:", error.message);
+			console.error("Error creating materi pembelajaran:", error.message);
 		}
 		throw error;
     }
 
 }
 
-export const deleteSksus = async (data) => {
+export const deleteMateriPembelajarans = async (data) => {
     try{
         const token = localStorage.getItem("authToken");
 
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-        const response = await api.delete(`/sksu`, {
+        const response = await api.delete(`/materi-pembelajaran`, {
             headers,
             data,
         });
@@ -63,30 +67,30 @@ export const deleteSksus = async (data) => {
         return response.data;
     }catch (error){
         if(error.response) {
-            console.error("Error delete sksu:", error.response.data);
+            console.error("Error delete materi pembelajaran:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
-			console.error("Error delete sksu:", error.message);
+			console.error("Error delete materi pembelajaran:", error.message);
 		}
 		throw error;
     }
     
 }
 
-export const deleteSksu = async (id) => {
+export const deleteMateriPembelajaran = async (id) => {
     try{
         const token = localStorage.getItem("authToken");
 
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-        const response = await api.delete(`/sksu/${id}`, {headers});
+        const response = await api.delete(`/materi-pembelajaran/${id}`, {headers});
         return response.data;
     }catch (error){
         if(error.response) {
-            console.error("Error delete sksu:", error.response.data);
+            console.error("Error delete materi pembelajaran:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
-			console.error("Error delete sksu:", error.message);
+			console.error("Error delete materi pembelajaran:", error.message);
 		}
 		throw error;
     }

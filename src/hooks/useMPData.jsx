@@ -1,11 +1,12 @@
 import { useState, useEffect, useContext } from "react";
-import { deleteSksu, getSksu, postSksu, deleteSksus } from "../../service/AnalisisKonsideran/sksu";
-import { getProdiDropdown } from "../../service/api";
-import { AuthContext } from "../../context/AuthProvider";
+import { getMateriPembelajarans, postMateriPembelajaran, deleteMateriPembelajaran, deleteMateriPembelajarans } from "../service/materiPembelajaran";
+import { AuthContext } from "../context/AuthProvider";
 import { message } from 'antd';
+import { data } from "react-router-dom";
+import { getProdiDropdown } from "../service/api";
 
-export const useSKSUData = () => {
-    const [sksu, setSksu] = useState([]);
+export const useMPData = () => {
+    const [materiPembelajaran, setMateriPembelajaran] = useState([]);
     const [loading, setLoading] = useState(false);
     const { user } = useContext(AuthContext);
     const [dataSource, setDataSource] = useState([]);
@@ -17,54 +18,49 @@ export const useSKSUData = () => {
 
     // Fetch data
     useEffect(() => {
-        const fetchSKSU = async () => {
+        const fetchMateriPembelajaran = async () => {
             setLoading(true);
             try {
                 if (user?.prodiId) {
-                    const data = await getSksu(user.prodiId);
-                    setSksu(data);
-                } else {
+                    const data = await getMateriPembelajarans(user.prodiId);
+                    setMateriPembelajaran(data);
+                }else {
                     const prodis = await getProdiDropdown();
                     setProdiDropdown(prodis);
                 }
             } catch (error) {
-                console.error("Error fetching SKSU:", error);
+                console.error("Error fetching materi pembelajaran:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchSKSU();
+        fetchMateriPembelajaran();
     }, [user?.prodiId]);
 
     useEffect(() => {
-        if (sksu.length > 0) {
+        if (materiPembelajaran.length > 0) {
             setDataSource(
-                sksu.map((item, index) => ({
-                    key: 'sksu' + (index + 1),
+                materiPembelajaran.map((item, index) => ({
+                    key: 'MP-' + index + 1,
                     _id: item.id,
-                    profilLulusan: item.profil_lulusan,
-                    kualifikasi: item.kualifikasi,
-                    kategori: item.kategori,
+                    code: item.code,
+                    description: item.description,
                     prodiId: user.prodiId,
-                    kompetensiKerja: item.kompetensi_kerja?.length
-                        ? item.kompetensi_kerja.map((k) => k.kompetensi_kerja)
-                        : [],
                 }))
             );
+            console.log(dataSource);
         }else {
-            setDataSource([]); 
+            setDataSource([]);
         }
-    }, [sksu]);
+    }, [materiPembelajaran]);
 
-    // Handle prodi change
     const handleProdiChange = async (value) => {
         setSelectedProdi(value);
         setLoading(true);
         try {
-            const data = await getSksu(value); // Ambil data berdasarkan prodiId
-            setSksu(data);
-            console.log(sksu);
+            const data = await getMateriPembelajarans(value); // Ambil data berdasarkan prodiId
+            setMateriPembelajaran(data);
         } catch (error) {
             console.error("Error fetching SKSU for selected prodi:", error);
         } finally {
@@ -99,59 +95,75 @@ export const useSKSUData = () => {
 
     // Add row
     const handleAddRow = () => {
+        // Simpan kondisi sebelum perubahan untuk undo
         saveToUndoStack([...dataSource]);
-
-        const existingKeys = dataSource.map((item) => parseInt(item.key.replace('sksu', ''))).sort((a, b) => a - b);
-        let newKeyNumber = 1;
-
-        for (let i = 0; i < existingKeys.length; i++) {
-            if (existingKeys[i] !== newKeyNumber) {
-                break;
-            }
-            newKeyNumber++;
-        }
-
+    
+        // Tambahkan baris baru
         const newRow = {
-            key: 'sksu' + newKeyNumber,
+            key: '', // Akan diperbarui nanti
             _id: null,
-            profilLulusan: '',
-            kualifikasi: '',
+            code: '', // Akan diperbarui nanti
             kategori: '',
-            kompetensiKerja: [],
-            prodiId: selectedProdi || user.prodiId, // Gunakan prodi terpilih
+            prodiId: selectedProdi || user.prodiId,
         };
-
-        setDataSource([...dataSource, newRow]);
+    
+        // Gabungkan data baru ke dalam dataSource
+        const updatedDataSource = [...dataSource, newRow];
+    
+        // Perbarui urutan key dan code berdasarkan posisi baru
+        updatedDataSource.forEach((item, index) => {
+            item.key = 'MP-' + (index + 1); // Key baru: kkni1, kkni2, dst.
+            item.code = 'MP-' + (index + 1); // Code baru: CPL1, CPL2, dst.
+        });
+    
+        // Simpan kembali dataSource
+        setDataSource(updatedDataSource);
     };
+    
 
     // Delete row
     const handleDeleteRow = async (key) => {
         saveToUndoStack([...dataSource]);
-
+    
+        // Temukan data yang akan dihapus
         const deleteData = dataSource.find((item) => item.key === key);
-
+    
+        // Jika data memiliki `_id`, hapus dari server terlebih dahulu
         if (deleteData?._id !== null) {
             try {
-                await deleteSksu(deleteData._id);
+                await deleteMateriPembelajaran(deleteData._id); // Tunggu hingga penghapusan selesai
+                console.log(`Item dengan ID ${deleteData._id} berhasil dihapus dari server.`);
             } catch (error) {
-                console.error("Error deleting SKSU:", error);
-                return;
+                console.error(`Gagal menghapus item dengan ID ${deleteData._id}:`, error);
+                return; // Keluar jika ada error
             }
         }
-
+    
+        // Hapus item dari data lokal
         const newData = dataSource.filter((item) => item.key !== key);
-        setDataSource(newData);
+    
+        // Perbarui ulang key dan code agar tetap urut
+        const updatedDataSource = newData.map((item, index) => ({
+            ...item,
+            key: 'MP-' + (index + 1), // Update key: kkni1, kkni2, dst.
+            code: 'MP-' + (index + 1), // Update code: CPL1, CPL2, dst.
+        }));
+    
+        // Simpan data baru ke state
+        setDataSource(updatedDataSource);
     };
+    
+    
 
     // Save data to server
     const handleSaveData = async () => {
         setSaving(true);
         try {
-            await postSksu(dataSource);
+            await postMateriPembelajaran(dataSource);
             message.success('Data berhasil disimpan!');
         } catch (error) {
             message.error('Gagal menyimpan data!');
-            console.error("Error saving SKSU:", error);
+            console.error("Error saving kkni:", error);
         } finally {
             setSaving(false);
         }
@@ -162,9 +174,10 @@ export const useSKSUData = () => {
         onChange: (newSelectedRowKeys) => setSelectedRowKeys(newSelectedRowKeys),
     };
 
-    const handleDeleteSksus = async () => {
+    const handleDeleteMateriPembelajarans = async () => {
         setLoading(true);
         try {
+            // Pisahkan data yang akan dihapus dan yang akan disimpan
             const { toDelete, toKeep } = dataSource.reduce(
                 (acc, item) => {
                     if (selectedRowKeys.includes(item.key)) {
@@ -176,24 +189,37 @@ export const useSKSUData = () => {
                 },
                 { toDelete: [], toKeep: [] }
             );
-
-            await deleteSksus(toDelete);
-            message.success('Data berhasil dihapus!');
-
-            setDataSource(toKeep);
-            setSelectedRowKeys([]);
+    
+            // Hapus data dari server
+            if (toDelete.length > 0) {
+                await deleteMateriPembelajarans(toDelete); // Pastikan fungsi ini menerima array
+                message.success('Data berhasil dihapus!');
+            }
+    
+            // Perbarui ulang key dan code agar tetap terurut
+            const updatedDataSource = toKeep.map((item, index) => ({
+                ...item,
+                key: 'MP-' + (index + 1), // Update key: kkni1, kkni2, dst.
+                code: 'MP-' + (index + 1), // Update code: CPL1, CPL2, dst.
+            }));
+    
+            // Simpan data baru ke state
+            setDataSource(updatedDataSource);
+            setSelectedRowKeys([]); // Hapus pilihan row
+    
         } catch (error) {
             message.error('Gagal menghapus data!');
-            console.error("Error hapus SKSU:", error);
+            console.error("Error hapus bench kurikulum:", error);
         } finally {
             setLoading(false);
         }
     };
+         
 
     return {
-        prodiDropdown,
         selectedProdi,
-        sksu,
+        prodiDropdown,
+        materiPembelajaran,
         loading,
         dataSource,
         saving,
@@ -205,7 +231,7 @@ export const useSKSUData = () => {
         handleAddRow,
         handleDeleteRow,
         handleSaveData,
-        handleDeleteSksus,
-        handleProdiChange,
+        handleDeleteMateriPembelajarans,
+        handleProdiChange
     };
 };
