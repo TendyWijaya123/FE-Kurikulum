@@ -5,6 +5,8 @@ import { useBCData } from "../../hooks/AnalisisKonsideran/useBCData";
 
 const BenchKurikulums = ()=> {
     const {
+        selectedProdi,
+        prodiDropdown,
         dataSource, 
         loading, 
         saving, 
@@ -15,7 +17,8 @@ const BenchKurikulums = ()=> {
         handleAddRow, 
         handleDeleteRow, 
         handleSaveData,
-		handleDeleteBenchKurikulums
+		handleDeleteBenchKurikulums,
+        handleProdiChange
     } = useBCData();
 
     const colums = [
@@ -120,15 +123,32 @@ const BenchKurikulums = ()=> {
         <DefaultLayout title='Bench Kurikulums'> 
             <div style={{ padding: '24px', background: '#fff', minHeight: '100%' }}>
                 <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
-                    <Button onClick={handleAddRow} type="primary">
-                        Tambah Baris
-                    </Button>
-                    <Button onClick={handleSaveData} type="primary" loading={saving}>
-                        Simpan Data
-                    </Button>
-                    <Tooltip title="Undo">
-                        <Button onClick="#" type="default" icon={<UndoOutlined />} />
-                    </Tooltip>
+                {prodiDropdown.length > 0 ? (
+                        // Jika `prodiDropdown` ada isinya, tampilkan dropdown
+                        <Select
+                            placeholder="Pilih Program Studi"
+                            options={prodiDropdown.map((prodi) => ({
+                                label: prodi.name,
+                                value: prodi.id,
+                            }))}
+                            value={selectedProdi}
+                            onChange={handleProdiChange}
+                            style={{ width: 200 }}
+                        />
+                    ) : (
+                        // Jika `prodiDropdown` kosong, tampilkan tombol
+                        <>
+                            <Button onClick={handleAddRow} type="primary">
+                                Tambah Baris
+                            </Button>
+                            <Button onClick={handleSaveData} type="primary" loading={saving}>
+                                Simpan Data
+                            </Button>
+                            <Tooltip title="Undo">
+                                <Button onClick={handleUndo} type="default" icon={<UndoOutlined />} />
+                            </Tooltip>
+                        </>
+                    )}
                     {selectedRowKeys.length > 0 && (
 						<Button
 							onClick={handleDeleteBenchKurikulums}

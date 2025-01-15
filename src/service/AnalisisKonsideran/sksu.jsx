@@ -12,6 +12,7 @@ const api = axios.create({
 
 export const getSksu = async (prodiId) => {
     try {
+        console.log(prodiId);
         const token = localStorage.getItem("authToken");
 
         const headers = token ? { Authorization: `Bearer ${token}` } : {};

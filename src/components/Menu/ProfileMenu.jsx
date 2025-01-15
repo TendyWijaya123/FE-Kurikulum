@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 
 const ProfileMenu = () => {
 	const [isOpenMenu, setIsOpenMenu] = useState(false);
-	const { logout } = useContext(AuthContext);
+	const { logout, user } = useContext(AuthContext);
 	const navigate = useNavigate();
-	const aliasName = "John Doe";
+	const aliasName = user.name;
 
 	const toggleMenu = () => {
 		setIsOpenMenu((prev) => !prev);

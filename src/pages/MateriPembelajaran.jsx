@@ -5,6 +5,8 @@ import { useMPData } from "../hooks/useMPData";
 
 const MateriPembelajaran = ()=>{
     const {
+        selectedProdi,
+        prodiDropdown,
         loading,
         dataSource,
         saving,
@@ -15,7 +17,8 @@ const MateriPembelajaran = ()=>{
         handleAddRow,
         handleDeleteRow,
         handleSaveData,
-        handleDeleteMateriPembelajarans
+        handleDeleteMateriPembelajarans,
+        handleProdiChange
     } = useMPData();
 
     // Kolom tabel
@@ -68,15 +71,32 @@ const MateriPembelajaran = ()=>{
         <DefaultLayout title='Materi Pembelajaran'>
             <div style={{ padding: '15px', background: '#fff9', minHeight: '100%' }}>
                 <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
-                    <Button onClick={handleAddRow} type="primary">
-                        Tambah Baris
-                    </Button>
-                    <Button onClick={handleSaveData} type="primary" loading={saving}>
-                        Simpan Data
-                    </Button>
-                    <Tooltip title="Undo">
-                        <Button onClick={handleUndo} type="default" icon={<UndoOutlined />} />
-                    </Tooltip>
+                {prodiDropdown.length > 0 ? (
+                        // Jika `prodiDropdown` ada isinya, tampilkan dropdown
+                        <Select
+                            placeholder="Pilih Program Studi"
+                            options={prodiDropdown.map((prodi) => ({
+                                label: prodi.name,
+                                value: prodi.id,
+                            }))}
+                            value={selectedProdi}
+                            onChange={handleProdiChange}
+                            style={{ width: 200 }}
+                        />
+                    ) : (
+                        // Jika `prodiDropdown` kosong, tampilkan tombol
+                        <>
+                            <Button onClick={handleAddRow} type="primary">
+                                Tambah Baris
+                            </Button>
+                            <Button onClick={handleSaveData} type="primary" loading={saving}>
+                                Simpan Data
+                            </Button>
+                            <Tooltip title="Undo">
+                                <Button onClick={handleUndo} type="default" icon={<UndoOutlined />} />
+                            </Tooltip>
+                        </>
+                    )}
 					{selectedRowKeys.length > 0 && (
 						<Button
 							onClick={handleDeleteMateriPembelajarans}

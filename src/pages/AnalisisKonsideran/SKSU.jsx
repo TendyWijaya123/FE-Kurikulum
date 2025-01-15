@@ -5,17 +5,20 @@ import { useSKSUData } from "../../hooks/AnalisisKonsideran/useSKSUData";
 
 const SKSU = () => {
     const {
+        prodiDropdown,
         dataSource, 
         loading, 
         saving, 
 		rowSelection,
 		selectedRowKeys,
+        selectedProdi,
         handleUndo, 
         handleSave, 
         handleAddRow, 
         handleDeleteRow, 
         handleSaveData,
-		handleDeleteSksus
+		handleDeleteSksus,
+        handleProdiChange
     } = useSKSUData();
 
     // Kolom tabel
@@ -114,25 +117,45 @@ const SKSU = () => {
         <DefaultLayout title='Siap Kerja Siap Usaha'>
             <div style={{ padding: '15px', background: '#fff9', minHeight: '100%' }}>
                 <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
-                    <Button onClick={handleAddRow} type="primary">
-                        Tambah Baris
-                    </Button>
-                    <Button onClick={handleSaveData} type="primary" loading={saving}>
-                        Simpan Data
-                    </Button>
-                    <Tooltip title="Undo">
-                        <Button onClick={handleUndo} type="default" icon={<UndoOutlined />} />
-                    </Tooltip>
-					{selectedRowKeys.length > 0 && (
-						<Button
-							onClick={handleDeleteSksus}
-							type="primary" danger
-							style={{ marginBottom: '16px' }}
-							loading={loading}
-						>
-							Hapus SKSU Terpilih
-						</Button>
-					)}
+                    {!loading (
+                        
+                    )}
+                    {prodiDropdown.length > 0 ? (
+                        // Jika `prodiDropdown` ada isinya, tampilkan dropdown
+                        <Select
+                            placeholder="Pilih Program Studi"
+                            options={prodiDropdown.map((prodi) => ({
+                                label: prodi.name,
+                                value: prodi.id,
+                            }))}
+                            value={selectedProdi}
+                            onChange={handleProdiChange}
+                            style={{ width: 200 }}
+                        />
+                    ) : (
+                        // Jika `prodiDropdown` kosong, tampilkan tombol
+                        <>
+                            <Button onClick={handleAddRow} type="primary">
+                                Tambah Baris
+                            </Button>
+                            <Button onClick={handleSaveData} type="primary" loading={saving}>
+                                Simpan Data
+                            </Button>
+                            <Tooltip title="Undo">
+                                <Button onClick={handleUndo} type="default" icon={<UndoOutlined />} />
+                            </Tooltip>
+                        </>
+                    )}
+                    {selectedRowKeys.length > 0 && (
+                        <Button
+                            onClick={handleDeleteSksus}
+                            type="primary" danger
+                            style={{ marginBottom: '16px' }}
+                            loading={loading}
+                        >
+                            Hapus SKSU Terpilih
+                        </Button>
+                    )}
                 </div>
                 {loading ? (
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>

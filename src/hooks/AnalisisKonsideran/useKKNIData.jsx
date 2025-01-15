@@ -1,5 +1,6 @@
 import { useState, useEffect, useContext } from "react";
 import { getKkni, deleteKkni, postKkni,  deleteKknis } from "../../service/AnalisisKonsideran/kkni";
+import { getProdiDropdown } from "../../service/api";
 import { AuthContext } from "../../context/AuthProvider";
 import { message } from 'antd';
 import { data } from "react-router-dom";
@@ -12,6 +13,8 @@ export const useKKNIData = () => {
     const [saving, setSaving] = useState(false);
     const [undoStack, setUndoStack] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [prodiDropdown, setProdiDropdown] = useState([]);
+    const [selectedProdi, setSelectedProdi] = useState(null);
 
     // Fetch data
     useEffect(() => {
@@ -21,6 +24,9 @@ export const useKKNIData = () => {
                 if (user?.prodiId) {
                     const data = await getKkni(user.prodiId);
                     setKkni(data);
+                }else{
+                    const prodis = await getProdiDropdown();
+                    setProdiDropdown(prodis);
                 }
             } catch (error) {
                 console.error("Error fetching kkni:", error);
@@ -44,8 +50,23 @@ export const useKKNIData = () => {
                 }))
             );
             console.log(dataSource);
+        }else {
+            setDataSource([]);
         }
     }, [kkni]);
+
+    const handleProdiChange = async (value) => {
+        setSelectedProdi(value);
+        setLoading(true);
+        try {
+            const data = await getKkni(value); // Ambil data berdasarkan prodiId
+            setKkni(data);
+        } catch (error) {
+            console.error("Error fetching SKSU for selected prodi:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // Save undo state
     const saveToUndoStack = (data) => {
@@ -83,7 +104,7 @@ export const useKKNIData = () => {
             _id: null,
             code: '', // Akan diperbarui nanti
             kategori: '',
-            prodiId: user.prodiId,
+            prodiId: selectedProdi || user.prodiId,
         };
     
         // Gabungkan data baru ke dalam dataSource
@@ -196,6 +217,8 @@ export const useKKNIData = () => {
          
 
     return {
+        selectedProdi,
+        prodiDropdown,
         kkni,
         loading,
         dataSource,
@@ -208,6 +231,7 @@ export const useKKNIData = () => {
         handleAddRow,
         handleDeleteRow,
         handleSaveData,
-        handleDeleteKknis
+        handleDeleteKknis,
+        handleProdiChange
     };
 };

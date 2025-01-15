@@ -99,7 +99,6 @@ export const updateProdi = async (id, prodiData) => {
 export const deleteProdi = async (id) => {
 	try {
 		const response = await api.delete(`/prodis/${id}`);
-		return response.data;
 	} catch (error) {
 		console.error("Error deleting Prodi:", error);
 		throw error;
@@ -109,6 +108,7 @@ export const deleteProdi = async (id) => {
 export const getProdiDropdown = async () => {
 	try {
 		const response = await api.get("/prodi/dropdown");
+		console.log(response.data);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching Prodi dropdown:", error);
@@ -415,4 +415,50 @@ export const deleteMisiPolban = async (id) => {
 		console.error("Error deleting Misi Polban:", error);
 		throw error;
 	}
+};
+
+/* -----------------------------Pengetahuan API----------------------------- */
+export const getPengetahuan = async () => {
+    try {
+        const response = await api.get("/pengetahuan");
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching Pengetahuan data:", error);
+        throw error;
+    }
+};
+
+export const createPengetahuan = async (data) => {
+    try {
+        const response = await api.post("/pengetahuan", data );
+        
+        if (!response.data) {
+            throw new Error("Tidak ada response dari server");
+        }
+        
+        return response.data;
+    } catch (error) {
+        console.error("Error creating Pengetahuan:", error);
+        throw error.response?.data || error;
+    }
+};
+
+export const updatePengetahuan = async (id, data) => {
+    try {
+        const response = await api.put(`/pengetahuan/${id}`, data );
+        return response.data;
+    } catch (error) {
+        console.error("Error updating Pengetahuan:", error);
+        throw error;
+    }
+};
+
+export const deletePengetahuan = async (id) => {
+    try {
+        const response = await api.delete(`/pengetahuan/${id}` );
+        return response.data;
+    } catch (error) {
+        console.error("Error deleting Pengetahuan:", error);
+        throw error;
+    }
 };

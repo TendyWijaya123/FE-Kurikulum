@@ -20,6 +20,8 @@ import MateriPembelajaran from "./pages/MateriPembelajaran";
 import Ipteks from "./pages/Ipteks";
 import CplPpmVm from "./pages/ModelKonstruksi/CPLPPMVM/CplPpmVm";
 import MatriksCplHasIea from "./pages/MatriksCplHasIea/MatriksCplHasIea";
+import MatrixCplPpm from "./pages/ModelKonstruksi/MatrixCplPpm/MatrixCplPpm";
+import Pengetahuan from "./pages/Pengetahuan";
 
 function App() {
 	return (
@@ -134,6 +136,15 @@ function App() {
 				/>
 
 				<Route
+					path="/matrix-cpl-ppm"
+					element={
+						<ProtectedRoute>
+							<MatrixCplPpm />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
 					path="/dashboard"
 					element={
 						<ProtectedRoute requiredPermission="view-dashboard">
@@ -189,6 +200,16 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<Ipteks />
+						</ProtectedRoute>
+					}
+				/>
+				{/* Pengetahuan */}
+
+				<Route
+					path="/pengetahuan"
+					element={
+						<ProtectedRoute>
+							<Pengetahuan />
 						</ProtectedRoute>
 					}
 				/>

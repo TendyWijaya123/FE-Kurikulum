@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { deleteSksu, getSksu, postSksu, deleteSksus } from "../../service/AnalisisKonsideran/sksu";
+import { getProdiDropdown } from "../../service/api";
 import { AuthContext } from "../../context/AuthProvider";
 import { message } from 'antd';
-import { data } from "react-router-dom";
 
 export const useSKSUData = () => {
     const [sksu, setSksu] = useState([]);
@@ -12,6 +12,8 @@ export const useSKSUData = () => {
     const [saving, setSaving] = useState(false);
     const [undoStack, setUndoStack] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [prodiDropdown, setProdiDropdown] = useState([]);
+    const [selectedProdi, setSelectedProdi] = useState(null);
 
     // Fetch data
     useEffect(() => {
@@ -21,6 +23,9 @@ export const useSKSUData = () => {
                 if (user?.prodiId) {
                     const data = await getSksu(user.prodiId);
                     setSksu(data);
+                } else {
+                    const prodis = await getProdiDropdown();
+                    setProdiDropdown(prodis);
                 }
             } catch (error) {
                 console.error("Error fetching SKSU:", error);
@@ -36,7 +41,7 @@ export const useSKSUData = () => {
         if (sksu.length > 0) {
             setDataSource(
                 sksu.map((item, index) => ({
-                    key: 'sksu' + index + 1,
+                    key: 'sksu' + (index + 1),
                     _id: item.id,
                     profilLulusan: item.profil_lulusan,
                     kualifikasi: item.kualifikasi,
@@ -47,8 +52,25 @@ export const useSKSUData = () => {
                         : [],
                 }))
             );
+        }else {
+            setDataSource([]); 
         }
     }, [sksu]);
+
+    // Handle prodi change
+    const handleProdiChange = async (value) => {
+        setSelectedProdi(value);
+        setLoading(true);
+        try {
+            const data = await getSksu(value); // Ambil data berdasarkan prodiId
+            setSksu(data);
+            console.log(sksu);
+        } catch (error) {
+            console.error("Error fetching SKSU for selected prodi:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // Save undo state
     const saveToUndoStack = (data) => {
@@ -78,18 +100,17 @@ export const useSKSUData = () => {
     // Add row
     const handleAddRow = () => {
         saveToUndoStack([...dataSource]);
-    
-        // Cari key yang hilang dalam urutan
-        const existingKeys = dataSource.map(item => parseInt(item.key.replace('sksu', ''))).sort((a, b) => a - b);
-        let newKeyNumber = 1; // Mulai dari 1
-    
+
+        const existingKeys = dataSource.map((item) => parseInt(item.key.replace('sksu', ''))).sort((a, b) => a - b);
+        let newKeyNumber = 1;
+
         for (let i = 0; i < existingKeys.length; i++) {
             if (existingKeys[i] !== newKeyNumber) {
-                break; // Key yang hilang ditemukan
+                break;
             }
             newKeyNumber++;
         }
-    
+
         const newRow = {
             key: 'sksu' + newKeyNumber,
             _id: null,
@@ -97,33 +118,30 @@ export const useSKSUData = () => {
             kualifikasi: '',
             kategori: '',
             kompetensiKerja: [],
-            prodiId: user.prodiId,
+            prodiId: selectedProdi || user.prodiId, // Gunakan prodi terpilih
         };
-    
+
         setDataSource([...dataSource, newRow]);
     };
-    
 
     // Delete row
     const handleDeleteRow = async (key) => {
         saveToUndoStack([...dataSource]);
-    
-        const deleteData = dataSource.find((item) => item.key === key); // Mengambil item yang ingin dihapus
-    
+
+        const deleteData = dataSource.find((item) => item.key === key);
+
         if (deleteData?._id !== null) {
             try {
-                await deleteSksu(deleteData._id); // Menunggu hingga penghapusan selesai
-                console.log(`Item dengan ID ${deleteData._id} berhasil dihapus dari server.`);
+                await deleteSksu(deleteData._id);
             } catch (error) {
-                console.error(`Gagal menghapus item dengan ID ${deleteData._id}:`, error);
-                return; // Berhenti di sini jika ada error
+                console.error("Error deleting SKSU:", error);
+                return;
             }
         }
-    
-        const newData = dataSource.filter((item) => item.key !== key); // Memperbarui data lokal
-        setDataSource(newData); // Mengatur ulang dataSource
+
+        const newData = dataSource.filter((item) => item.key !== key);
+        setDataSource(newData);
     };
-    
 
     // Save data to server
     const handleSaveData = async () => {
@@ -158,11 +176,11 @@ export const useSKSUData = () => {
                 },
                 { toDelete: [], toKeep: [] }
             );
-    
-            await deleteSksus(toDelete); // Menghapus data ke server
+
+            await deleteSksus(toDelete);
             message.success('Data berhasil dihapus!');
-    
-            setDataSource(toKeep); // Memperbarui data tanpa data yang dihapus
+
+            setDataSource(toKeep);
             setSelectedRowKeys([]);
         } catch (error) {
             message.error('Gagal menghapus data!');
@@ -170,9 +188,11 @@ export const useSKSUData = () => {
         } finally {
             setLoading(false);
         }
-    };       
+    };
 
     return {
+        prodiDropdown,
+        selectedProdi,
         sksu,
         loading,
         dataSource,
@@ -185,6 +205,7 @@ export const useSKSUData = () => {
         handleAddRow,
         handleDeleteRow,
         handleSaveData,
-        handleDeleteSksus
+        handleDeleteSksus,
+        handleProdiChange,
     };
 };

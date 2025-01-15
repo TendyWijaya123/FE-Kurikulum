@@ -3,6 +3,7 @@ import { getMateriPembelajarans, postMateriPembelajaran, deleteMateriPembelajara
 import { AuthContext } from "../context/AuthProvider";
 import { message } from 'antd';
 import { data } from "react-router-dom";
+import { getProdiDropdown } from "../service/api";
 
 export const useMPData = () => {
     const [materiPembelajaran, setMateriPembelajaran] = useState([]);
@@ -12,6 +13,8 @@ export const useMPData = () => {
     const [saving, setSaving] = useState(false);
     const [undoStack, setUndoStack] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [prodiDropdown, setProdiDropdown] = useState([]);
+    const [selectedProdi, setSelectedProdi] = useState(null);
 
     // Fetch data
     useEffect(() => {
@@ -21,6 +24,9 @@ export const useMPData = () => {
                 if (user?.prodiId) {
                     const data = await getMateriPembelajarans(user.prodiId);
                     setMateriPembelajaran(data);
+                }else {
+                    const prodis = await getProdiDropdown();
+                    setProdiDropdown(prodis);
                 }
             } catch (error) {
                 console.error("Error fetching materi pembelajaran:", error);
@@ -44,8 +50,23 @@ export const useMPData = () => {
                 }))
             );
             console.log(dataSource);
+        }else {
+            setDataSource([]);
         }
     }, [materiPembelajaran]);
+
+    const handleProdiChange = async (value) => {
+        setSelectedProdi(value);
+        setLoading(true);
+        try {
+            const data = await getMateriPembelajarans(value); // Ambil data berdasarkan prodiId
+            setMateriPembelajaran(data);
+        } catch (error) {
+            console.error("Error fetching SKSU for selected prodi:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // Save undo state
     const saveToUndoStack = (data) => {
@@ -83,7 +104,7 @@ export const useMPData = () => {
             _id: null,
             code: '', // Akan diperbarui nanti
             kategori: '',
-            prodiId: user.prodiId,
+            prodiId: selectedProdi || user.prodiId,
         };
     
         // Gabungkan data baru ke dalam dataSource
@@ -125,7 +146,7 @@ export const useMPData = () => {
         const updatedDataSource = newData.map((item, index) => ({
             ...item,
             key: 'MP-' + (index + 1), // Update key: kkni1, kkni2, dst.
-            code: 'MP--' + (index + 1), // Update code: CPL1, CPL2, dst.
+            code: 'MP-' + (index + 1), // Update code: CPL1, CPL2, dst.
         }));
     
         // Simpan data baru ke state
@@ -196,6 +217,8 @@ export const useMPData = () => {
          
 
     return {
+        selectedProdi,
+        prodiDropdown,
         materiPembelajaran,
         loading,
         dataSource,
@@ -208,6 +231,7 @@ export const useMPData = () => {
         handleAddRow,
         handleDeleteRow,
         handleSaveData,
-        handleDeleteMateriPembelajarans
+        handleDeleteMateriPembelajarans,
+        handleProdiChange
     };
 };
