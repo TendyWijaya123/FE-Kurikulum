@@ -117,9 +117,6 @@ const SKSU = () => {
         <DefaultLayout title='Siap Kerja Siap Usaha'>
             <div style={{ padding: '15px', background: '#fff9', minHeight: '100%' }}>
                 <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
-                    {!loading (
-                        
-                    )}
                     {prodiDropdown.length > 0 ? (
                         // Jika `prodiDropdown` ada isinya, tampilkan dropdown
                         <Select
