@@ -39,7 +39,6 @@ const useCreateProdi = () => {
 	};
 
 	const handleSubmit = async (e) => {
-		e.preventDefault();
 		setLoading(true);
 		setAlert(null); // Clear previous alerts
 

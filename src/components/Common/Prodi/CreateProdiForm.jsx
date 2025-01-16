@@ -1,7 +1,9 @@
 import React from "react";
-import { Alert } from "@mui/material"; // Import Alert component from MUI
+import { Alert, Input, Select, Button } from "antd"; // Import Ant Design components
+import { JENJANG_ENUM } from "../../../constants/constants"; // Import Jenjang Enum
 import useCreateProdi from "../../../hooks/Prodi/useCreateProdi"; // Hook untuk CreateProdi
-import { JENJANG_ENUM } from "../../../constants/constants";
+
+const { Option } = Select;
 
 const CreateProdiForm = () => {
 	const {
@@ -21,97 +23,120 @@ const CreateProdiForm = () => {
 
 			{/* Display Alert if available */}
 			{alert && (
-				<Alert severity={alert.severity} className="mb-4">
-					{alert.message}
-				</Alert>
+				<Alert
+					message={alert.message}
+					type={alert.severity}
+					showIcon
+					className="mb-4"
+				/>
 			)}
 
-			<form onSubmit={handleSubmit}>
+			<form
+				onSubmit={(e) => {
+					e.preventDefault();
+					handleSubmit();
+				}}>
+				{/* Name Input */}
 				<div className="mb-4">
 					<label
 						htmlFor="name"
 						className="block text-sm font-medium text-gray-700">
 						Name
 					</label>
-					<input
+					<Input
 						id="name"
-						type="text"
 						name="name"
 						value={formData.name}
 						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+						className="mt-1 block w-full"
 						required
 					/>
 				</div>
 
+				{/* Jenjang Select */}
 				<div className="mb-4">
 					<label
 						htmlFor="jenjang"
 						className="block text-sm font-medium text-gray-700">
 						Jenjang
 					</label>
-					<select
+					<Select
 						id="jenjang"
 						name="jenjang"
 						value={formData.jenjang}
-						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-						required>
-						<option value="">Select Jenjang</option>
+						onChange={(value) =>
+							handleChangeForm({ target: { name: "jenjang", value } })
+						}
+						className="mt-1 block w-full"
+						placeholder="Select Jenjang"
+						required
+						showSearch>
+						<Option value="">Select Jenjang</Option>
 						{JENJANG_ENUM.map((jenjangValue) => (
-							<option key={jenjangValue} value={jenjangValue}>
+							<Option key={jenjangValue} value={jenjangValue}>
 								{jenjangValue}
-							</option>
+							</Option>
 						))}
-					</select>
+					</Select>
 				</div>
 
+				{/* Kode Input */}
 				<div className="mb-4">
 					<label
 						htmlFor="kode"
 						className="block text-sm font-medium text-gray-700">
 						Kode
 					</label>
-					<input
+					<Input
 						id="kode"
-						type="text"
 						name="kode"
 						value={formData.kode}
 						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+						className="mt-1 block w-full"
 						required
 					/>
 				</div>
 
+				{/* Jurusan Select with Search */}
 				<div className="mb-4">
 					<label
 						htmlFor="jurusan_id"
 						className="block text-sm font-medium text-gray-700">
 						Jurusan
 					</label>
-					<select
+					<Select
 						id="jurusan_id"
 						name="jurusan_id"
 						value={formData.jurusan_id}
-						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-						required>
-						<option value="">Select Jurusan</option>
+						onChange={(value) =>
+							handleChangeForm({ target: { name: "jurusan_id", value } })
+						}
+						className="mt-1 block w-full"
+						placeholder="Select Jurusan"
+						showSearch
+						required
+						filterOption={(input, option) =>
+							option?.children.toLowerCase().includes(input.toLowerCase())
+						}>
+						<Option value="">Select Jurusan</Option>
 						{jurusanList.map((jurusan) => (
-							<option key={jurusan.id} value={jurusan.id}>
+							<Option key={jurusan.id} value={jurusan.id}>
 								{jurusan.nama}
-							</option>
+							</Option>
 						))}
-					</select>
+					</Select>
 				</div>
 
+				{/* Submit Button */}
 				<div className="flex items-center justify-center mt-6">
-					<button
-						type="submit"
-						className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+					<Button
+						type="primary"
+						htmlType="submit"
+						block
+						loading={loading}
 						disabled={loading}>
 						{loading ? "Creating..." : "Create Prodi"}
-					</button>
+					</Button>
 				</div>
 			</form>
 		</div>

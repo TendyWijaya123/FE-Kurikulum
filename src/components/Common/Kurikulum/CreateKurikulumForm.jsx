@@ -1,6 +1,8 @@
 import React from "react";
-import { Alert } from "@mui/material"; // Import Alert component from MUI
+import { Alert, Select, Input, Button } from "antd"; // Import Ant Design components
 import useCreateKurikulum from "../../../hooks/Kurikulum/useCreateKurikulum";
+
+const { Option } = Select;
 
 const CreateKurikulumForm = () => {
 	const {
@@ -20,9 +22,12 @@ const CreateKurikulumForm = () => {
 
 			{/* Display Alert if available */}
 			{alert && (
-				<Alert severity={alert.severity} className="mb-4">
-					{alert.message}
-				</Alert>
+				<Alert
+					message={alert.message}
+					type={alert.severity} // Severity is used to set the type of alert (success, error, warning, etc.)
+					showIcon
+					className="mb-4"
+				/>
 			)}
 
 			<form onSubmit={handleSubmit}>
@@ -32,13 +37,13 @@ const CreateKurikulumForm = () => {
 						className="block text-sm font-medium text-gray-700">
 						Tahun Awal
 					</label>
-					<input
+					<Input
 						id="tahun_awal"
 						type="number"
 						name="tahun_awal"
 						value={formData.tahun_awal}
 						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+						className="mt-1 block w-full"
 						required
 					/>
 				</div>
@@ -49,13 +54,13 @@ const CreateKurikulumForm = () => {
 						className="block text-sm font-medium text-gray-700">
 						Tahun Akhir
 					</label>
-					<input
+					<Input
 						id="tahun_akhir"
 						type="number"
 						name="tahun_akhir"
 						value={formData.tahun_akhir}
 						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+						className="mt-1 block w-full"
 						required
 					/>
 				</div>
@@ -66,29 +71,40 @@ const CreateKurikulumForm = () => {
 						className="block text-sm font-medium text-gray-700">
 						Prodi
 					</label>
-					<select
+					<Select
 						id="prodi_id"
 						name="prodi_id"
 						value={formData.prodi_id}
-						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-						required>
-						<option value="">Select Prodi</option>
+						onChange={(value) =>
+							handleChangeForm({ target: { name: "prodi_id", value } })
+						}
+						className="mt-1 block w-full"
+						placeholder="Select Prodi"
+						required
+						showSearch // Enable search functionality
+						optionFilterProp="children" // Set the filtering to search based on children (name)
+						filterOption={
+							(input, option) =>
+								option.children.toLowerCase().includes(input.toLowerCase()) // Customize search behavior
+						}>
+						<Option value="">Select Prodi</Option>
 						{prodiList.map((prodi) => (
-							<option key={prodi.id} value={prodi.id}>
+							<Option key={prodi.id} value={prodi.id}>
 								{prodi.name}
-							</option>
+							</Option>
 						))}
-					</select>
+					</Select>
 				</div>
 
 				<div className="flex items-center justify-center mt-6">
-					<button
-						type="submit"
-						className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+					<Button
+						type="primary"
+						htmlType="submit"
+						block
+						loading={loading}
 						disabled={loading}>
 						{loading ? "Creating..." : "Create Kurikulum"}
-					</button>
+					</Button>
 				</div>
 			</form>
 		</div>
