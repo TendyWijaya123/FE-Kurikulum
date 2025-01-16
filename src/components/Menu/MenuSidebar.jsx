@@ -31,8 +31,7 @@ const MenuSidebar = () => {
 				title="Dashboard"
 				icon={<DashboardCustomize />}
 				isOpen={openMenu === "dashboard"}
-				onToggle={() => handleMenuToggle("dashboard")}
-				>
+				onToggle={() => handleMenuToggle("dashboard")}>
 				<MenuItemSidebar
 					url="/dashboard/overview"
 					title="Overview"
@@ -51,13 +50,12 @@ const MenuSidebar = () => {
 			</MenuItemSidebar>
 
 			{/* Users */}
-			<VisibleMenu requiredPermission="view-user">
-				<MenuItemSidebar 
-					title="Users" 
+			<VisibleMenu requiredPermission="view-users">
+				<MenuItemSidebar
+					title="Users"
 					icon={<DashboardCustomize />}
 					isOpen={openMenu === "users"}
-					onToggle={() => handleMenuToggle("users")}
-				>
+					onToggle={() => handleMenuToggle("users")}>
 					<MenuItemSidebar
 						url="/users"
 						title="Users"
@@ -74,8 +72,8 @@ const MenuSidebar = () => {
 			</VisibleMenu>
 
 			{/* Jurusan */}
-			<MenuItemSidebar 
-				title="Jurusan" 
+			<MenuItemSidebar
+				title="Jurusan"
 				icon={<DashboardCustomize />}
 				isOpen={openMenu === "jurusan"}
 				onToggle={() => handleMenuToggle("jurusan")}>
@@ -92,9 +90,9 @@ const MenuSidebar = () => {
 			</MenuItemSidebar>
 
 			{/* Prodi */}
-			<MenuItemSidebar 
-				title="Prodi" 	
-				icon={<DashboardCustomize />} 
+			<MenuItemSidebar
+				title="Prodi"
+				icon={<DashboardCustomize />}
 				isOpen={openMenu === "prodi"}
 				onToggle={() => handleMenuToggle("prodi")}>
 				<MenuItemSidebar
@@ -110,8 +108,8 @@ const MenuSidebar = () => {
 			</MenuItemSidebar>
 
 			{/* Kurikulum */}
-			<MenuItemSidebar 
-				title="Kurikulum" 
+			<MenuItemSidebar
+				title="Kurikulum"
 				icon={<DashboardCustomize />}
 				isOpen={openMenu === "kurikulums"}
 				onToggle={() => handleMenuToggle("kurikulums")}>
@@ -160,12 +158,11 @@ const MenuSidebar = () => {
 			</MenuItemSidebar>
 
 			{/* Model  dan Konstruksi Prauji */}
-			<MenuItemSidebar 
-				title="Model  Konstruksi" 
+			<MenuItemSidebar
+				title="Model  Konstruksi"
 				icon={<DashboardCustomize />}
 				isOpen={openMenu === "modelKonstruksi"}
-				onToggle={() => handleMenuToggle("modelKonstruksi")}
-				>
+				onToggle={() => handleMenuToggle("modelKonstruksi")}>
 				<MenuItemSidebar url="/vmt" title="VMT" icon={<DashboardCustomize />} />
 				<MenuItemSidebar
 					url="/cpl-ppm-vm"
@@ -180,18 +177,28 @@ const MenuSidebar = () => {
 			</MenuItemSidebar>
 
 			{/* Pengetahuan Page */}
-			<MenuItemSidebar 
-				title="Pengetahuan" 
+			<MenuItemSidebar
+				title="Pengetahuan"
 				icon={<DashboardCustomize />}
 				isOpen={openMenu === "pengetahuan"}
 				onToggle={() => handleMenuToggle("pengetahuan")}>
-				<MenuItemSidebar url="/pengetahuan" title="Pengetahuan" icon={<DashboardCustomize />} />
+				<MenuItemSidebar
+					url="/pengetahuan"
+					title="Pengetahuan"
+					icon={<DashboardCustomize />}
+				/>
 			</MenuItemSidebar>
 
-			
-			<MenuItemSidebar url="/mp" title="Materi Pembelajaran" icon={<DashboardCustomize />} />
-			<MenuItemSidebar url="/matriks-cpl-iea" title="Matriks CPL IEA" icon={<DashboardCustomize />} />
-
+			<MenuItemSidebar
+				url="/mp"
+				title="Materi Pembelajaran"
+				icon={<DashboardCustomize />}
+			/>
+			<MenuItemSidebar
+				url="/matriks-cpl-iea"
+				title="Matriks CPL IEA"
+				icon={<DashboardCustomize />}
+			/>
 		</ul>
 	);
 };

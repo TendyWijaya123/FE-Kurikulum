@@ -22,6 +22,7 @@ import CplPpmVm from "./pages/ModelKonstruksi/CPLPPMVM/CplPpmVm";
 import MatriksCplHasIea from "./pages/MatriksCplHasIea/MatriksCplHasIea";
 import MatrixCplPpm from "./pages/ModelKonstruksi/MatrixCplPpm/MatrixCplPpm";
 import Pengetahuan from "./pages/Pengetahuan";
+import TemporaryUnavailable from "./pages/TemporaryUnavailable";
 
 function App() {
 	return (
@@ -30,6 +31,10 @@ function App() {
 				<Route path="/" element={<Login />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/unauthorized" element={<Unauthorized />} />
+				<Route
+					path="/temporary-unavailable"
+					element={<TemporaryUnavailable />}
+				/>
 				<Route path="/coba" element={<Dashboard />} />
 				{/* User Pages */}
 				<Route
@@ -129,7 +134,7 @@ function App() {
 				<Route
 					path="/cpl-ppm-vm"
 					element={
-						<ProtectedRoute>
+						<ProtectedRoute isProdiRestricted={true}>
 							<CplPpmVm />
 						</ProtectedRoute>
 					}
