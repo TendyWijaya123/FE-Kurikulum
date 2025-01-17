@@ -11,8 +11,8 @@ import Jurusans from "./pages/Jurusans/Jurusans";
 import CreateJurusan from "./pages/Jurusans/Jurusans";
 import Prodis from "./pages/Prodi/Prodis";
 import CreateProdi from "./pages/Prodi/CreateProdi";
-import Kurikulums from "./pages/Kurikulum.jsx/Kurikulums";
-import CreateKurikulum from "./pages/Kurikulum.jsx/CreateKurikulum";
+import Kurikulums from "./pages/Kurikulum/Kurikulums";
+import CreateKurikulum from "./pages/Kurikulum/CreateKurikulum";
 import VMT from "./pages/VMT/VMT";
 import BenchKurikulums from "./pages/AnalisisKonsideran/BenchKurikulums";
 import KKNI from "./pages/AnalisisKonsideran/KKNI";
@@ -23,6 +23,7 @@ import MatriksCplHasIea from "./pages/MatriksCplHasIea/MatriksCplHasIea";
 import MatrixCplPpm from "./pages/ModelKonstruksi/MatrixCplPpm/MatrixCplPpm";
 import Pengetahuan from "./pages/Pengetahuan";
 import TemporaryUnavailable from "./pages/TemporaryUnavailable";
+import MataKuliah from "./pages/MataKuliah/MataKuliah";
 
 function App() {
 	return (
@@ -215,6 +216,17 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<Pengetahuan />
+						</ProtectedRoute>
+					}
+				/>
+
+				{/* Mata Kuliah */}
+
+				<Route
+					path="/mata-kuliah"
+					element={
+						<ProtectedRoute>
+							<MataKuliah />
 						</ProtectedRoute>
 					}
 				/>
