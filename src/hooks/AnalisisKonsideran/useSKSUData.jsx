@@ -3,6 +3,7 @@ import { deleteSksu, getSksu, postSksu, deleteSksus } from "../../service/Analis
 import { getProdiDropdown } from "../../service/api";
 import { AuthContext } from "../../context/AuthProvider";
 import { message } from 'antd';
+import * as XLSX from 'xlsx';
 
 export const useSKSUData = () => {
     const [sksu, setSksu] = useState([]);
@@ -190,7 +191,74 @@ export const useSKSUData = () => {
         }
     };
 
+    const props = {
+        beforeUpload: (file) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+      
+            // Nama sheet yang ingin diakses
+            const targetSheetName = '4a_AK-SKSU';
+            const sheetNames = workbook.SheetNames;
+      
+            if (!sheetNames.includes(targetSheetName)) {
+              message.error(`Sheet ${targetSheetName} tidak ditemukan.`);
+              return;
+            }
+      
+            const worksheet = workbook.Sheets[targetSheetName];
+            const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      
+            // Proses data untuk menghasilkan format 
+            jsonData
+                .filter((row) => row.__EMPTY_1 && row.__EMPTY_2)
+                .map((row, index) => {
+                    // Menghitung nomor key terbaru berdasarkan dataSource
+                    setDataSource(prevDataSource => {
+                        const existingKeys = prevDataSource
+                            .map((item) => parseInt(item.key.replace('sksu', '')))
+                            .sort((a, b) => a - b);
+
+                        let newKeyNumber = 1;
+                        for (let i = 0; i < existingKeys.length; i++) {
+                            if (existingKeys[i] !== newKeyNumber) {
+                                break;
+                            }
+                            newKeyNumber++;
+                        }
+
+                        // Menambahkan baris baru ke dataSource
+                        const newData = {
+                            kategori:
+                                typeof row.__EMPTY_1 === 'string' && row.__EMPTY_1.includes('Siap Kerja')
+                                    ? 'Siap Kerja'
+                                    : 'Siap Usaha',
+                            key: `sksu${newKeyNumber}`,
+                            profilLulusan: row.__EMPTY_2,
+                            kualifikasi: row.__EMPTY_3,
+                            kompetensiKerja: row.__EMPTY_5
+                                ? row.__EMPTY_5.split(/\r?\n/).map((item) => item.trim()).filter(Boolean)
+                                : [],
+                            prodiId: user.prodiId,
+                            _id: null,
+                        };
+
+                        // Kembalikan dataSource yang diperbarui
+                        return [...prevDataSource, newData];
+                    });
+                });
+            message.success('Data berhasil diproses.');
+          };
+          reader.readAsArrayBuffer(file);
+      
+          // Return false agar file tidak diunggah ke server
+          return false;
+        },
+      };
+
     return {
+        props,
         prodiDropdown,
         selectedProdi,
         sksu,

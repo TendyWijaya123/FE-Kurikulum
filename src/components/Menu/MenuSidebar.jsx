@@ -199,6 +199,11 @@ const MenuSidebar = () => {
 				title="Matriks CPL IEA"
 				icon={<DashboardCustomize />}
 			/>
+			<MenuItemSidebar
+				url="/matriks-p-mp"
+				title="Matriks p mp"
+				icon={<DashboardCustomize />}
+			/>
 		</ul>
 	);
 };

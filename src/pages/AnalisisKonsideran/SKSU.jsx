@@ -1,10 +1,11 @@
 import DefaultLayout from "../../layouts/DefaultLayout";
-import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin } from 'antd';
+import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin, Upload } from 'antd';
 import { UndoOutlined } from '@ant-design/icons';
 import { useSKSUData } from "../../hooks/AnalisisKonsideran/useSKSUData";
 
 const SKSU = () => {
     const {
+        props,
         prodiDropdown,
         dataSource, 
         loading, 
@@ -138,6 +139,9 @@ const SKSU = () => {
                             <Button onClick={handleSaveData} type="primary" loading={saving}>
                                 Simpan Data
                             </Button>
+                            <Upload {...props}>
+                                <Button>Unggah File Excel</Button>
+                            </Upload>
                             <Tooltip title="Undo">
                                 <Button onClick={handleUndo} type="default" icon={<UndoOutlined />} />
                             </Tooltip>
