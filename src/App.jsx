@@ -19,11 +19,12 @@ import KKNI from "./pages/AnalisisKonsideran/KKNI";
 import MateriPembelajaran from "./pages/MateriPembelajaran";
 import Ipteks from "./pages/Ipteks";
 import CplPpmVm from "./pages/ModelKonstruksi/CPLPPMVM/CplPpmVm";
-import MatriksCplHasIea from "./pages/MatriksCplHasIea/MatriksCplHasIea";
+import MatriksCplHasIea from "./pages/Matriks/MatriksCplHasIea";
 import MatrixCplPpm from "./pages/ModelKonstruksi/MatrixCplPpm/MatrixCplPpm";
 import Pengetahuan from "./pages/Pengetahuan";
 import TemporaryUnavailable from "./pages/TemporaryUnavailable";
 import MataKuliah from "./pages/MataKuliah/MataKuliah";
+import MatriksPHasMp from "./pages/Matriks/MatriksPengetahuanHasMp";
 
 function App() {
 	return (
@@ -198,6 +199,14 @@ function App() {
 					element={
 						<ProtectedRoute requiredPermission="view-users">
 							<MatriksCplHasIea />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/matriks-p-mp"
+					element={
+						<ProtectedRoute requiredPermission="view-users">
+							<MatriksPHasMp />
 						</ProtectedRoute>
 					}
 				/>

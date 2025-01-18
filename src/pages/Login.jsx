@@ -7,6 +7,7 @@ const Login = () => {
 	const {
 		email,
 		password,
+		loading,
 		handleChangeEmail,
 		handleChangePassword,
 		handleSubmit,
@@ -60,8 +61,9 @@ const Login = () => {
 					{/* Login Button */}
 					<button
 						type="submit"
+						disabled={loading}
 						className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-200">
-						Login
+						{loading ? "Logging in..." : "Login"}
 					</button>
 				</form>
 			</div>
