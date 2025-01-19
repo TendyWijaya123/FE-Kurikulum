@@ -181,6 +181,19 @@ const MenuSidebar = () => {
 				/>
 			</MenuItemSidebar>
 
+			{/* MataKuliah */}
+			<MenuItemSidebar
+				title="Mata Kuliah"
+				icon={<DashboardCustomize />}
+				isOpen={openMenu === "matakuliah"}
+				onToggle={() => handleMenuToggle("matakuliah")}>
+				<MenuItemSidebar
+					url="/mata-kuliah"
+					title="MataKuliah"
+					icon={<DashboardCustomize />}
+				/>
+			</MenuItemSidebar>
+
 			{/* Pengetahuan Page */}
 			<MenuItemSidebar
 				title="Pengetahuan"
@@ -202,6 +215,11 @@ const MenuSidebar = () => {
 			<MenuItemSidebar
 				url="/matriks-cpl-iea"
 				title="Matriks CPL IEA"
+				icon={<DashboardCustomize />}
+			/>
+			<MenuItemSidebar
+				url="/matriks-p-mp"
+				title="Matriks p mp"
 				icon={<DashboardCustomize />}
 			/>
 		</ul>

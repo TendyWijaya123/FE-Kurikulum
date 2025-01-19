@@ -3,7 +3,6 @@ import api from "../../../utils/axiosInstance";
 export const updateMatrixCplIea = async (data) => {
 	try {
 		const response = await api.put("/matrix-cpl-iea", data);
-		console.log(response.data);
 		return response.data;
 	} catch (error) {
 		if(error.response) {
@@ -19,7 +18,6 @@ export const updateMatrixCplIea = async (data) => {
 export const getMatrixCplIea = async (prodiId) => {
 	try {
 		const response = await api.get("/matrix-cpl-iea", {params: {prodiId}});
-		console.log(response.data);
 		return response.data;
 	} catch (error) {
 		if(error.response) {
