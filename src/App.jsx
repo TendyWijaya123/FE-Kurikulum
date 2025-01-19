@@ -25,6 +25,7 @@ import Pengetahuan from "./pages/Pengetahuan";
 import TemporaryUnavailable from "./pages/TemporaryUnavailable";
 import MataKuliah from "./pages/MataKuliah/MataKuliah";
 import MatriksPHasMp from "./pages/Matriks/MatriksPengetahuanHasMp";
+import MatrixCplP from "./pages/ModelKonstruksi/MatrixCplP/MatrixCplP"
 
 function App() {
 	return (
@@ -236,6 +237,15 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<MataKuliah />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/matrix-cpl-p"
+					element={
+						<ProtectedRoute>
+						<MatrixCplP />
 						</ProtectedRoute>
 					}
 				/>
