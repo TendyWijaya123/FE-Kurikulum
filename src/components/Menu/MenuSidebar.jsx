@@ -174,6 +174,11 @@ const MenuSidebar = () => {
 					title="Matriks CPL-PPM"
 					icon={<DashboardCustomize />}
 				/>
+				<MenuItemSidebar
+					url="/matrix-cpl-p"
+					title="Matriks CPL-P"
+					icon={<DashboardCustomize />}
+				/>
 			</MenuItemSidebar>
 
 			{/* Pengetahuan Page */}

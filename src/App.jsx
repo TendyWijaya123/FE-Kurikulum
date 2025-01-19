@@ -23,6 +23,7 @@ import MatriksCplHasIea from "./pages/MatriksCplHasIea/MatriksCplHasIea";
 import MatrixCplPpm from "./pages/ModelKonstruksi/MatrixCplPpm/MatrixCplPpm";
 import Pengetahuan from "./pages/Pengetahuan";
 import TemporaryUnavailable from "./pages/TemporaryUnavailable";
+import MatrixCplP from "./pages/ModelKonstruksi/MatrixCplP/MatrixCplP"
 
 function App() {
 	return (
@@ -215,6 +216,15 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<Pengetahuan />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/matrix-cpl-p"
+					element={
+						<ProtectedRoute>
+						<MatrixCplP />
 						</ProtectedRoute>
 					}
 				/>
