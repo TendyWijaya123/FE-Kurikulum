@@ -222,6 +222,11 @@ const MenuSidebar = () => {
 				title="Matriks p mp"
 				icon={<DashboardCustomize />}
 			/>
+			<MenuItemSidebar
+				url="/matrix-cpl-mk"
+				title="Matriks CPL-MK"
+				icon={<DashboardCustomize />}
+			/>
 		</ul>
 	);
 };

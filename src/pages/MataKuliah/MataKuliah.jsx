@@ -38,7 +38,7 @@ const MataKuliah = () => {
 
 	return (
 		<DefaultLayout title="Mata Kuliah">
-			<div className="bg-white p-4 rounded-lg shadow-md">
+			<div className="w-full bg-white p-4 rounded-lg shadow-md">
 				<h1 className="text-3xl font-bold mb-4">Mata Kuliah</h1>
 				{/* Loading Indicator */}
 				{loading ? (
@@ -48,7 +48,7 @@ const MataKuliah = () => {
 				) : (
 					<>
 						<button
-							className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all duration-200"
+							className="px-2  py-2 mb-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all duration-200"
 							onClick={() => {
 								setIsModalCreateVisible(true);
 							}}>

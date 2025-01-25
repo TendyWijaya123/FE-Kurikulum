@@ -10,9 +10,6 @@ const EditUser = () => {
 		<DefaultLayout>
 			<div className="w-full flex flex-col justify-center items-start pr-10">
 				<div className="m-3 py-3 w-full">
-					<h1 className="text-4xl font-semibold font-sans text-start">
-						Edit User
-					</h1>
 					<EditUserForm userId={userId} />
 				</div>
 			</div>

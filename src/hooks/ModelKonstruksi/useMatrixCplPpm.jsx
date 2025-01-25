@@ -3,6 +3,7 @@ import {
 	getMatrixCplPpm,
 	updateMatrixCplPpm,
 } from "../../service/ModelKonstruksi/Matrix/MatrixCplPpmService";
+import { message } from "antd";
 
 const useMatrixCplPpm = () => {
 	const [cpls, setCpls] = useState([]);
@@ -14,14 +15,11 @@ const useMatrixCplPpm = () => {
 	const fetchMatrixData = async () => {
 		try {
 			setLoading(true);
-			// Mengambil data dari API
 			const data = await getMatrixCplPpm();
 
-			// Set data CPLs dan PPMS terpisah
 			setCpls(data.cpls);
 			setPpms(data.ppms);
 
-			// Transforms data ke dalam format yang diinginkan
 			const transformedMatrixData = data.matrix.map((entry) => ({
 				cpl_id: entry.cpl.id,
 				ppm_ids: entry.ppms
@@ -56,6 +54,7 @@ const useMatrixCplPpm = () => {
 		try {
 			await updateMatrixCplPpm({ matrix: matrixData });
 			fetchMatrixData();
+			message.success("Matrix berhasil  diupdate");
 		} catch (err) {
 			setError(err);
 		}

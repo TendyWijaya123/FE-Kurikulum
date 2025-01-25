@@ -59,7 +59,7 @@ const ModalCreateMataKuliah = ({
 					Save
 				</Button>,
 			]}
-			className=" w-full h-screen">
+			className=" min-w-full p-6 h-screen">
 			<div className="space-y-6">
 				{" "}
 				{/* Memberikan jarak antar elemen dengan space-y-6 */}

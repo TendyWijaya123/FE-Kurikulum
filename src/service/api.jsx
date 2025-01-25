@@ -43,11 +43,24 @@ export const updateUser = async (id, userData) => {
 		const response = await api.put(`/users/${id}`, userData);
 		return response.data;
 	} catch (error) {
-		// Log error for debugging
 		if (error.response) {
 			console.error("Error updating user:", error.response.data);
 		} else {
 			console.error("Error updating user:", error.message);
+		}
+		throw error;
+	}
+};
+
+export const deleteUser = async (id) => {
+	try {
+		const response = await api.delete(`/users/${id}`);
+		return response.data;
+	} catch (error) {
+		if (error.response) {
+			console.error("Error deleting user:", error.response.data);
+		} else {
+			console.error("Error deleting user:", error.message);
 		}
 		throw error;
 	}
@@ -272,74 +285,72 @@ export const updateVmtJurusan = async (id, vmtJurusanData) => {
 	}
 };
 
-
 /* -----------------------------IPTEKS API----------------------------- */
 export const getIpteks = async (prodiId) => {
-    try {
+	try {
 		console.log(prodiId);
-        const token = localStorage.getItem("authToken");
-        
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        
-        const response = await api.get("/ipteks", { headers, params:{prodiId}});
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching IPTEKS data:", error);
-        throw error;
-    }
+		const token = localStorage.getItem("authToken");
+
+		const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
+		const response = await api.get("/ipteks", { headers, params: { prodiId } });
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching IPTEKS data:", error);
+		throw error;
+	}
 };
 
 export const createIpteks = async (type, data) => {
-    try {
-        const token = localStorage.getItem("authToken");
-        
-        const headers = {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        };
+	try {
+		const token = localStorage.getItem("authToken");
 
-        // Kirim data langsung tanpa parameter prodiId
-        const response = await api.post(`/ipteks/${type}`, data, { headers });
-        return response.data;
-    } catch (error) {
-        console.error(`Error creating IPTEKS ${type}:`, error);
-        throw error;
-    }
+		const headers = {
+			"Content-Type": "application/json",
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+		};
+
+		// Kirim data langsung tanpa parameter prodiId
+		const response = await api.post(`/ipteks/${type}`, data, { headers });
+		return response.data;
+	} catch (error) {
+		console.error(`Error creating IPTEKS ${type}:`, error);
+		throw error;
+	}
 };
 
-
 export const updateIpteks = async (type, id, data) => {
-    try {
-        const token = localStorage.getItem("authToken");
+	try {
+		const token = localStorage.getItem("authToken");
 
-        const headers = {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        };
+		const headers = {
+			"Content-Type": "application/json",
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+		};
 
-        const response = await api.put(`/ipteks/${type}/${id}`, data, { headers });
-        return response.data;
-    } catch (error) {
-        console.error(`Error updating IPTEKS ${type}:`, error);
-        throw error;
-    }
+		const response = await api.put(`/ipteks/${type}/${id}`, data, { headers });
+		return response.data;
+	} catch (error) {
+		console.error(`Error updating IPTEKS ${type}:`, error);
+		throw error;
+	}
 };
 
 export const deleteIpteks = async (type, id) => {
-    try {
-        const token = localStorage.getItem("authToken");
+	try {
+		const token = localStorage.getItem("authToken");
 
-        const headers = {
-            "Content-Type": "application/json",
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        };
+		const headers = {
+			"Content-Type": "application/json",
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+		};
 
-        const response = await api.delete(`/ipteks/${type}/${id}`, { headers });
-        return response.data;
-    } catch (error) {
-        console.error(`Error deleting IPTEKS ${type}:`, error);
-        throw error;
-    }
+		const response = await api.delete(`/ipteks/${type}/${id}`, { headers });
+		return response.data;
+	} catch (error) {
+		console.error(`Error deleting IPTEKS ${type}:`, error);
+		throw error;
+	}
 };
 
 /* -----------------------------Vmt Polban API----------------------------- */
@@ -419,46 +430,46 @@ export const deleteMisiPolban = async (id) => {
 
 /* -----------------------------Pengetahuan API----------------------------- */
 export const getPengetahuan = async () => {
-    try {
-        const response = await api.get("/pengetahuan");
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching Pengetahuan data:", error);
-        throw error;
-    }
+	try {
+		const response = await api.get("/pengetahuan");
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching Pengetahuan data:", error);
+		throw error;
+	}
 };
 
 export const createPengetahuan = async (data) => {
-    try {
-        const response = await api.post("/pengetahuan", data );
-        
-        if (!response.data) {
-            throw new Error("Tidak ada response dari server");
-        }
-        
-        return response.data;
-    } catch (error) {
-        console.error("Error creating Pengetahuan:", error);
-        throw error.response?.data || error;
-    }
+	try {
+		const response = await api.post("/pengetahuan", data);
+
+		if (!response.data) {
+			throw new Error("Tidak ada response dari server");
+		}
+
+		return response.data;
+	} catch (error) {
+		console.error("Error creating Pengetahuan:", error);
+		throw error.response?.data || error;
+	}
 };
 
 export const updatePengetahuan = async (id, data) => {
-    try {
-        const response = await api.put(`/pengetahuan/${id}`, data );
-        return response.data;
-    } catch (error) {
-        console.error("Error updating Pengetahuan:", error);
-        throw error;
-    }
+	try {
+		const response = await api.put(`/pengetahuan/${id}`, data);
+		return response.data;
+	} catch (error) {
+		console.error("Error updating Pengetahuan:", error);
+		throw error;
+	}
 };
 
 export const deletePengetahuan = async (id) => {
-    try {
-        const response = await api.delete(`/pengetahuan/${id}` );
-        return response.data;
-    } catch (error) {
-        console.error("Error deleting Pengetahuan:", error);
-        throw error;
-    }
+	try {
+		const response = await api.delete(`/pengetahuan/${id}`);
+		return response.data;
+	} catch (error) {
+		console.error("Error deleting Pengetahuan:", error);
+		throw error;
+	}
 };

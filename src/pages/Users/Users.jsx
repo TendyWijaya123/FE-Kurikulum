@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import DefaultLayout from "../../layouts/DefaultLayout";
-import { getUsers } from "../../service/api";
+import { deleteUser, getUsers } from "../../service/api";
 import { Pagination, Skeleton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { message } from "antd";
+import DeleteButton from "../../components/Button/DeleteButton";
 
 const Users = () => {
 	const [users, setUsers] = useState([]);
@@ -13,21 +15,21 @@ const Users = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const fetchUsers = async () => {
-			setLoading(true);
-			try {
-				const data = await getUsers(currentPage);
-				setUsers(data.data);
-				setTotalPage(data.last_page);
-			} catch (error) {
-				console.error("Error fetching users:", error);
-			} finally {
-				setLoading(false);
-			}
-		};
-
 		fetchUsers();
 	}, [currentPage]);
+
+	const fetchUsers = async () => {
+		setLoading(true);
+		try {
+			const data = await getUsers(currentPage);
+			setUsers(data.data);
+			setTotalPage(data.last_page);
+		} catch (error) {
+			console.error("Error fetching users:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
 	const handlePageChange = (event, page) => {
 		setCurrentPage(page);
@@ -35,6 +37,15 @@ const Users = () => {
 
 	const handleEditClick = (userId) => {
 		navigate(`/user/edit/${userId}`);
+	};
+
+	const handleDeleteClick = async (userId) => {
+		try {
+			await deleteUser(userId);
+			message.success("User Berhasil Dihapus");
+		} catch (error) {
+			message.error("Gagal  Menghapus User");
+		}
 	};
 
 	return (
@@ -101,14 +112,18 @@ const Users = () => {
 												{/* Action column */}
 												<td className="border-b px-4 py-2">
 													<button
-														className="px-4 py-2 bg-yellow-500 text-white rounded mr-2 hover:bg-yellow-600"
+														className="px-2 py-2 bg-yellow-300 text-white rounded mr-2 hover:bg-yellow-400"
 														onClick={() => handleEditClick(user.id)} // Call handleEditClick with user.id
 													>
 														Edit
 													</button>
-													<button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+													<DeleteButton
+														className="px-2 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+														onDelete={() => {
+															handleDeleteClick(user.id);
+														}}>
 														Delete
-													</button>
+													</DeleteButton>
 												</td>
 											</tr>
 									  ))}

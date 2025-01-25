@@ -8,7 +8,6 @@ import Users from "./pages/Users/Users";
 import CreateUser from "./pages/Users/CreateUser";
 import EditUser from "./pages/Users/EditUser";
 import Jurusans from "./pages/Jurusans/Jurusans";
-import CreateJurusan from "./pages/Jurusans/Jurusans";
 import Prodis from "./pages/Prodi/Prodis";
 import CreateProdi from "./pages/Prodi/CreateProdi";
 import Kurikulums from "./pages/Kurikulum/Kurikulums";
@@ -27,6 +26,7 @@ import MataKuliah from "./pages/MataKuliah/MataKuliah";
 import MatriksPHasMp from "./pages/Matriks/MatriksPengetahuanHasMp";
 import MatrixCplP from "./pages/ModelKonstruksi/MatrixCplP/MatrixCplP";
 import MatrixCplMk from "./pages/ModelKonstruksi/MatrixCplMk/MatrixCplMk";
+import CreateJurusan from "./pages/CreateJurusan";
 
 function App() {
 	return (
