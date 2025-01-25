@@ -3,6 +3,7 @@ import {
 	getMatrixCplMk,
 	updateMatrixCplMk,
 } from "../../service/ModelKonstruksi/Matrix/MatrixCplMkService";
+import { message } from "antd";
 
 const useMatrixCplMk = () => {
 	const [cpls, setCpls] = useState([]);
@@ -14,14 +15,11 @@ const useMatrixCplMk = () => {
 	const fetchMatrixData = async () => {
 		try {
 			setLoading(true);
-			// Fetch data from API
 			const data = await getMatrixCplMk();
 
-			// Separate CPLs and Mata Kuliah data
 			setCpls(data.cpls);
 			setMataKuliahs(data.mataKuliahs);
 
-			// Transform the matrix data into a more manageable format
 			const transformedMatrixData = data.matrix.map((entry) => ({
 				cpl_id: entry.cpl.id,
 				mk_ids: entry.mataKuliahs
@@ -35,6 +33,7 @@ const useMatrixCplMk = () => {
 			setMatrixData(transformedMatrixData);
 		} catch (err) {
 			setError(err);
+			message.error("Gagal Mengambil data matriks cpl mk");
 		} finally {
 			setLoading(false);
 		}
@@ -59,7 +58,10 @@ const useMatrixCplMk = () => {
 		try {
 			await updateMatrixCplMk({ matrix: matrixData });
 			fetchMatrixData();
+			message.success("Matrix berhasil di update");
 		} catch (err) {
+			message.error("Matrix gagal diupdate", err.message);
+
 			setError(err);
 		}
 	};

@@ -1,6 +1,7 @@
 import React from "react";
 import useCpl from "../../../../hooks/ModelKonstruksi/useCpl";
 import DeleteButton from "../../../Button/DeleteButton";
+import { Spin } from "antd";
 
 const CplTable = () => {
 	const {
@@ -17,10 +18,22 @@ const CplTable = () => {
 		<div className="p-6 bg-white shadow-lg rounded-lg">
 			<h1 className="text-2xl font-semibold mb-4 text-gray-800">Daftar CPL</h1>
 			{alert && <div className="text-red-500 mb-4">{alert}</div>}
+			<div className="mt-4 flex flex-col sm:flex-row items-center gap-4 mb-4">
+				<button
+					onClick={handleAddCplPoint}
+					className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
+					Tambah CPL
+				</button>
+				<button
+					onClick={handleSaveCpls}
+					className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 w-full sm:w-auto">
+					Simpan
+				</button>
+			</div>
 			{loading ? (
-				<p className="text-center text-gray-500">Loading...</p>
+				<Spin />
 			) : (
-				<div className="overflow-x-auto max-h-[400px]">
+				<div className="overflow-x-auto ">
 					<table className="min-w-full bg-white border-collapse shadow-sm rounded-lg overflow-hidden">
 						<thead>
 							<tr className="bg-blue-100 text-gray-700">
@@ -77,18 +90,6 @@ const CplTable = () => {
 					</table>
 				</div>
 			)}
-			<div className="mt-4 flex flex-col sm:flex-row items-center gap-4">
-				<button
-					onClick={handleAddCplPoint}
-					className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
-					Tambah CPL
-				</button>
-				<button
-					onClick={handleSaveCpls}
-					className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 w-full sm:w-auto">
-					Simpan
-				</button>
-			</div>
 		</div>
 	);
 };

@@ -12,10 +12,10 @@ import {
 	MenuItem,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { getProdis, updateProdi } from "../../service/api"; // Ensure API is correct as per your backend
+import { getProdis, updateProdi } from "../../service/api";
 
 const Prodis = () => {
-	const [prodis, setProdis] = useState([]); // Ensure initial value is an empty array
+	const [prodis, setProdis] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(1);
 	const [loading, setLoading] = useState(false);
@@ -224,9 +224,14 @@ const Prodis = () => {
 													) : (
 														<Button
 															variant="contained"
-															color="warning"
 															size="small"
 															onClick={() => handleEditClick(prodi.id)}
+															sx={{
+																backgroundColor: "rgb(250, 204, 21)", // Warna sesuai Tailwind bg-yellow-400
+																"&:hover": {
+																	backgroundColor: "rgb(234, 179, 8)", // Hover sesuai Tailwind hover:bg-yellow-400
+																},
+															}}
 															className="mr-2">
 															Edit
 														</Button>

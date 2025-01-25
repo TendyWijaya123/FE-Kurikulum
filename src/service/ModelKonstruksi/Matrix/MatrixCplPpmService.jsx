@@ -13,7 +13,6 @@ export const updateMatrixCplPpm = async (matrixCplPpm) => {
 export const getMatrixCplPpm = async () => {
 	try {
 		const response = await api.get("/matrix-cpl-ppm");
-		console.log(response.data);
 		return response.data;
 	} catch (error) {
 		console.error("Error upserting CPL:", error);

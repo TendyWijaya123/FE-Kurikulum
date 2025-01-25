@@ -9,7 +9,6 @@ import MisiPolban from "../../components/Common/VMT/MisiPolban";
 import TujuanPolban from "../../components/Common/VMT/TujuanPolban";
 
 const VMT = () => {
-	const { loading } = useVmt();
 	return (
 		<DefaultLayout title="Visi, Misi Tujuan">
 			<div className="font-semibold">

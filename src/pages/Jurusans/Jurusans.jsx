@@ -3,6 +3,7 @@ import DefaultLayout from "../../layouts/DefaultLayout";
 import { getJurusans } from "../../service/api";
 import { Pagination, Skeleton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const Jurusans = () => {
 	const [jurusans, setJurusans] = useState([]);
@@ -21,6 +22,7 @@ const Jurusans = () => {
 				setTotalPage(data.last_page);
 			} catch (error) {
 				console.error("Error fetching jurusans:", error);
+				message.error("Gagal Mengambil data Jurusan");
 			} finally {
 				setLoading(false);
 			}
@@ -33,21 +35,11 @@ const Jurusans = () => {
 		setCurrentPage(page);
 	};
 
-	const handleEditClick = (jurusanId) => {
-		navigate(`/jurusan/edit/${jurusanId}`);
-	};
-
 	return (
-		<DefaultLayout>
+		<DefaultLayout title="Semua  Jurusan">
 			<div className="w-full flex flex-col justify-center items-start pr-10">
-				<div className="m-3 py-3 w-full">
-					<h1 className="text-4xl font-semibold font-sans text-start">
-						Jurusans
-					</h1>
-				</div>
-
 				<div className="m-4 w-full mr-10 bg-white p-5 rounded-lg shadow-md">
-					<h2 className="text-3xl font-semibold mb-2">All Jurusans</h2>
+					<h2 className="text-3xl font-semibold mb-2">Jurusan</h2>
 
 					{/* Scrollable table */}
 					<div className="overflow-x-auto">
@@ -55,13 +47,10 @@ const Jurusans = () => {
 							<thead className="bg-gray-100">
 								<tr>
 									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Name
+										Nama Jurusan
 									</th>
 									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Category
-									</th>
-									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Action
+										Kategori
 									</th>
 								</tr>
 							</thead>
@@ -95,19 +84,6 @@ const Jurusans = () => {
 												<td className="border-b px-4 py-2">{jurusan.nama}</td>
 												<td className="border-b px-4 py-2">
 													{jurusan.kategori}
-												</td>
-
-												{/* Action column */}
-												<td className="border-b px-4 py-2">
-													<button
-														className="px-4 py-2 bg-yellow-500 text-white rounded mr-2 hover:bg-yellow-600"
-														onClick={() => handleEditClick(jurusan.id)} // Call handleEditClick with jurusan.id
-													>
-														Edit
-													</button>
-													<button className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-														Delete
-													</button>
 												</td>
 											</tr>
 									  ))}
