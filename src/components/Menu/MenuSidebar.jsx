@@ -222,6 +222,11 @@ const MenuSidebar = () => {
 				title="Matriks p mp"
 				icon={<DashboardCustomize />}
 			/>
+			<MenuItemSidebar
+				url="/matriks-p-mp-mk"
+				title="Matriks p mp mk"
+				icon={<DashboardCustomize />}
+			/>
 		</ul>
 	);
 };

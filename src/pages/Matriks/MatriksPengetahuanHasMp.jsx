@@ -61,7 +61,7 @@ const MatriksPHasMp = () => {
     ];
 
     return (
-        <DefaultLayout title="Matriks CPL Berdasarkan IEA">
+        <DefaultLayout title="Matriks Materi Pembelajaran dan Pengetahuan">
             <div>
                 <div style={{ marginBottom: '10px', display: 'flex', gap: '5px' }}>
                 {prodiDropdown.length > 0 ? (

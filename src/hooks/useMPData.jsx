@@ -14,6 +14,7 @@ export const useMPData = () => {
     const [undoStack, setUndoStack] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
     const [prodiDropdown, setProdiDropdown] = useState([]);
+    const [knowledgeDropdown, setKnowledgeDropdown] = useState([]);
     const [selectedProdi, setSelectedProdi] = useState(null);
 
     // Fetch data
@@ -22,7 +23,8 @@ export const useMPData = () => {
             setLoading(true);
             try {
                 if (user?.prodiId) {
-                    const data = await getMateriPembelajarans(user.prodiId);
+                    const {data, knowledge} = await getMateriPembelajarans(user.prodiId);
+                    setKnowledgeDropdown(knowledge);
                     setMateriPembelajaran(data);
                 }else {
                     const prodis = await getProdiDropdown();
@@ -46,10 +48,13 @@ export const useMPData = () => {
                     _id: item.id,
                     code: item.code,
                     description: item.description,
+                    cognitifProses : item.cognitif_proses,
+                    knowledgeDimension: item.knowledge_dimension?.length
+                        ? item.knowledge_dimension.map((k) => k.code)
+                        : [],
                     prodiId: user.prodiId,
                 }))
             );
-            console.log(dataSource);
         }else {
             setDataSource([]);
         }
@@ -100,10 +105,12 @@ export const useMPData = () => {
     
         // Tambahkan baris baru
         const newRow = {
-            key: '', // Akan diperbarui nanti
+            key: '', 
             _id: null,
-            code: '', // Akan diperbarui nanti
-            kategori: '',
+            code: '', 
+            description: '',
+            cognitifProses : '',
+            knowledgeDimension: [],
             prodiId: selectedProdi || user.prodiId,
         };
     
@@ -217,6 +224,7 @@ export const useMPData = () => {
          
 
     return {
+        knowledgeDropdown,
         selectedProdi,
         prodiDropdown,
         materiPembelajaran,

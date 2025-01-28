@@ -5,6 +5,7 @@ import { useMPData } from "../hooks/useMPData";
 
 const MateriPembelajaran = ()=>{
     const {
+        knowledgeDropdown,
         selectedProdi,
         prodiDropdown,
         loading,
@@ -49,7 +50,44 @@ const MateriPembelajaran = ()=>{
                     }}
                 />
             ),
+        },  
+        {
+            title: 'Cognitif Proses',
+            dataIndex: 'cognitifProses',
+            key: 'cognitifProses',
+            render: (cognitifProses, record) => (
+                <Select
+                    value={cognitifProses}
+                    style={{ width: '100%' }}
+                    onChange={(value) => handleSave({ ...record, cognitifProses: value })}
+                    options={[
+                        { value: 'Remembering', label: 'Remembering' },
+                        { value: 'Understanding', label: 'Understanding' },
+                        { value: 'Applying', label: 'Applying' },
+                        { value: 'Analyzing', label: 'Analyzing' },
+                        { value: 'Evaluating', label: 'Evaluating' },
+                        { value: 'Creating', label: 'Creating' },
+                    ]}
+                />
+            ),
         },        
+        {
+            title: 'Knowledge Dimension',
+            dataIndex: 'knowledgeDimension',
+            key: 'knowledgeDimension',
+            render: (knowledgeDimension, record) => (
+                <Select
+                    mode="multiple"
+                    value={knowledgeDimension}
+                    style={{ width: '100%' }}
+                    onChange={(value) => handleSave({ ...record, knowledgeDimension: value })}
+                    options={ knowledgeDropdown.map((knowledge) => ({
+                        label : knowledge.name,
+                        value : knowledge.code,
+                    }))}
+                />
+            ),
+        },
         {
             title: 'Aksi',
             key: 'aksi',

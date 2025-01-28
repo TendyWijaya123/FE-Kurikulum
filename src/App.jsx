@@ -26,6 +26,7 @@ import TemporaryUnavailable from "./pages/TemporaryUnavailable";
 import MataKuliah from "./pages/MataKuliah/MataKuliah";
 import MatriksPHasMp from "./pages/Matriks/MatriksPengetahuanHasMp";
 import MatrixCplP from "./pages/ModelKonstruksi/MatrixCplP/MatrixCplP"
+import MatriksMpPMk from "./pages/Matriks/MatriksMpPMk";
 
 function App() {
 	return (
@@ -245,7 +246,16 @@ function App() {
 					path="/matrix-cpl-p"
 					element={
 						<ProtectedRoute>
-						<MatrixCplP />
+							<MatrixCplP />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/matriks-p-mp-mk"
+					element={
+						<ProtectedRoute>
+							<MatriksMpPMk />
 						</ProtectedRoute>
 					}
 				/>
