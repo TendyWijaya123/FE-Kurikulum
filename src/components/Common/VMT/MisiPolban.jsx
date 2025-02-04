@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import useVmt from "../../../hooks/Vmt/useVmt";
 import DeleteButton from "../../Button/DeleteButton";
+import { Spin } from "antd";
 
 const MisiPolban = () => {
 	const {
@@ -50,42 +51,38 @@ const MisiPolban = () => {
 		}
 	};
 
-	if (loading) {
-		return (
-			<div className="w-full bg-white flex justify-center items-center min-h-screen">
-				<div className="spinner-border animate-spin border-t-4 border-blue-600 rounded-full w-16 h-16 border-4"></div>
-			</div>
-		);
-	}
-
 	return (
 		<div className="w-full bg-white p-6 rounded-lg shadow-lg mb-4">
 			<h2 className="text-3xl font-semibold text-center mb-6 text-gray-800">
 				Misi Polban
 			</h2>
 
-			<div className="space-y-4">
-				{misiPolban.map((item, index) => (
-					<div
-						key={index}
-						className="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50">
-						<input
-							type="text"
-							value={item.misi_polban}
-							onChange={(e) => handleChangePoint(index, e)}
-							className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-							placeholder="Masukkan Misi Polban"
-						/>
-						<DeleteButton
-							className="text-red-500 hover:text-red-700 transition-colors duration-200"
-							onDelete={() => handleDeletePoint(index)}>
-							Hapus
-						</DeleteButton>
-					</div>
-				))}
-			</div>
+			{loading ? (
+				<Spin />
+			) : (
+				<div className="space-y-4">
+					{misiPolban.map((item, index) => (
+						<div
+							key={index}
+							className="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50">
+							<input
+								type="text"
+								value={item.misi_polban}
+								onChange={(e) => handleChangePoint(index, e)}
+								className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+								placeholder="Masukkan Misi Polban"
+							/>
+							<DeleteButton
+								className="text-red-500 hover:text-red-700 transition-colors duration-200"
+								onDelete={() => handleDeletePoint(index)}>
+								Hapus
+							</DeleteButton>
+						</div>
+					))}
+				</div>
+			)}
 
-			<div className="flex gap-2 justify-between">
+			<div className="flex gap-2 ">
 				<div className="flex justify-center mt-6">
 					<button
 						onClick={handleAddPoint}

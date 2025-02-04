@@ -1,8 +1,8 @@
 import api from "../../../utils/axiosInstance";
 
-export const updateMatrixCplPpm = async (matrixCplPpm) => {
+export const updateMatrixCplMk = async (matrixCplMk) => {
 	try {
-		const response = await api.put("/matrix-cpl-ppm", matrixCplPpm);
+		const response = await api.put("/matrix-mk-cpl", matrixCplMk);
 		return response.data;
 	} catch (error) {
 		console.error("Error upserting CPL:", error);
@@ -10,9 +10,10 @@ export const updateMatrixCplPpm = async (matrixCplPpm) => {
 	}
 };
 
-export const getMatrixCplPpm = async () => {
+export const getMatrixCplMk = async () => {
 	try {
-		const response = await api.get("/matrix-cpl-ppm");
+		const response = await api.get("/matrix-mk-cpl");
+		console.log(response.data);
 		return response.data;
 	} catch (error) {
 		console.error("Error upserting CPL:", error);

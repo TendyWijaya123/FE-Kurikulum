@@ -8,7 +8,6 @@ import Users from "./pages/Users/Users";
 import CreateUser from "./pages/Users/CreateUser";
 import EditUser from "./pages/Users/EditUser";
 import Jurusans from "./pages/Jurusans/Jurusans";
-import CreateJurusan from "./pages/Jurusans/Jurusans";
 import Prodis from "./pages/Prodi/Prodis";
 import CreateProdi from "./pages/Prodi/CreateProdi";
 import Kurikulums from "./pages/Kurikulum/Kurikulums";
@@ -25,7 +24,9 @@ import Pengetahuan from "./pages/Pengetahuan";
 import TemporaryUnavailable from "./pages/TemporaryUnavailable";
 import MataKuliah from "./pages/MataKuliah/MataKuliah";
 import MatriksPHasMp from "./pages/Matriks/MatriksPengetahuanHasMp";
-import MatrixCplP from "./pages/ModelKonstruksi/MatrixCplP/MatrixCplP"
+import MatrixCplP from "./pages/ModelKonstruksi/MatrixCplP/MatrixCplP";
+import MatrixCplMk from "./pages/ModelKonstruksi/MatrixCplMk/MatrixCplMk";
+import CreateJurusan from "./pages/CreateJurusan";
 import MatriksMpPMk from "./pages/Matriks/MatriksMpPMk";
 
 function App() {
@@ -256,6 +257,15 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<MatriksMpPMk />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/matrix-cpl-mk"
+					element={
+						<ProtectedRoute>
+							<MatrixCplMk />
 						</ProtectedRoute>
 					}
 				/>

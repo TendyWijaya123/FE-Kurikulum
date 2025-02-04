@@ -21,8 +21,8 @@ export const useLoginForm = () => {
 			console.error("Login failed:", error.response?.data || error.message);
 			alert("Login failed, please try again.");
 		} finally {
-            setLoading(false);
-        }
+			setLoading(false);
+		}
 	};
 
 	const handleChangeEmail = (e) => {
