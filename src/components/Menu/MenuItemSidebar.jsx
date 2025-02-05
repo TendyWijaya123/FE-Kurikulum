@@ -21,7 +21,7 @@ const MenuItemSidebar = ({ url, title, children, icon, isOpen, onToggle }) => {
 				className={`flex items-center justify-between w-full rounded p-2 transition-all duration-200  text-gray-200 ${
 					isActive
 						? "bg-blue-500 text-white font-bold"
-						: "hover:text-white hover:font-bold hover:scale-110"
+						: "hover:text-white hover:font-bold hover:scale-103"
 				}`}
 				onClick={toggleSubmenu}>
 				<div className="flex items-center">
