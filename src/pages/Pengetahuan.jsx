@@ -40,10 +40,9 @@ const Pengetahuan = () => {
       <div className="w-full flex flex-col justify-center items-start pr-10">
         <div className="m-4 w-full bg-white p-5 rounded-lg shadow-md">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-3xl font-semibold">Pengetahuan</h2>
             <button
               onClick={handleAddNew}
-              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
             >
               {isAddingNew ? 'Tutup Form' : 'Tambah Data'}
             </button>

@@ -109,33 +109,33 @@ export const IpteksTable = ({
                   </div>
                 )}
               </td>
-              <td className="p-2 border border-gray-300 text-center align-top">
+              <td className="p-2 border border-gray-300 text-center">
                 {editingRow === row.id ? (
-                  <div className="flex flex-col space-y-2">
+                  <div className="flex justify-center space-x-2 w-full">
                     <button
                       onClick={() => handleSave(row)}
-                      className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 text-sm"
+                      className="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600 text-sm"
                     >
                       Simpan
                     </button>
                     <button
                       onClick={handleCancelEdit}
-                      className="bg-gray-500 text-white px-3 py-1 rounded hover:bg-gray-600 text-sm"
+                      className="bg-gray-500 text-white px-2 py-1 rounded hover:bg-gray-600 text-sm"
                     >
                       Batal
                     </button>
                   </div>
                 ) : (
-                  <div className="flex flex-col space-y-2">
+                  <div className="flex justify-center space-x-2 w-full">
                     <button
                       onClick={() => handleEdit(row)}
-                      className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm"
+                      className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 text-sm"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => onDelete(row)}
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm"
+                      className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 text-sm"
                     >
                       Hapus
                     </button>
