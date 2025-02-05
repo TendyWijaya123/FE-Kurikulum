@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import usePeranIndustri from "../../../../hooks/ModelKonstruksi/usePeranIndustri";
 import { Spin } from "antd";
+import ImportModal from "../../../Modal/ImportModal";
 
 const PeranIndustriTable = () => {
 	const {
@@ -18,7 +19,11 @@ const PeranIndustriTable = () => {
 		handleEdit,
 		handleSubmit,
 		removePeranIndustri,
+		handleExportTemplatePeranIndustri,
+		handleImportPeranIndustri,
 	} = usePeranIndustri();
+
+	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
 	return (
 		<div className="p-6 bg-white shadow-lg rounded-md">
@@ -92,6 +97,25 @@ const PeranIndustriTable = () => {
 					)}
 				</div>
 			</form>
+
+			<div className="mt-4 flex flex-col sm:flex-row items-center gap-4 mb-4">
+				<button
+					onClick={handleExportTemplatePeranIndustri}
+					className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
+					Download Template
+				</button>
+				<button
+					onClick={() => setIsModalImportOpen(true)}
+					className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 w-full sm:w-auto">
+					Import Peran Industri
+				</button>
+				<ImportModal
+					isOpen={isModalImportOpen}
+					setIsOpen={setIsModalImportOpen}
+					handleImport={handleImportPeranIndustri}
+					title="Import Peran Industri"
+				/>
+			</div>
 
 			{loading ? (
 				<Spin />

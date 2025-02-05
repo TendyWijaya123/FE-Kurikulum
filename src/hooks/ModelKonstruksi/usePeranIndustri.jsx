@@ -5,6 +5,10 @@ import {
 	updatePeranIndustri,
 	fetchPeranIndustri,
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
+import {
+	getPeranIndustriTemplate,
+	importPeranIndustri,
+} from "../../service/Import/ImportService";
 
 const usePeranIndustri = () => {
 	const [peranIndustriList, setPeranIndustriList] = useState([]);
@@ -85,6 +89,23 @@ const usePeranIndustri = () => {
 		handleCancel();
 	};
 
+	const handleExportTemplatePeranIndustri = async () => {
+		try {
+			await getPeranIndustriTemplate();
+		} catch (error) {
+			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		}
+	};
+
+	const handleImportPeranIndustri = async (file) => {
+		try {
+			await importPeranIndustri(file);
+			fetchData();
+		} catch (error) {
+			message.error("Gagal mengunggah file. Coba lagi.");
+		}
+	};
+
 	const addPeranIndustri = async (data) => {
 		setLoading(true);
 		try {
@@ -145,6 +166,8 @@ const usePeranIndustri = () => {
 		addPeranIndustri,
 		removePeranIndustri,
 		updatePeranIndustriItem,
+		handleExportTemplatePeranIndustri,
+		handleImportPeranIndustri,
 	};
 };
 

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import useCpl from "../../../../hooks/ModelKonstruksi/useCpl";
 import DeleteButton from "../../../Button/DeleteButton";
 import { Spin } from "antd";
+import ImportModal from "../../../Modal/ImportModal";
 
 const CplTable = () => {
 	const {
@@ -12,13 +13,34 @@ const CplTable = () => {
 		handleChangeCplPoint,
 		handleDeleteCplPoint,
 		handleSaveCpls,
+		handleExportTemplateCpl,
+		handleImportCpl,
 	} = useCpl();
+
+	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
 	return (
 		<div className="p-6 bg-white shadow-lg rounded-lg">
 			<h1 className="text-2xl font-semibold mb-4 text-gray-800">Daftar CPL</h1>
 			{alert && <div className="text-red-500 mb-4">{alert}</div>}
 			<div className="mt-4 flex flex-col sm:flex-row items-center gap-4 mb-4">
+				<button
+					onClick={handleExportTemplateCpl}
+					className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
+					Download Template CPL
+				</button>
+				<button
+					onClick={() => setIsModalImportOpen(true)}
+					className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 w-full sm:w-auto">
+					Import CPL
+				</button>
+				<ImportModal
+					isOpen={isModalImportOpen}
+					setIsOpen={setIsModalImportOpen}
+					handleImport={handleImportCpl}
+					title="Import CPL"
+				/>
+
 				<button
 					onClick={handleAddCplPoint}
 					className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">

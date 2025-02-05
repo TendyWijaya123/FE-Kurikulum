@@ -4,6 +4,7 @@ import {
 	fetchPpms,
 	upsertPpm,
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
+import { getPPMTemplate, importPpm } from "../../service/Import/ImportService";
 
 const usePpm = () => {
 	const [loading, setLoading] = useState(false);
@@ -36,6 +37,23 @@ const usePpm = () => {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
 		} finally {
 			setLoading(false);
+		}
+	};
+
+	const handleExportTemplatePpm = async () => {
+		try {
+			await getPPMTemplate();
+		} catch (error) {
+			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		}
+	};
+
+	const handleImportPpm = async (file) => {
+		try {
+			await importPpm(file);
+			fetchData();
+		} catch (error) {
+			message.error("Gagal mengunggah file. Coba lagi.");
 		}
 	};
 
@@ -96,6 +114,8 @@ const usePpm = () => {
 		handleDeletePpmPoint,
 		handleSavePpms,
 		handleDeletePpms,
+		handleExportTemplatePpm,
+		handleImportPpm,
 	};
 };
 

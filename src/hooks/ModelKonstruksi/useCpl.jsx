@@ -4,6 +4,7 @@ import {
 	fetchCpls,
 	upsertCpl,
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
+import { getCPLTemplate, importCPL } from "../../service/Import/ImportService";
 
 const useCpl = () => {
 	const [loading, setLoading] = useState(false);
@@ -36,6 +37,23 @@ const useCpl = () => {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
 		} finally {
 			setLoading(false);
+		}
+	};
+
+	const handleExportTemplateCpl = async () => {
+		try {
+			await getCPLTemplate();
+		} catch (error) {
+			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		}
+	};
+
+	const handleImportCpl = async (file) => {
+		try {
+			await importCPL(file);
+			fetchData();
+		} catch (error) {
+			message.error("Gagal mengunggah file. Coba lagi.");
 		}
 	};
 
@@ -96,6 +114,8 @@ const useCpl = () => {
 		handleDeleteCplPoint,
 		handleSaveCpls,
 		handleDeleteCpls,
+		handleExportTemplateCpl,
+		handleImportCpl,
 	};
 };
 
