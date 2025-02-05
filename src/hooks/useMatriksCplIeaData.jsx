@@ -25,6 +25,7 @@ export const useMatriksCplIeaData = () => {
 
                 setIea(data.ieas);
                 setCpl(data.cpls);
+                console.log(data.cpls);
                 setMatrix(data.matrix);
             }else {
               const prodis = await getProdiDropdown();

@@ -1,7 +1,9 @@
 import DefaultLayout from "../layouts/DefaultLayout";
-import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin } from 'antd';
-import { UndoOutlined } from '@ant-design/icons';
+import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin } from "antd";
+import { UndoOutlined } from "@ant-design/icons";
 import { useMPData } from "../hooks/useMPData";
+import { useState } from "react";
+import ImportModal from "../components/Modal/ImportModal";
 
 const MateriPembelajaran = ()=>{
     const {
@@ -19,8 +21,12 @@ const MateriPembelajaran = ()=>{
         handleDeleteRow,
         handleSaveData,
         handleDeleteMateriPembelajarans,
-        handleProdiChange
+        handleProdiChange,
+		handleImportMateriPembelajaran,
+		handleExportTemplateMateriPembelajaran,
     } = useMPData();
+
+	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
     // Kolom tabel
     const columns = [
@@ -105,64 +111,88 @@ const MateriPembelajaran = ()=>{
         },
     ];
 
-    return (
-        <DefaultLayout title='Materi Pembelajaran'>
-            <div style={{ padding: '15px', background: '#fff9', minHeight: '100%' }}>
-                <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
-                {prodiDropdown.length > 0 ? (
-                        // Jika `prodiDropdown` ada isinya, tampilkan dropdown
-                        <Select
-                            placeholder="Pilih Program Studi"
-                            options={prodiDropdown.map((prodi) => ({
-                                label: prodi.name,
-                                value: prodi.id,
-                            }))}
-                            value={selectedProdi}
-                            onChange={handleProdiChange}
-                            style={{ width: 200 }}
-                        />
-                    ) : (
-                        // Jika `prodiDropdown` kosong, tampilkan tombol
-                        <>
-                            <Button onClick={handleAddRow} type="primary">
-                                Tambah Baris
-                            </Button>
-                            <Button onClick={handleSaveData} type="primary" loading={saving}>
-                                Simpan Data
-                            </Button>
-                            <Tooltip title="Undo">
-                                <Button onClick={handleUndo} type="default" icon={<UndoOutlined />} />
-                            </Tooltip>
-                        </>
-                    )}
+	return (
+		<DefaultLayout title="Materi Pembelajaran">
+			<div style={{ padding: "15px", background: "#fff9", minHeight: "100%" }}>
+				<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
+					{prodiDropdown.length > 0 ? (
+						// Jika `prodiDropdown` ada isinya, tampilkan dropdown
+						<Select
+							placeholder="Pilih Program Studi"
+							options={prodiDropdown.map((prodi) => ({
+								label: prodi.name,
+								value: prodi.id,
+							}))}
+							value={selectedProdi}
+							onChange={handleProdiChange}
+							style={{ width: 200 }}
+						/>
+					) : (
+						// Jika `prodiDropdown` kosong, tampilkan tombol
+						<>
+							<Button
+								onClick={handleExportTemplateMateriPembelajaran}
+								type="primary">
+								Download Template MP
+							</Button>
+							<Button
+								onClick={() => setIsModalImportOpen(true)}
+								type="primary">
+								Import MP
+							</Button>
+							<ImportModal
+								isOpen={isModalImportOpen}
+								setIsOpen={setIsModalImportOpen}
+								handleImport={handleImportMateriPembelajaran}
+								title="Import Materi Pembelajaran"
+							/>
+							<Button onClick={handleAddRow} type="primary">
+								Tambah Baris
+							</Button>
+							<Button onClick={handleSaveData} type="primary" loading={saving}>
+								Simpan Data
+							</Button>
+							<Tooltip title="Undo">
+								<Button
+									onClick={handleUndo}
+									type="default"
+									icon={<UndoOutlined />}
+								/>
+							</Tooltip>
+						</>
+					)}
 					{selectedRowKeys.length > 0 && (
 						<Button
 							onClick={handleDeleteMateriPembelajarans}
-							type="primary" danger
-							style={{ marginBottom: '16px' }}
-							loading={loading}
-						>
+							type="primary"
+							danger
+							style={{ marginBottom: "16px" }}
+							loading={loading}>
 							Hapus CPL Terpilih
 						</Button>
 					)}
-                </div>
-                {loading ? (
-                    <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
-                        <Spin size="large" />
-                    </div>
-                ) : (
-                    <Table
-                        dataSource={dataSource}
+				</div>
+				{loading ? (
+					<div
+						style={{
+							display: "flex",
+							justifyContent: "center",
+							marginTop: "50px",
+						}}>
+						<Spin size="large" />
+					</div>
+				) : (
+					<Table
+						dataSource={dataSource}
 						rowSelection={rowSelection}
-                        columns={columns}
-                        pagination={{ pageSize: 5 }}
-                        bordered
-                    />
-                )}
-            </div>
-        </DefaultLayout>
-    );
-}
+						columns={columns}
+						pagination={{ pageSize: 5 }}
+						bordered
+					/>
+				)}
+			</div>
+		</DefaultLayout>
+	);
+};
 
 export default MateriPembelajaran;
-
