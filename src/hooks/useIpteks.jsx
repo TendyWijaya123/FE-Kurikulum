@@ -175,7 +175,7 @@ export const useIpteks = () => {
 	const handleImportIpteks = async (file) => {
 		try {
 			await importIpteks(file);
-			fetchData();
+			message.success("berhasil inport data, refresh halaman!!");
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
 		}

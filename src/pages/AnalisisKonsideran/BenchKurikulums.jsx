@@ -33,6 +33,7 @@ const BenchKurikulums = () => {
 		handleImportBenchKurikulum,
 		handleExportTemplateBenchKurikulum,
 	} = useBCData();
+
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
 	const colums = [
@@ -75,48 +76,102 @@ const BenchKurikulums = () => {
 			title: "Daftar CPL",
 			dataIndex: "cpl",
 			key: "cpl",
-			render: (cpl, record) => (
-				<Input.TextArea
-					value={cpl.join("\n")}
-					onChange={(e) =>
-						handleSave({
-							...record,
-							cpl: e.target.value.split("\n"),
-						})
+			render: (cpl, record) => {
+				// Tidak menampilkan nomor urut di dalam data yang disimpan
+				const formattedCPL = cpl
+					.map((text, index) => `${index + 1})  ${text}`) // Nomor urut hanya untuk tampilan
+					.join("\n");
+		
+				// Tangani penghapusan baris
+				const handleDelete = (index) => {
+					const newCpl = [...cpl];
+					newCpl.splice(index, 1); // Hapus item pada index yang diberikan
+					handleSave({ ...record, cpl: newCpl });
+				};
+		
+				// Tangani keydown untuk penambahan baris baru
+				const handleKeyDown = (e) => {
+					if (e.key === "Enter") {
+						e.preventDefault(); // Hindari behavior default dari Enter
+						const newValue = [...cpl, ""]; // Tambahkan baris kosong
+						handleSave({ ...record, cpl: newValue });
 					}
-					autoSize={{ minRows: 3 }}
-					style={{
-						border: "none",
-						outline: "none",
-						boxShadow: "none",
-						padding: 0,
-					}}
-				/>
-			),
+				};
+		
+				// Tangani perubahan teks
+				const handleChange = (e) => {
+					const newValue = e.target.value
+						.split("\n")
+						.map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus nomor urut saat menyimpan
+						.filter((line) => line.trim() !== ""); // Hindari menyimpan baris kosong
+		
+					handleSave({ ...record, cpl: newValue });
+				};
+		
+				return (
+					<Input.TextArea
+						value={formattedCPL} // Hanya tampilan dengan numbering
+						onChange={handleChange} // Tangani perubahan teks
+						onKeyDown={handleKeyDown} // Tangani Enter
+						autoSize={{ minRows: 3 }}
+						style={{
+							border: "none",
+							outline: "none",
+							boxShadow: "none",
+							padding: 0,
+						}}
+					/>
+				);
+			},
 		},
 		{
 			title: "PPM (jika ada)",
 			dataIndex: "ppm",
 			key: "ppm",
-			render: (ppm, record) => (
-				<Input.TextArea
-					value={ppm.join("\n")}
-					onChange={(e) =>
-						handleSave({
-							...record,
-							ppm: e.target.value.split("\n"),
-						})
+			render: (ppm, record) => {
+				const formattedPPM = ppm
+					.map((text, index) => `${index + 1})  ${text}`)
+					.join("\n");
+		
+				const handleDelete = (index) => {
+					const newPpm = [...ppm];
+					newPpm.splice(index, 1);
+					handleSave({ ...record, ppm: newPpm });
+				};
+		
+				const handleKeyDown = (e) => {
+					if (e.key === "Enter") {
+						e.preventDefault();
+						const newValue = [...ppm, ""];
+						handleSave({ ...record, ppm: newValue });
 					}
-					autoSize={{ minRows: 3 }}
-					style={{
-						border: "none",
-						outline: "none",
-						boxShadow: "none",
-						padding: 0,
-					}}
-				/>
-			),
-		},
+				};
+		
+				const handleChange = (e) => {
+					const newValue = e.target.value
+						.split("\n")
+						.map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus nomor urut saat menyimpan
+						.filter((line) => line.trim() !== "");
+		
+					handleSave({ ...record, ppm: newValue });
+				};
+		
+				return (
+					<Input.TextArea
+						value={formattedPPM}
+						onChange={handleChange}
+						onKeyDown={handleKeyDown}
+						autoSize={{ minRows: 3 }}
+						style={{
+							border: "none",
+							outline: "none",
+							boxShadow: "none",
+							padding: 0,
+						}}
+					/>
+				);
+			},
+		},					
 		{
 			title: "Aksi",
 			key: "aksi",
@@ -160,8 +215,7 @@ const BenchKurikulums = () => {
 							</Button>
 							<Button
 								onClick={() => setIsModalImportOpen(true)}
-								type="primary"
-								loading={saving}>
+								type="primary">
 								Import BK
 							</Button>
 							<ImportModal

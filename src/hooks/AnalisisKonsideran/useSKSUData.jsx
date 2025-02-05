@@ -116,10 +116,14 @@ export const useSKSUData = () => {
 	};
 
 	const handleImportSksu = async (file) => {
+		setLoading(true);
 		try {
 			await importSksu(file);
+			message.success("Data berhasil disimpan!");
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
+		} finally {
+			setLoading(false);
 		}
 	};
 

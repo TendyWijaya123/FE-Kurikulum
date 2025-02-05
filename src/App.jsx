@@ -27,6 +27,10 @@ import MatriksPHasMp from "./pages/Matriks/MatriksPengetahuanHasMp";
 import MatrixCplP from "./pages/ModelKonstruksi/MatrixCplP/MatrixCplP";
 import MatrixCplMk from "./pages/ModelKonstruksi/MatrixCplMk/MatrixCplMk";
 import CreateJurusan from "./pages/CreateJurusan";
+import MatriksMpPMk from "./pages/Matriks/MatriksMpPMk";
+import Role from "./pages/Users/Role";
+import Permission from "./pages/Users/Permission";
+import PermissionRole from "./pages/Users/PermissionRole";
 
 function App() {
 	return (
@@ -64,6 +68,33 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<EditUser />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/users/role"
+					element={
+						<ProtectedRoute>
+							<Role/>
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/users/permission"
+					element={
+						<ProtectedRoute>
+							<Permission/>
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/users/permission-role"
+					element={
+						<ProtectedRoute>
+							<PermissionRole />
 						</ProtectedRoute>
 					}
 				/>
@@ -247,6 +278,15 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<MatrixCplP />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/matriks-p-mp-mk"
+					element={
+						<ProtectedRoute>
+							<MatriksMpPMk />
 						</ProtectedRoute>
 					}
 				/>

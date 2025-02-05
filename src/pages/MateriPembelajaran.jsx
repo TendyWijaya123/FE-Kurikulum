@@ -5,74 +5,111 @@ import { useMPData } from "../hooks/useMPData";
 import { useState } from "react";
 import ImportModal from "../components/Modal/ImportModal";
 
-const MateriPembelajaran = () => {
-	const {
-		selectedProdi,
-		prodiDropdown,
-		loading,
-		dataSource,
-		saving,
-		rowSelection,
-		selectedRowKeys,
-		handleUndo,
-		handleSave,
-		handleAddRow,
-		handleDeleteRow,
-		handleSaveData,
-		handleDeleteMateriPembelajarans,
-		handleProdiChange,
-		handleExportTemplateMateriPembelajaran,
+const MateriPembelajaran = ()=>{
+    const {
+        knowledgeDropdown,
+        selectedProdi,
+        prodiDropdown,
+        loading,
+        dataSource,
+        saving,
+        rowSelection,
+        selectedRowKeys,
+        handleUndo,
+        handleSave,
+        handleAddRow,
+        handleDeleteRow,
+        handleSaveData,
+        handleDeleteMateriPembelajarans,
+        handleProdiChange,
 		handleImportMateriPembelajaran,
-	} = useMPData();
+		handleExportTemplateMateriPembelajaran,
+    } = useMPData();
+
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
-	// Kolom tabel
-	const columns = [
-		{
-			title: "Code",
-			dataIndex: "code",
-			key: "code",
-			render: (text) => (
-				<span style={{ padding: 0 }}>{text}</span> // Hanya menampilkan teks tanpa input
-			),
-		},
-		{
-			title: "Description",
-			dataIndex: "description",
-			key: "description",
-			render: (text, record) => (
-				<Input.TextArea
-					value={text}
-					onChange={(e) =>
-						handleSave({ ...record, description: e.target.value })
-					}
-					autoSize={{ minRows: 1, maxRows: 5 }} // Menentukan jumlah baris minimal dan maksimal
-					style={{
-						border: "none",
-						outline: "none",
-						boxShadow: "none",
-						padding: 0,
-						resize: "none", // Mencegah pengguna meresize secara manual
-					}}
-				/>
-			),
-		},
-		{
-			title: "Aksi",
-			key: "aksi",
-			render: (_, record) => (
-				<Popconfirm
-					title="Yakin ingin menghapus baris ini?"
-					onConfirm={() => handleDeleteRow(record.key)}
-					okText="Ya"
-					cancelText="Tidak">
-					<Button type="primary" danger>
-						Hapus
-					</Button>
-				</Popconfirm>
-			),
-		},
-	];
+    // Kolom tabel
+    const columns = [
+        {
+            title: 'Code',
+            dataIndex: 'code',
+            key: 'code',
+            render: (text) => (
+                <span style={{ padding: 0 }}>{text}</span> // Hanya menampilkan teks tanpa input
+            ),
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+            render: (text, record) => (
+                <Input.TextArea
+                    value={text}
+                    onChange={(e) => handleSave({ ...record, description: e.target.value })}
+                    autoSize={{ minRows: 1, maxRows: 5 }} // Menentukan jumlah baris minimal dan maksimal
+                    style={{
+                        border: 'none',
+                        outline: 'none',
+                        boxShadow: 'none',
+                        padding: 0,
+                        resize: 'none', // Mencegah pengguna meresize secara manual
+                    }}
+                />
+            ),
+        },  
+        {
+            title: 'Cognitif Proses',
+            dataIndex: 'cognitifProses',
+            key: 'cognitifProses',
+            render: (cognitifProses, record) => (
+                <Select
+                    value={cognitifProses}
+                    style={{ width: '100%' }}
+                    onChange={(value) => handleSave({ ...record, cognitifProses: value })}
+                    options={[
+                        { value: 'Remembering', label: 'Remembering' },
+                        { value: 'Understanding', label: 'Understanding' },
+                        { value: 'Applying', label: 'Applying' },
+                        { value: 'Analyzing', label: 'Analyzing' },
+                        { value: 'Evaluating', label: 'Evaluating' },
+                        { value: 'Creating', label: 'Creating' },
+                    ]}
+                />
+            ),
+        },        
+        {
+            title: 'Knowledge Dimension',
+            dataIndex: 'knowledgeDimension',
+            key: 'knowledgeDimension',
+            render: (knowledgeDimension, record) => (
+                <Select
+                    mode="multiple"
+                    value={knowledgeDimension}
+                    style={{ width: '100%' }}
+                    onChange={(value) => handleSave({ ...record, knowledgeDimension: value })}
+                    options={ knowledgeDropdown.map((knowledge) => ({
+                        label : knowledge.name,
+                        value : knowledge.code,
+                    }))}
+                />
+            ),
+        },
+        {
+            title: 'Aksi',
+            key: 'aksi',
+            render: (_, record) =>
+                <Popconfirm
+                    title="Yakin ingin menghapus baris ini?"
+                    onConfirm={() => handleDeleteRow(record.key)}
+                    okText="Ya"
+                    cancelText="Tidak"
+                >
+                    <Button type="primary" danger>
+                        Hapus
+                    </Button>
+                </Popconfirm>
+        },
+    ];
 
 	return (
 		<DefaultLayout title="Materi Pembelajaran">
@@ -100,8 +137,7 @@ const MateriPembelajaran = () => {
 							</Button>
 							<Button
 								onClick={() => setIsModalImportOpen(true)}
-								type="primary"
-								loading={saving}>
+								type="primary">
 								Import MP
 							</Button>
 							<ImportModal

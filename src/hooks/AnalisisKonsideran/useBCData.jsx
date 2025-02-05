@@ -115,6 +115,7 @@ export const useBCData = () => {
 	const handleImportBenchKurikulum = async (file) => {
 		try {
 			await importBenchKurikulum(file);
+			message.success("berhasil mengimport data, tolong refreseh halaman!!")
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
 		}

@@ -96,24 +96,53 @@ const SKSU = () => {
 			title: "Kompetensi Kerja",
 			dataIndex: "kompetensiKerja",
 			key: "kompetensiKerja",
-			render: (kompetensiKerja, record) => (
-				<Input.TextArea
-					value={kompetensiKerja.join("\n")}
-					onChange={(e) =>
-						handleSave({
-							...record,
-							kompetensiKerja: e.target.value.split("\n"),
-						})
+			render: (kompetensiKerja, record) => {
+				// Tidak menampilkan nomor urut di dalam data yang disimpan
+				const formattedSKSU = kompetensiKerja
+					.map((text, index) => `${index + 1})  ${text}`) // Nomor urut hanya untuk tampilan
+					.join("\n");
+		
+				// Tangani penghapusan baris
+				const handleDelete = (index) => {
+					const newCpl = [...kompetensiKerja];
+					newCpl.splice(index, 1); // Hapus item pada index yang diberikan
+					handleSave({ ...record, kompetensiKerja: newCpl });
+				};
+		
+				// Tangani keydown untuk penambahan baris baru
+				const handleKeyDown = (e) => {
+					if (e.key === "Enter") {
+						e.preventDefault(); // Hindari behavior default dari Enter
+						const newValue = [...kompetensiKerja, ""]; // Tambahkan baris kosong
+						handleSave({ ...record, kompetensiKerja: newValue });
 					}
-					autoSize={{ minRows: 3 }}
-					style={{
-						border: "none",
-						outline: "none",
-						boxShadow: "none",
-						padding: 0,
-					}}
-				/>
-			),
+				};
+		
+				// Tangani perubahan teks
+				const handleChange = (e) => {
+					const newValue = e.target.value
+						.split("\n")
+						.map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus nomor urut saat menyimpan
+						.filter((line) => line.trim() !== ""); // Hindari menyimpan baris kosong
+		
+					handleSave({ ...record, kompetensiKerja: newValue });
+				};
+		
+				return (
+					<Input.TextArea
+						value={formattedSKSU} // Hanya tampilan dengan numbering
+						onChange={handleChange} // Tangani perubahan teks
+						onKeyDown={handleKeyDown} // Tangani Enter
+						autoSize={{ minRows: 3 }}
+						style={{
+							border: "none",
+							outline: "none",
+							boxShadow: "none",
+							padding: 0,
+						}}
+					/>
+				);
+			},
 		},
 		{
 			title: "Aksi",
@@ -156,8 +185,7 @@ const SKSU = () => {
 							</Button>
 							<Button
 								onClick={() => setIsModalImportOpen(true)}
-								type="primary"
-								loading={saving}>
+								type="primary">
 								Import SKSU
 							</Button>
 							<ImportModal

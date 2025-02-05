@@ -23,6 +23,7 @@ export const useMPData = () => {
 	const [undoStack, setUndoStack] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [prodiDropdown, setProdiDropdown] = useState([]);
+    const [knowledgeDropdown, setKnowledgeDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
 
 	// Fetch data
@@ -31,7 +32,8 @@ export const useMPData = () => {
 			setLoading(true);
 			try {
 				if (user?.prodiId) {
-					const data = await getMateriPembelajarans(user.prodiId);
+					const {data, knowledge} = await getMateriPembelajarans(user.prodiId);
+                    setKnowledgeDropdown(knowledge);
 					setMateriPembelajaran(data);
 				} else {
 					const prodis = await getProdiDropdown();
@@ -47,22 +49,25 @@ export const useMPData = () => {
 		fetchMateriPembelajaran();
 	}, [user?.prodiId]);
 
-	useEffect(() => {
-		if (materiPembelajaran.length > 0) {
-			setDataSource(
-				materiPembelajaran.map((item, index) => ({
-					key: "MP-" + index + 1,
-					_id: item.id,
-					code: item.code,
-					description: item.description,
-					prodiId: user.prodiId,
-				}))
-			);
-			console.log(dataSource);
-		} else {
-			setDataSource([]);
-		}
-	}, [materiPembelajaran]);
+    useEffect(() => {
+        if (materiPembelajaran.length > 0) {
+            setDataSource(
+                materiPembelajaran.map((item, index) => ({
+                    key: 'MP-' + index + 1,
+                    _id: item.id,
+                    code: item.code,
+                    description: item.description,
+                    cognitifProses : item.cognitif_proses,
+                    knowledgeDimension: item.knowledge_dimension?.length
+                        ? item.knowledge_dimension.map((k) => k.code)
+                        : [],
+                    prodiId: user.prodiId,
+                }))
+            );
+        }else {
+            setDataSource([]);
+        }
+    }, [materiPembelajaran]);
 
 	const handleProdiChange = async (value) => {
 		setSelectedProdi(value);
@@ -102,32 +107,35 @@ export const useMPData = () => {
 		}
 	};
 
-	// Add row
-	const handleAddRow = () => {
-		// Simpan kondisi sebelum perubahan untuk undo
-		saveToUndoStack([...dataSource]);
-
-		// Tambahkan baris baru
-		const newRow = {
-			key: "", // Akan diperbarui nanti
-			_id: null,
-			code: "", // Akan diperbarui nanti
-			kategori: "",
-			prodiId: selectedProdi || user.prodiId,
-		};
-
-		// Gabungkan data baru ke dalam dataSource
-		const updatedDataSource = [...dataSource, newRow];
-
-		// Perbarui urutan key dan code berdasarkan posisi baru
-		updatedDataSource.forEach((item, index) => {
-			item.key = "MP-" + (index + 1); // Key baru: kkni1, kkni2, dst.
-			item.code = "MP-" + (index + 1); // Code baru: CPL1, CPL2, dst.
-		});
-
-		// Simpan kembali dataSource
-		setDataSource(updatedDataSource);
-	};
+    // Add row
+    const handleAddRow = () => {
+        // Simpan kondisi sebelum perubahan untuk undo
+        saveToUndoStack([...dataSource]);
+    
+        // Tambahkan baris baru
+        const newRow = {
+            key: '', 
+            _id: null,
+            code: '', 
+            description: '',
+            cognitifProses : '',
+            knowledgeDimension: [],
+            prodiId: selectedProdi || user.prodiId,
+        };
+    
+        // Gabungkan data baru ke dalam dataSource
+        const updatedDataSource = [...dataSource, newRow];
+    
+        // Perbarui urutan key dan code berdasarkan posisi baru
+        updatedDataSource.forEach((item, index) => {
+            item.key = 'MP-' + (index + 1); // Key baru: kkni1, kkni2, dst.
+            item.code = 'MP-' + (index + 1); // Code baru: CPL1, CPL2, dst.
+        });
+    
+        // Simpan kembali dataSource
+        setDataSource(updatedDataSource);
+    };
+    
 
 	// Delete row
 	const handleDeleteRow = async (key) => {
@@ -242,6 +250,7 @@ export const useMPData = () => {
 	};
 
 	return {
+        knowledgeDropdown,
 		selectedProdi,
 		prodiDropdown,
 		materiPembelajaran,
