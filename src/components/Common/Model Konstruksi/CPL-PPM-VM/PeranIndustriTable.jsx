@@ -1,181 +1,156 @@
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { Table, Input, Button, Spin, Modal, message } from "antd";
 import usePeranIndustri from "../../../../hooks/ModelKonstruksi/usePeranIndustri";
-import { Spin } from "antd";
-import ImportModal from "../../../Modal/ImportModal";
+import {
+	PlusOutlined,
+	SaveOutlined,
+	UploadOutlined,
+	DownloadOutlined,
+	DeleteOutlined,
+} from "@ant-design/icons";
 
 const PeranIndustriTable = () => {
 	const {
-		peranIndustriList,
 		loading,
-		error,
-		formData,
-		editingId,
-		setFormData,
-		handleInputChange,
-		handleDescriptionChange,
-		handleAddDescription,
-		handleDeleteDescription,
-		handleCancel,
-		handleEdit,
-		handleSubmit,
-		removePeranIndustri,
-		handleExportTemplatePeranIndustri,
+		peranIndustriData,
+		alert,
+		handleAddPeranIndustri,
+		handlePeranIndustriChange,
+		handleDeletePeranIndustriPoint,
+		handleSavePeranIndustri,
 		handleImportPeranIndustri,
+		handleExportTemplatePeranIndustri,
 	} = usePeranIndustri();
 
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
-	return (
-		<div className="p-6 bg-white shadow-lg rounded-md">
-			<h2 className="text-2xl font-bold mb-4">Peran Industri</h2>
-
-			<form onSubmit={handleSubmit} className="mb-6">
-				<div className="flex gap-2 w-full  ">
-					<div className="flex-1">
-						<label
-							htmlFor="jabatan"
-							className="block text-sm font-medium text-gray-700">
-							Jabatan
-						</label>
-						<input
-							id="jabatan"
-							name="jabatan"
-							type="text"
-							value={formData.jabatan}
-							onChange={handleInputChange}
-							className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-							required
-						/>
-					</div>
-
-					<div className="flex-1 mb-5">
-						<label className="block text-sm font-medium text-gray-700">
-							Deskripsi
-						</label>
-						{formData.descriptions.map((description, index) => (
-							<div key={index} className="flex items-center mb-2">
-								<input
-									type="text"
-									name="deskripsi_point"
-									value={description.deskripsi_point}
-									onChange={(e) => handleDescriptionChange(e, index)}
-									className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-									placeholder={`Deskripsi Point ${index + 1}`}
-								/>
-								{formData.descriptions.length > 1 && (
-									<button
-										type="button"
-										onClick={() => handleDeleteDescription(index)}
-										className="ml-2 text-red-500 hover:text-red-700">
-										Hapus
-									</button>
-								)}
-							</div>
-						))}
-						<button
-							type="button"
-							onClick={handleAddDescription}
-							className="mt-2 w-full bg-blue-500 text-white px-4 py-1 rounded-md">
-							Tambah Deskripsi
-						</button>
-					</div>
-				</div>
-
-				<div className="flex space-x-2">
-					<button
-						type="submit"
-						className="flex-1 py-2 px-4 text-white font-semibold rounded-md bg-indigo-600 hover:bg-indigo-700">
-						{editingId ? "Update Peran Industri" : "Create Peran Industri"}
-					</button>
-					{editingId && (
-						<button
-							type="button"
-							onClick={handleCancel}
-							className="flex-1 py-2 px-4 text-white font-semibold rounded-md bg-gray-500 hover:bg-gray-700">
-							Cancel Edit
-						</button>
-					)}
-				</div>
-			</form>
-
-			<div className="mt-4 flex flex-col sm:flex-row items-center gap-4 mb-4">
-				<button
-					onClick={handleExportTemplatePeranIndustri}
-					className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
-					Download Template
-				</button>
-				<button
-					onClick={() => setIsModalImportOpen(true)}
-					className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 w-full sm:w-auto">
-					Import Peran Industri
-				</button>
-				<ImportModal
-					isOpen={isModalImportOpen}
-					setIsOpen={setIsModalImportOpen}
-					handleImport={handleImportPeranIndustri}
-					title="Import Peran Industri"
+	const columns = [
+		{
+			title: "No",
+			dataIndex: "no",
+			key: "no",
+			render: (_, __, index) => index + 1,
+			width: 50,
+		},
+		{
+			title: "Jabatan",
+			dataIndex: "jabatan",
+			key: "jabatan",
+			render: (_, record, index) => (
+				<Input
+					name="jabatan"
+					value={record.jabatan || ""}
+					onChange={(e) => handlePeranIndustriChange(index, e)}
 				/>
+			),
+			filterDropdown: true,
+			filterSearch: true,
+			width: "20%",
+		},
+		{
+			title: "Deskripsi",
+			dataIndex: "deskripsi",
+			key: "deskripsi",
+			render: (_, record, index) => (
+				<Input.TextArea
+					name="deskripsi"
+					value={record.deskripsi || ""}
+					onChange={(e) => handlePeranIndustriChange(index, e)}
+					autoSize={{ minRows: 1, maxRows: 5 }}
+				/>
+			),
+			width: "75%",
+		},
+		{
+			title: "Aksi",
+			key: "aksi",
+			render: (_, __, index) => (
+				<Button
+					type="primary"
+					danger
+					icon={<DeleteOutlined />}
+					onClick={() =>
+						Modal.confirm({
+							title: "Konfirmasi Hapus",
+							content: "Apakah Anda yakin ingin menghapus item ini?",
+							okText: "Hapus",
+							okType: "danger",
+							cancelText: "Batal",
+							onOk: () => handleDeletePeranIndustriPoint(index),
+						})
+					}></Button>
+			),
+			width: 100,
+		},
+	];
+
+	return (
+		<div className="p-6 bg-white shadow-lg rounded-lg">
+			<h1 className="text-2xl font-semibold mb-4 text-gray-800">
+				Daftar Peran Industri
+			</h1>
+
+			<div className="mb-4 flex flex-wrap gap-2">
+				<Button
+					type="primary"
+					icon={<DownloadOutlined />}
+					onClick={handleExportTemplatePeranIndustri}>
+					Download Template
+				</Button>
+				<Button
+					type="default"
+					icon={<UploadOutlined />}
+					onClick={() => setIsModalImportOpen(true)}>
+					Import Peran Industri
+				</Button>
+				<Button
+					type="primary"
+					icon={<PlusOutlined />}
+					onClick={handleAddPeranIndustri}>
+					Tambah Peran
+				</Button>
+				<Button
+					type="primary"
+					icon={<SaveOutlined />}
+					onClick={handleSavePeranIndustri}
+					style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
+					Simpan
+				</Button>
 			</div>
+
+			{alert && <div className="text-red-500 mb-4">{alert}</div>}
 
 			{loading ? (
 				<Spin />
 			) : (
 				<div className="overflow-x-auto">
-					<table className="min-w-full table-auto border">
-						<thead>
-							<tr className="bg-blue-100">
-								<th className="border px-6 py-3 text-left min-w-[200px]">
-									Jabatan
-								</th>
-								<th className="border px-6 py-3 text-left min-w-[300px]">
-									Deskripsi
-								</th>
-								<th className="border px-6 py-3 text-center min-w-[150px]">
-									Aksi
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{peranIndustriList.map((item) => (
-								<tr key={item.id}>
-									<td className="border px-6 py-2">{item.jabatan}</td>
-									<td className="border px-6 py-2">
-										{item.peran_industri_deskripsis.length > 0 ? (
-											<ol className="list-decimal">
-												{item.peran_industri_deskripsis.map((desc) => (
-													<li key={desc.id}>{desc.deskripsi_point}</li>
-												))}
-											</ol>
-										) : (
-											<div>Tidak ada deskripsi</div>
-										)}
-									</td>
-									<td className="border px-6 py-2 text-center space-x-2">
-										<div className="flex space-x-2">
-											<button
-												onClick={() =>
-													handleEdit(
-														item.id,
-														item.jabatan,
-														item.peran_industri_deskripsis
-													)
-												}
-												className="bg-yellow-500 text-white px-4 py-1 rounded-md">
-												Edit
-											</button>
-											<button
-												onClick={() => removePeranIndustri(item.id)}
-												className="bg-red-500 text-white px-4 py-1 rounded-md">
-												Hapus
-											</button>
-										</div>
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</table>
+					<Table
+						columns={columns}
+						dataSource={peranIndustriData.map((item, index) => ({
+							...item,
+							key: index,
+						}))}
+						pagination={false}
+						bordered
+						style={{ minWidth: "400px" }}
+					/>
 				</div>
 			)}
+
+			{/* Modal Import */}
+			<Modal
+				title="Import Peran Industri"
+				open={isModalImportOpen}
+				onCancel={() => setIsModalImportOpen(false)}
+				onOk={() => {
+					handleImportPeranIndustri();
+					message.success("Import berhasil");
+					setIsModalImportOpen(false);
+				}}
+				okText="Import"
+				cancelText="Batal">
+				<p>Silakan unggah file template untuk mengimpor data peran industri.</p>
+			</Modal>
 		</div>
 	);
 };

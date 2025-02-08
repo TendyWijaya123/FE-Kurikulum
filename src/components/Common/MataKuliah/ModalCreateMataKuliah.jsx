@@ -14,6 +14,14 @@ const ModalCreateMataKuliah = ({
 		nama: "",
 		kode: "",
 		tujuan: "",
+		semester: null,
+		teori_bt: 0,
+		teori_pt: 0,
+		teori_m: 0,
+		praktek_bt: 0,
+		praktek_pt: 0,
+		praktek_m: 0,
+
 		formulasi_cpas: [],
 		kemampuan_akhir: [],
 	});
@@ -86,6 +94,75 @@ const ModalCreateMataKuliah = ({
 						onChange={(e) => setNewData({ ...newData, tujuan: e.target.value })}
 						className="w-full mt-2"
 					/>
+				</div>
+				<div>
+					<h3 className="text-lg font-semibold">Semester</h3>
+					<Input
+						type="number"
+						onChange={(e) =>
+							setNewData({ ...newData, semester: e.target.value })
+						}
+						className="w-full mt-2"
+					/>
+				</div>
+				<div>
+					<h2 className="text-lg font-semibold">Teori</h2>
+					<div className="flex gap-4 mt-2">
+						<Input
+							type="number"
+							placeholder="BT"
+							onChange={(e) =>
+								setNewData({ ...newData, teori_bt: e.target.value })
+							}
+							className="w-full"
+						/>
+						<Input
+							type="number"
+							placeholder="PT"
+							onChange={(e) =>
+								setNewData({ ...newData, teori_pt: e.target.value })
+							}
+							className="w-full"
+						/>
+
+						<Input
+							type="number"
+							placeholder="M"
+							onChange={(e) =>
+								setNewData({ ...newData, teori_m: e.target.value })
+							}
+							className="w-full"
+						/>
+					</div>
+				</div>
+				<div>
+					<h2 className="text-lg font-semibold">Praktik</h2>
+					<div className="flex gap-4 mt-2">
+						<Input
+							type="number"
+							placeholder="BT"
+							onChange={(e) =>
+								setNewData({ ...newData, praktek_bt: e.target.value })
+							}
+							className="w-full"
+						/>
+						<Input
+							type="number"
+							placeholder="PT"
+							onChange={(e) =>
+								setNewData({ ...newData, praktek_pt: e.target.value })
+							}
+							className="w-full"
+						/>
+						<Input
+							type="number"
+							placeholder="M"
+							onChange={(e) =>
+								setNewData({ ...newData, praktek_m: e.target.value })
+							}
+							className="w-full"
+						/>
+					</div>
 				</div>
 				<div>
 					<h3 className="text-lg font-semibold">Formulasi CPA</h3>
