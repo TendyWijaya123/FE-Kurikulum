@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
 import {
-	createPeranIndustri,
 	deletePeranIndustri,
-	updatePeranIndustri,
 	fetchPeranIndustri,
+	upsertPeranIndustri,
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
 import {
 	getPeranIndustriTemplate,
@@ -11,20 +10,16 @@ import {
 } from "../../service/Import/ImportService";
 
 const usePeranIndustri = () => {
-	const [peranIndustriList, setPeranIndustriList] = useState([]);
+	const [peranIndustriData, setPeranIndustriData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
-	const [editingId, setEditingId] = useState(null);
-	const [formData, setFormData] = useState({
-		jabatan: "",
-		descriptions: [{ deskripsi_point: "" }],
-	});
+	const [alert, setAlert] = useState(null);
 
 	const fetchData = async () => {
 		setLoading(true);
 		try {
 			const response = await fetchPeranIndustri();
-			setPeranIndustriList(response.data);
+			setPeranIndustriData(response.data);
 		} catch (err) {
 			setError(err);
 		} finally {
@@ -36,57 +31,17 @@ const usePeranIndustri = () => {
 		fetchData();
 	}, []);
 
-	const handleInputChange = (e) => {
-		const { name, value } = e.target;
-		setFormData((prev) => ({
-			...prev,
-			[name]: value,
-		}));
-	};
-
-	const handleDescriptionChange = (e, index) => {
-		const { name, value } = e.target;
-		const newDescriptions = [...formData.descriptions];
-		newDescriptions[index][name] = value;
-		setFormData((prev) => ({
-			...prev,
-			descriptions: newDescriptions,
-		}));
-	};
-
-	const handleAddDescription = () => {
-		setFormData((prev) => ({
-			...prev,
-			descriptions: [...prev.descriptions, { deskripsi_point: "" }],
-		}));
-	};
-
-	const handleDeleteDescription = (index) => {
-		const newDescriptions = formData.descriptions.filter((_, i) => i !== index);
-		setFormData((prev) => ({
-			...prev,
-			descriptions: newDescriptions,
-		}));
-	};
-
-	const handleCancel = () => {
-		setEditingId(null);
-		setFormData({ jabatan: "", descriptions: [{ deskripsi_point: "" }] });
-	};
-
-	const handleEdit = (id, jabatan, descriptions) => {
-		setEditingId(id);
-		setFormData({ jabatan, descriptions });
-	};
-
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		if (editingId) {
-			await updatePeranIndustriItem(editingId, formData);
-		} else {
-			await addPeranIndustri(formData);
+	const handleSavePeranIndustri = async () => {
+		setLoading(true);
+		try {
+			console.log(peranIndustriData);
+			await upsertPeranIndustri({ peran_industri: peranIndustriData });
+			fetchData();
+		} catch (error) {
+			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
-		handleCancel();
 	};
 
 	const handleExportTemplatePeranIndustri = async () => {
@@ -98,76 +53,76 @@ const usePeranIndustri = () => {
 	};
 
 	const handleImportPeranIndustri = async (file) => {
+		setLoading(true);
 		try {
 			await importPeranIndustri(file);
 			fetchData();
 		} catch (error) {
-			message.error("Gagal mengunggah file. Coba lagi.");
-		}
-	};
-
-	const addPeranIndustri = async (data) => {
-		setLoading(true);
-		try {
-			const response = await createPeranIndustri(data);
-			setPeranIndustriList((prevList) => [...prevList, response.data]);
-			fetchData();
-		} catch (err) {
-			setError(err);
+			setAlert("Gagal mengunggah file. Coba lagi.");
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	const removePeranIndustri = async (id) => {
+	const handleDeletePeranIndustri = async (id) => {
 		setLoading(true);
 		try {
 			await deletePeranIndustri(id);
-			setPeranIndustriList((prevList) =>
-				prevList.filter((item) => item.id !== id)
-			);
-		} catch (err) {
-			setError(err);
+			fetchData();
+		} catch (error) {
+			setAlert(`Terjadi kesalahan: ${error.message || error}`);
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	const updatePeranIndustriItem = async (id, data) => {
+	const handleAddPeranIndustri = () => {
+		setPeranIndustriData((prev) => [...prev, { deskripsi: "", jabatan: "" }]);
+	};
+
+	const handlePeranIndustriChange = (index, event) => {
+		const { name, value } = event.target;
+		setPeranIndustriData((prev) => {
+			const updatedData = [...prev];
+			updatedData[index] = {
+				...updatedData[index],
+				[name]: value,
+			};
+			return updatedData;
+		});
+	};
+
+	const handleDeletePeranIndustriPoint = async (index) => {
 		setLoading(true);
 		try {
-			const response = await updatePeranIndustri(id, data);
-			setPeranIndustriList((prevList) =>
-				prevList.map((item) =>
-					item.id === id ? { ...item, ...response.data } : item
-				)
-			);
-		} catch (err) {
-			setError(err);
+			const updatedData = [...peranIndustriData];
+			const itemToDelete = updatedData[index];
+
+			if (itemToDelete.id) {
+				await handleDeletePeranIndustri(itemToDelete.id);
+			}
+
+			updatedData.splice(index, 1);
+			setPeranIndustriData(updatedData);
+		} catch (error) {
+			setAlert(`Terjadi kesalahan: ${error.message || error}`);
 		} finally {
 			setLoading(false);
 		}
 	};
 
 	return {
-		peranIndustriList,
+		peranIndustriData,
 		loading,
 		error,
-		formData,
-		editingId,
-		setFormData,
-		handleInputChange,
-		handleDescriptionChange,
-		handleAddDescription,
-		handleDeleteDescription,
-		handleCancel,
-		handleEdit,
-		handleSubmit,
-		addPeranIndustri,
-		removePeranIndustri,
-		updatePeranIndustriItem,
+		handleSavePeranIndustri,
 		handleExportTemplatePeranIndustri,
 		handleImportPeranIndustri,
+		handleDeletePeranIndustri,
+		handleAddPeranIndustri,
+		handlePeranIndustriChange,
+		handleDeletePeranIndustriPoint,
+		alert,
 	};
 };
 

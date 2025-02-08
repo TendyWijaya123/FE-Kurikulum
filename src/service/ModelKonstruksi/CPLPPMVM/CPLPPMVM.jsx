@@ -74,22 +74,15 @@ export const fetchPeranIndustri = async () => {
 	}
 };
 
-export const createPeranIndustri = async (peranIndustriData) => {
+export const upsertPeranIndustri = async (peranIndustriData) => {
 	try {
-		const response = await api.post("/peran-industri", peranIndustriData);
+		const response = await api.post(
+			"/peran-industri/upsert",
+			peranIndustriData
+		);
 		return response.data;
 	} catch (error) {
 		console.error("Error upserting Peran Industri:", error);
-		throw error;
-	}
-};
-
-export const updatePeranIndustri = async (id, peranIndustriData) => {
-	try {
-		const response = await api.put(`/peran-industri/${id}`, peranIndustriData);
-		return response.data;
-	} catch (error) {
-		console.error("Error updating Peran Industri:", error);
 		throw error;
 	}
 };

@@ -93,6 +93,82 @@ const ModalEditMataKuliah = ({
 					/>
 				</div>
 				<div>
+					<h3 className="text-lg font-semibold">Semester</h3>
+					<Input
+						type="number"
+						value={editedData.semester}
+						onChange={(e) =>
+							setEditedData({ ...editedData, semester: e.target.value })
+						}
+						className="w-full mt-2"
+					/>
+				</div>
+				<div>
+					<h2 className="text-lg font-semibold">Teori</h2>
+					<div className="flex gap-4 mt-2">
+						<Input
+							type="number"
+							placeholder="BT"
+							value={editedData.teori_bt}
+							onChange={(e) =>
+								setEditedData({ ...editedData, teori_bt: e.target.value })
+							}
+							className="w-full"
+						/>
+						<Input
+							type="number"
+							placeholder="PT"
+							value={editedData.teori_pt}
+							onChange={(e) =>
+								setEditedData({ ...editedData, teori_pt: e.target.value })
+							}
+							className="w-full"
+						/>
+
+						<Input
+							type="number"
+							placeholder="M"
+							value={editedData.teori_m}
+							onChange={(e) =>
+								setEditedData({ ...editedData, teori_m: e.target.value })
+							}
+							className="w-full"
+						/>
+					</div>
+				</div>
+				<div>
+					<h2 className="text-lg font-semibold">Praktik</h2>
+					<div className="flex gap-4 mt-2">
+						<Input
+							type="number"
+							placeholder="BT"
+							value={editedData.praktek_bt}
+							onChange={(e) =>
+								setEditedData({ ...editedData, praktek_bt: e.target.value })
+							}
+							className="w-full"
+						/>
+						<Input
+							type="number"
+							placeholder="PT"
+							value={editedData.praktek_pt}
+							onChange={(e) =>
+								setEditedData({ ...editedData, praktek_pt: e.target.value })
+							}
+							className="w-full"
+						/>
+						<Input
+							type="number"
+							placeholder="M"
+							value={editedData.praktek_m}
+							onChange={(e) =>
+								setEditedData({ ...editedData, praktek_m: e.target.value })
+							}
+							className="w-full"
+						/>
+					</div>
+				</div>
+				<div>
 					<h3 className="text-lg font-semibold">Formulasi CPA</h3>
 					<Select
 						mode="multiple"
