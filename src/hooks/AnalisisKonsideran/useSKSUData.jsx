@@ -57,9 +57,7 @@ export const useSKSUData = () => {
 					kualifikasi: item.kualifikasi,
 					kategori: item.kategori,
 					prodiId: user.prodiId,
-					kompetensiKerja: item.kompetensi_kerja?.length
-						? item.kompetensi_kerja.map((k) => k.kompetensi_kerja)
-						: [],
+					kompetensiKerja: item.kompetensi_kerja,
 				}))
 			);
 		} else {
@@ -149,7 +147,7 @@ export const useSKSUData = () => {
 			profilLulusan: "",
 			kualifikasi: "",
 			kategori: "",
-			kompetensiKerja: [],
+			kompetensiKerja: "",
 			prodiId: selectedProdi || user.prodiId, // Gunakan prodi terpilih
 		};
 

@@ -1,9 +1,9 @@
-import { usePermissionData } from "../../hooks/Users/usePermissionData";
+import { useDosenData } from "../../hooks/Dosen/useDosenData";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { UndoOutlined } from '@ant-design/icons';
 import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin } from 'antd';
 
-const Permission = ()=>{
+const Dosen = ()=>{
     const {
         loading,
         dataSource,
@@ -15,8 +15,8 @@ const Permission = ()=>{
         handleAddRow,
         handleDeleteRow,
         handleSaveData,
-        handleDeletePermissions,
-    } = usePermissionData ();
+        handleDeleteDosens,
+    } = useDosenData ();
 
     const colums = [
         {
@@ -26,26 +26,77 @@ const Permission = ()=>{
             render: (_, __, index) => index + 1,
         },
         {
-            title: 'Permission',
-            dataIndex: 'name',
-            key: 'name',
+            title: "NIP",
+            dataIndex: "nip",
+            key: "nip",
             render: (text, record) => (
                 <Input
                     value={text}
-                    onChange={(e) => handleSave({ ...record, name: e.target.value })}
+                    onChange={(e) => handleSave({ ...record, nip: e.target.value })}
                     style={{
-                        border: 'none',
-                        outline: 'none',
-                        boxShadow: 'none',
+                        border: "none",
+                        outline: "none",
+                        boxShadow: "none",
                         padding: 0,
                     }}
                 />
             ),
         },
         {
-            title: 'Aksi',
-            key: 'aksi',
-            render: (_, record) =>
+            title: "Nama",
+            dataIndex: "nama",
+            key: "nama",
+            render: (text, record) => (
+                <Input
+                    value={text}
+                    onChange={(e) => handleSave({ ...record, nama: e.target.value })}
+                    style={{
+                        border: "none",
+                        outline: "none",
+                        boxShadow: "none",
+                        padding: 0,
+                    }}
+                />
+            ),
+        },
+        {
+            title: "Email",
+            dataIndex: "email",
+            key: "email",
+            render: (text, record) => (
+                <Input
+                    type="email"
+                    value={text}
+                    onChange={(e) => handleSave({ ...record, email: e.target.value })}
+                    style={{
+                        border: "none",
+                        outline: "none",
+                        boxShadow: "none",
+                        padding: 0,
+                    }}
+                />
+            ),
+        },
+        {
+            title: "Role",
+            dataIndex: "role",
+            key: "role",
+            render: (text, record) => (
+                <Select
+                    value={text}
+                    onChange={(value) => handleSave({ ...record, role: value })}
+                    style={{ width: "100%" }}
+                >
+                    <Option value="1">Admin</Option>
+                    <Option value="2">Dosen</Option>
+                    <Option value="3">Mahasiswa</Option>
+                </Select>
+            ),
+        },
+        {
+            title: "Aksi",
+            key: "aksi",
+            render: (_, record) => (
                 <Popconfirm
                     title="Yakin ingin menghapus baris ini?"
                     onConfirm={() => handleDeleteRow(record.key)}
@@ -56,12 +107,12 @@ const Permission = ()=>{
                         Hapus
                     </Button>
                 </Popconfirm>
+            ),
         },
-    ]
-
+    ];    
 
     return (
-        <DefaultLayout title='Permission'> 
+        <DefaultLayout title='Dosen'> 
             <div style={{ padding: '24px', background: '#fff', minHeight: '100%' }}>
                 <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
                     <>
@@ -77,12 +128,12 @@ const Permission = ()=>{
                     </>
                     {selectedRowKeys.length > 0 && (
 						<Button
-							onClick={handleDeletePermissions}
+							onClick={handleDeleteDosens}
 							type="primary" danger
 							style={{ marginBottom: '16px' }}
 							loading={loading}
 						>
-							Hapus Permission Terpilih
+							Hapus Dosen Terpilih
 						</Button>
 					)}
                 </div>
@@ -104,4 +155,4 @@ const Permission = ()=>{
     )
 }
 
-export default Permission;
+export default Dosen;

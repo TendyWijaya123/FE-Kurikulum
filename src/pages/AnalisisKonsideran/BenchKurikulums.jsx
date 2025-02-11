@@ -9,7 +9,7 @@ import {
 	Tooltip,
 	Spin,
 } from "antd";
-import { UndoOutlined } from "@ant-design/icons";
+import { UndoOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useBCData } from "../../hooks/AnalisisKonsideran/useBCData";
 import { useState } from "react";
 import ImportModal from "../../components/Modal/ImportModal";
@@ -41,9 +41,11 @@ const BenchKurikulums = () => {
 			title: "Program Studi",
 			dataIndex: "programStudi",
 			key: "programStudi",
+			width: 200,
 			render: (text, record) => (
-				<Input
+				<Input.TextArea
 					value={text}
+					autoSize={{ minRows: 1 }}
 					onChange={(e) =>
 						handleSave({ ...record, programStudi: e.target.value })
 					}
@@ -60,6 +62,12 @@ const BenchKurikulums = () => {
 			title: "Kategori",
 			dataIndex: "kategori",
 			key: "kategori",
+			filters: [
+				{ text: "Dalam Negeri", value: "Dalam Negeri" },
+				{ text: "Luar Negeri", value: "Luar Negeri" },
+			],
+			onFilter: (value, record) => record.kategori === value,
+			width: 150,
 			render: (kategori, record) => (
 				<Select
 					value={kategori}
@@ -77,50 +85,53 @@ const BenchKurikulums = () => {
 			dataIndex: "cpl",
 			key: "cpl",
 			render: (cpl, record) => {
-				// Tidak menampilkan nomor urut di dalam data yang disimpan
-				const formattedCPL = cpl
-					.map((text, index) => `${index + 1})  ${text}`) // Nomor urut hanya untuk tampilan
-					.join("\n");
-		
-				// Tangani penghapusan baris
-				const handleDelete = (index) => {
-					const newCpl = [...cpl];
-					newCpl.splice(index, 1); // Hapus item pada index yang diberikan
-					handleSave({ ...record, cpl: newCpl });
-				};
-		
-				// Tangani keydown untuk penambahan baris baru
-				const handleKeyDown = (e) => {
-					if (e.key === "Enter") {
-						e.preventDefault(); // Hindari behavior default dari Enter
-						const newValue = [...cpl, ""]; // Tambahkan baris kosong
-						handleSave({ ...record, cpl: newValue });
-					}
-				};
-		
+				// Pastikan kompetensiKerja adalah string, lalu pecah berdasarkan newline
+				const cplArray =cpl ? cpl.split("\n") : [];
+			
+				// Tambahkan numbering hanya untuk tampilan
+				const formattedText = cplArray
+				  .map((text, index) => `${index + 1}. ${text}`)
+				  .join("\n");
+  
+			  // Tangani Enter untuk menambahkan baris baru dengan numbering yang sesuai
+				  const handleKeyDown = (e) => {
+					  if (e.key === "Enter") {
+					  e.preventDefault(); // Hindari behavior default dari Enter
+  
+					  // Tambahkan baris baru ke kompetensiArray
+					  const newCplArray = [...cplArray, ""]; // Gunakan spasi sebagai placeholder
+  
+					  // Gabungkan kembali sebagai teks tanpa numbering
+					  const newValue = newCplArray.join("\n");
+			  
+					  handleSave({ ...record, cpl: newValue });
+					  }
+				  };
+			
 				// Tangani perubahan teks
 				const handleChange = (e) => {
-					const newValue = e.target.value
-						.split("\n")
-						.map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus nomor urut saat menyimpan
-						.filter((line) => line.trim() !== ""); // Hindari menyimpan baris kosong
-		
-					handleSave({ ...record, cpl: newValue });
+				  const newValue = e.target.value
+					.split("\n")
+					.map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus numbering sebelum menyimpan
+					.filter((line) => line !== "")
+					.join("\n"); // Gabungkan kembali menjadi teks
+			
+				  handleSave({ ...record, cpl: newValue });
 				};
-		
+			
 				return (
-					<Input.TextArea
-						value={formattedCPL} // Hanya tampilan dengan numbering
-						onChange={handleChange} // Tangani perubahan teks
-						onKeyDown={handleKeyDown} // Tangani Enter
-						autoSize={{ minRows: 3 }}
-						style={{
-							border: "none",
-							outline: "none",
-							boxShadow: "none",
-							padding: 0,
-						}}
-					/>
+				  <Input.TextArea
+					value={formattedText}
+					onChange={handleChange}
+					onKeyDown={handleKeyDown}
+					autoSize={{ minRows: 1 }}
+					style={{
+					  border: "none",
+					  outline: "none",
+					  boxShadow: "none",
+					  padding: 0,
+					}}
+				  />
 				);
 			},
 		},
@@ -129,52 +140,50 @@ const BenchKurikulums = () => {
 			dataIndex: "ppm",
 			key: "ppm",
 			render: (ppm, record) => {
-				const formattedPPM = ppm
-					.map((text, index) => `${index + 1})  ${text}`)
-					.join("\n");
-		
-				const handleDelete = (index) => {
-					const newPpm = [...ppm];
-					newPpm.splice(index, 1);
-					handleSave({ ...record, ppm: newPpm });
-				};
-		
-				const handleKeyDown = (e) => {
-					if (e.key === "Enter") {
-						e.preventDefault();
-						const newValue = [...ppm, ""];
-						handleSave({ ...record, ppm: newValue });
-					}
-				};
-		
-				const handleChange = (e) => {
-					const newValue = e.target.value
-						.split("\n")
-						.map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus nomor urut saat menyimpan
-						.filter((line) => line.trim() !== "");
-		
-					handleSave({ ...record, ppm: newValue });
-				};
-		
-				return (
-					<Input.TextArea
-						value={formattedPPM}
-						onChange={handleChange}
-						onKeyDown={handleKeyDown}
-						autoSize={{ minRows: 3 }}
-						style={{
-							border: "none",
-							outline: "none",
-							boxShadow: "none",
-							padding: 0,
-						}}
-					/>
-				);
+			  const ppmArray = ppm ? ppm.split("\n") : [];
+			  const formattedText = ppmArray
+				.map((text, index) => `${index + 1}. ${text}`)
+				.join("\n");
+		  
+			  const handleKeyDown = (e) => {
+				if (e.key === "Enter") {
+				  e.preventDefault();
+				  const newPpmArray = [...ppmArray, ""];
+				  const newValue = newPpmArray.join("\n");
+				  handleSave({ ...record, ppm: newValue });
+				}
+			  };
+		  
+			  const handleChange = (e) => {
+				const newValue = e.target.value
+				  .split("\n")
+				  .map((line) => line.replace(/^\d+\.\s*/, ""))
+				  .filter((line) => line !== "")
+				  .join("\n");
+		  
+				handleSave({ ...record, ppm: newValue });
+			  };
+		  
+			  return (
+				<Input.TextArea
+				  value={formattedText}
+				  onChange={handleChange}
+				  onKeyDown={handleKeyDown}
+				  autoSize={{ minRows: 1, maxRows: 6 }}
+				  style={{
+					border: "none",
+					outline: "none",
+					boxShadow: "none",
+					padding: 0,
+				  }}
+				/>
+			  );
 			},
-		},					
+		  },							  
 		{
 			title: "Aksi",
 			key: "aksi",
+			width: 100,
 			render: (_, record) => (
 				<Popconfirm
 					title="Yakin ingin menghapus baris ini?"
@@ -182,7 +191,7 @@ const BenchKurikulums = () => {
 					okText="Ya"
 					cancelText="Tidak">
 					<Button type="primary" danger>
-						Hapus
+						<DeleteOutlined />
 					</Button>
 				</Popconfirm>
 			),
