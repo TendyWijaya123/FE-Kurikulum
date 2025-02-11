@@ -1,19 +1,8 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthProvider";
 
-const VisibleMenu = ({
-	requiredPermission,
-	children,
-	isProdiRestricted = true,
-}) => {
-	const { permissions, user } = useContext(AuthContext);
-
-	if (
-		requiredPermission &&
-		(!permissions || !permissions.includes(requiredPermission))
-	) {
-		return null;
-	}
+const VisibleMenu = ({ children, isProdiRestricted = true }) => {
+	const { user } = useContext(AuthContext);
 
 	if (
 		isProdiRestricted &&

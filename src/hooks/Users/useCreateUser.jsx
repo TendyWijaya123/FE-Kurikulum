@@ -1,34 +1,24 @@
 import { useEffect, useState } from "react";
-import {
-	createUser,
-	getProdiDropdown,
-	getRoleDropdown,
-} from "../../service/api";
+import { createUser, getProdiDropdown } from "../../service/api";
 
 const useCreateUser = () => {
 	const [loading, setLoading] = useState(false);
 	const [prodiList, setProdiList] = useState([]);
-	const [roleList, setRoleList] = useState([]);
 	const [alert, setAlert] = useState(null);
 	const [formData, setFormData] = useState({
 		name: "",
 		email: "",
 		password: "",
 		prodi_id: "",
-		role_id: "",
 	});
 
 	useEffect(() => {
 		const fetchData = async () => {
 			setLoading(true);
 			try {
-				const [prodiResponse, roleResponse] = await Promise.all([
-					getProdiDropdown(),
-					getRoleDropdown(),
-				]);
+				const [prodiResponse] = await Promise.all([getProdiDropdown()]);
 
 				setProdiList(prodiResponse);
-				setRoleList(roleResponse);
 			} catch (error) {
 				setAlert({ message: "Failed to fetch data.", severity: "error" });
 				console.error("Error in fetching dropdown data:", error);
@@ -73,7 +63,6 @@ const useCreateUser = () => {
 	return {
 		loading,
 		prodiList,
-		roleList,
 		alert,
 		formData,
 		handleChangeForm,

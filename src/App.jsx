@@ -28,9 +28,6 @@ import MatrixCplP from "./pages/ModelKonstruksi/MatrixCplP/MatrixCplP";
 import MatrixCplMk from "./pages/ModelKonstruksi/MatrixCplMk/MatrixCplMk";
 import CreateJurusan from "./pages/CreateJurusan";
 import MatriksMpPMk from "./pages/Matriks/MatriksMpPMk";
-import Role from "./pages/Users/Role";
-import Permission from "./pages/Users/Permission";
-import PermissionRole from "./pages/Users/PermissionRole";
 
 function App() {
 	return (
@@ -48,7 +45,7 @@ function App() {
 				<Route
 					path="/users"
 					element={
-						<ProtectedRoute requiredPermission="view-users">
+						<ProtectedRoute>
 							<Users />
 						</ProtectedRoute>
 					}
@@ -68,33 +65,6 @@ function App() {
 					element={
 						<ProtectedRoute>
 							<EditUser />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/users/role"
-					element={
-						<ProtectedRoute>
-							<Role/>
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/users/permission"
-					element={
-						<ProtectedRoute>
-							<Permission/>
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/users/permission-role"
-					element={
-						<ProtectedRoute>
-							<PermissionRole />
 						</ProtectedRoute>
 					}
 				/>
@@ -187,7 +157,7 @@ function App() {
 				<Route
 					path="/dashboard"
 					element={
-						<ProtectedRoute requiredPermission="view-dashboard">
+						<ProtectedRoute>
 							<Dashboard />
 						</ProtectedRoute>
 					}
@@ -195,7 +165,7 @@ function App() {
 				<Route
 					path="/analisis-konsideran/sksu"
 					element={
-						<ProtectedRoute requiredPermission="view-users">
+						<ProtectedRoute>
 							<SKSU />
 						</ProtectedRoute>
 					}
@@ -204,7 +174,7 @@ function App() {
 				<Route
 					path="/analisis-konsideran/bench-kurikulums"
 					element={
-						<ProtectedRoute requiredPermission="view-users">
+						<ProtectedRoute>
 							<BenchKurikulums />
 						</ProtectedRoute>
 					}
@@ -213,7 +183,7 @@ function App() {
 				<Route
 					path="/analisis-konsideran/kkni"
 					element={
-						<ProtectedRoute requiredPermission="view-users">
+						<ProtectedRoute>
 							<KKNI />
 						</ProtectedRoute>
 					}
@@ -222,7 +192,7 @@ function App() {
 				<Route
 					path="/mp"
 					element={
-						<ProtectedRoute requiredPermission="view-users">
+						<ProtectedRoute>
 							<MateriPembelajaran />
 						</ProtectedRoute>
 					}
@@ -230,7 +200,7 @@ function App() {
 				<Route
 					path="/matriks-cpl-iea"
 					element={
-						<ProtectedRoute requiredPermission="view-users">
+						<ProtectedRoute>
 							<MatriksCplHasIea />
 						</ProtectedRoute>
 					}
@@ -238,7 +208,7 @@ function App() {
 				<Route
 					path="/matriks-p-mp"
 					element={
-						<ProtectedRoute requiredPermission="view-users">
+						<ProtectedRoute>
 							<MatriksPHasMp />
 						</ProtectedRoute>
 					}

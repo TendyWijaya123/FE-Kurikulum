@@ -65,9 +65,7 @@ const Users = () => {
 									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
 										Email
 									</th>
-									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Role
-									</th>
+
 									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
 										Action
 									</th>
@@ -105,9 +103,6 @@ const Users = () => {
 											<tr key={user.id} className="hover:bg-gray-50">
 												<td className="border-b px-4 py-2">{user.name}</td>
 												<td className="border-b px-4 py-2">{user.email}</td>
-												<td className="border-b px-4 py-2">
-													{user.role?.name}
-												</td>
 
 												{/* Action column */}
 												<td className="border-b px-4 py-2">
