@@ -9,8 +9,6 @@ const MenuRps = () => {
         <MenuItemSidebar url="/rps/input" title="Input RPS" icon={<ImportContacts />} />
         <MenuItemSidebar url="/rps/review" title="Review RPS" icon={<Assignment />} />
       </MenuItemSidebar>
-      <MenuItemSidebar title="Dosen" icon={<Assignment/>} url="/dosen" ></MenuItemSidebar>
-      <MenuItemSidebar title="Dosen Pengampu" icon={<Assignment/>} url="/dosen-pengampu" ></MenuItemSidebar>
     </>
   );
 };
