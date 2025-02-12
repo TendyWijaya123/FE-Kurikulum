@@ -9,7 +9,7 @@ import {
 	Spin,
 	Upload,
 } from "antd";
-import { UndoOutlined } from "@ant-design/icons";
+import { UndoOutlined, DeleteOutlined  } from "@ant-design/icons";
 import { useSKSUData } from "../../hooks/AnalisisKonsideran/useSKSUData";
 import { useState } from "react";
 import ImportModal from "../../components/Modal/ImportModal";
@@ -42,10 +42,13 @@ const SKSU = () => {
 			title: "Profil Lulusan",
 			dataIndex: "profilLulusan",
 			key: "profilLulusan",
+			sorter: (a, b) => a.profilLulusan.localeCompare(b.profilLulusan),
+			width: 200,
 			render: (text, record) => (
-				<Input
+				<Input.TextArea
 					value={text}
-					onChange={(e) =>
+				  autoSize={{ minRows: 1 }}
+				  onChange={(e) =>
 						handleSave({ ...record, profilLulusan: e.target.value })
 					}
 					style={{
@@ -61,6 +64,7 @@ const SKSU = () => {
 			title: "Kualifikasi",
 			dataIndex: "kualifikasi",
 			key: "kualifikasi",
+			width: 150,
 			render: (text, record) => (
 				<Input
 					value={text}
@@ -80,6 +84,12 @@ const SKSU = () => {
 			title: "Kategori",
 			dataIndex: "kategori",
 			key: "kategori",
+			filters: [
+				{ text: "Siap Kerja", value: "Siap Kerja" },
+				{ text: "Siap Usaha", value: "Siap Usaha" },
+			],
+			onFilter: (value, record) => record.kategori === value,
+			width: 150,
 			render: (kategori, record) => (
 				<Select
 					value={kategori}
@@ -97,56 +107,60 @@ const SKSU = () => {
 			dataIndex: "kompetensiKerja",
 			key: "kompetensiKerja",
 			render: (kompetensiKerja, record) => {
-				// Tidak menampilkan nomor urut di dalam data yang disimpan
-				const formattedSKSU = kompetensiKerja
-					.map((text, index) => `${index + 1})  ${text}`) // Nomor urut hanya untuk tampilan
-					.join("\n");
-		
-				// Tangani penghapusan baris
-				const handleDelete = (index) => {
-					const newCpl = [...kompetensiKerja];
-					newCpl.splice(index, 1); // Hapus item pada index yang diberikan
-					handleSave({ ...record, kompetensiKerja: newCpl });
-				};
-		
-				// Tangani keydown untuk penambahan baris baru
+			  // Pastikan kompetensiKerja adalah string, lalu pecah berdasarkan newline
+			  const kompetensiArray =kompetensiKerja ? kompetensiKerja.split("\n") : [];
+		  
+			  // Tambahkan numbering hanya untuk tampilan
+			  const formattedText = kompetensiArray
+				.map((text, index) => `${index + 1}. ${text}`)
+				.join("\n");
+
+			// Tangani Enter untuk menambahkan baris baru dengan numbering yang sesuai
 				const handleKeyDown = (e) => {
 					if (e.key === "Enter") {
-						e.preventDefault(); // Hindari behavior default dari Enter
-						const newValue = [...kompetensiKerja, ""]; // Tambahkan baris kosong
-						handleSave({ ...record, kompetensiKerja: newValue });
+					e.preventDefault(); // Hindari behavior default dari Enter
+
+					// Tambahkan baris baru ke kompetensiArray
+					const newKompetensiArray = [...kompetensiArray, ""]; // Gunakan spasi sebagai placeholder
+
+					// Gabungkan kembali sebagai teks tanpa numbering
+					const newValue = newKompetensiArray.join("\n");
+			
+					handleSave({ ...record, kompetensiKerja: newValue });
 					}
 				};
-		
-				// Tangani perubahan teks
-				const handleChange = (e) => {
-					const newValue = e.target.value
-						.split("\n")
-						.map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus nomor urut saat menyimpan
-						.filter((line) => line.trim() !== ""); // Hindari menyimpan baris kosong
-		
-					handleSave({ ...record, kompetensiKerja: newValue });
-				};
-		
-				return (
-					<Input.TextArea
-						value={formattedSKSU} // Hanya tampilan dengan numbering
-						onChange={handleChange} // Tangani perubahan teks
-						onKeyDown={handleKeyDown} // Tangani Enter
-						autoSize={{ minRows: 3 }}
-						style={{
-							border: "none",
-							outline: "none",
-							boxShadow: "none",
-							padding: 0,
-						}}
-					/>
-				);
+		  
+			  // Tangani perubahan teks
+			  const handleChange = (e) => {
+				const newValue = e.target.value
+				  .split("\n")
+				  .map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus numbering sebelum menyimpan
+				  .filter((line) => line !== "")
+				  .join("\n"); // Gabungkan kembali menjadi teks
+		  
+				handleSave({ ...record, kompetensiKerja: newValue });
+			  };
+		  
+			  return (
+				<Input.TextArea
+				  value={formattedText}
+				  onChange={handleChange}
+				  onKeyDown={handleKeyDown}
+				  autoSize={{ minRows: 3 }}
+				  style={{
+					border: "none",
+					outline: "none",
+					boxShadow: "none",
+					padding: 0,
+				  }}
+				/>
+			  );
 			},
-		},
+		  },		  
 		{
 			title: "Aksi",
 			key: "aksi",
+			width: 100,
 			render: (_, record) => (
 				<Popconfirm
 					title="Yakin ingin menghapus baris ini?"
@@ -154,7 +168,7 @@ const SKSU = () => {
 					okText="Ya"
 					cancelText="Tidak">
 					<Button type="primary" danger>
-						Hapus
+						<DeleteOutlined />
 					</Button>
 				</Popconfirm>
 			),
@@ -200,9 +214,9 @@ const SKSU = () => {
 							<Button onClick={handleSaveData} type="primary" loading={saving}>
 								Simpan Data
 							</Button>
-							<Upload {...props}>
+							{/* <Upload {...props}>
 								<Button>Unggah File Excel</Button>
-							</Upload>
+							</Upload> */}
 							<Tooltip title="Undo">
 								<Button
 									onClick={handleUndo}

@@ -1,74 +1,62 @@
-import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthProvider";
+import React, { useContext } from "react";
+import { Form, Input, Button, Card, Typography, Select } from "antd";
 import { useLoginForm } from "../hooks/useLoginForm";
+import { SelectionContext } from "../context/SelectionContext";
+
+const { Title } = Typography;
+const { Option } = Select;
 
 const Login = () => {
-	const {
-		email,
-		password,
-		loading,
-		handleChangeEmail,
-		handleChangePassword,
-		handleSubmit,
-	} = useLoginForm();
+  const {
+    email,
+    password,
+    loading,
+    handleChangeEmail,
+    handleChangePassword,
+    handleSubmit,
+    handleSubmitRps,
+  } = useLoginForm();
 
-	return (
-		<div className="flex justify-center items-center bg-blue-950 w-full h-screen">
-			<div className="w-96 bg-white rounded-sm p-6 flex-col justify-center shadow-lg">
-				<h1 className="text-3xl font-semibold text-center text-blue-950 mb-6">
-					Login
-				</h1>
+  const { selectedOption, setSelectedOption } = useContext(SelectionContext);
+  const isDisabled = !selectedOption;
 
-				{/* Form Login */}
-				<form onSubmit={handleSubmit}>
-					{/* Form Input Email */}
-					<div className="mb-4">
-						<label
-							htmlFor="email"
-							className="block text-sm font-medium text-gray-700">
-							Email
-						</label>
-						<input
-							id="email"
-							type="email"
-							value={email}
-							onChange={(e) => handleChangeEmail(e)}
-							className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-							placeholder="Enter your email"
-							required
-						/>
-					</div>
-
-					{/* Form Input Password */}
-					<div className="mb-6">
-						<label
-							htmlFor="password"
-							className="block text-sm font-medium text-gray-700">
-							Password
-						</label>
-						<input
-							id="password"
-							type="password"
-							value={password}
-							onChange={(e) => handleChangePassword(e)}
-							className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-							placeholder="Enter your password"
-							required
-						/>
-					</div>
-
-					{/* Login Button */}
-					<button
-						type="submit"
-						disabled={loading}
-						className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-200">
-						{loading ? "Logging in..." : "Login"}
-					</button>
-				</form>
-			</div>
-		</div>
-	);
+  return (
+    <div className="flex justify-center items-center bg-blue-950 w-full h-screen">
+      <Card className="w-96 shadow-lg">
+        <Title level={2} className="text-center text-blue-950">Login</Title>
+        <Form layout="vertical" onFinish={selectedOption === "dosen" ? handleSubmitRps : handleSubmit}>
+          <Form.Item label="Pilih Opsi" name="option" rules={[{ required: true, message: "Silakan pilih opsi" }]}>            
+				<Select placeholder="Pilih opsi" onChange={setSelectedOption} value={selectedOption}>
+					<Option value="kurikulum">Penyusunan Kurikulum</Option>
+					<Option value="dosen">Dosen</Option>
+				</Select>
+          </Form.Item>
+          <Form.Item label="Email" name="email" rules={[{ required: true, message: "Please enter your email" }]}>            
+            <Input 
+              type="email"
+              value={email}
+              onChange={(e) => handleChangeEmail(e)}
+              placeholder="Enter your email"
+              disabled={isDisabled}
+            />
+          </Form.Item>
+          <Form.Item label="Password" name="password" rules={[{ required: true, message: "Please enter your password" }]}>            
+            <Input.Password
+              value={password}
+              onChange={(e) => handleChangePassword(e)}
+              placeholder="Enter your password"
+              disabled={isDisabled}
+            />
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" block loading={loading} disabled={isDisabled}>
+              {loading ? "Logging in..." : "Login"}
+            </Button>
+          </Form.Item>
+        </Form>
+      </Card>
+    </div>
+  );
 };
 
 export default Login;
