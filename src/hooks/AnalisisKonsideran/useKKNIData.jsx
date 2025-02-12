@@ -260,5 +260,6 @@ export const useKKNIData = () => {
 		handleProdiChange,
 		handleExportTemplateKkni,
 		handleImportKkni,
+		setDataSource,
 	};
 };
