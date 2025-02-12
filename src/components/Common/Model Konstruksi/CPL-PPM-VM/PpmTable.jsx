@@ -1,8 +1,13 @@
 import React, { useState } from "react";
+import { Table, Input, Button, Spin, Modal, message } from "antd";
 import usePpm from "../../../../hooks/ModelKonstruksi/usePpm";
-import DeleteButton from "../../../Button/DeleteButton";
-import { Spin } from "antd";
-import ImportModal from "../../../Modal/ImportModal";
+import {
+	PlusOutlined,
+	SaveOutlined,
+	UploadOutlined,
+	DownloadOutlined,
+	DeleteOutlined,
+} from "@ant-design/icons";
 
 const PpmTable = () => {
 	const {
@@ -16,100 +21,118 @@ const PpmTable = () => {
 		handleImportPpm,
 		handleExportTemplatePpm,
 	} = usePpm();
+
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
+
+	const columns = [
+		{
+			title: "No",
+			dataIndex: "no",
+			key: "no",
+			render: (_, __, index) => index + 1,
+			width: 50,
+		},
+		{
+			title: "Kode",
+			dataIndex: "kode",
+			key: "kode",
+			render: (text) => text || "Masukkan CPL yang baru",
+			filterDropdown: true,
+			width: "20%",
+		},
+		{
+			title: "Deskripsi",
+			dataIndex: "deskripsi",
+			key: "deskripsi",
+			render: (_, record, index) => (
+				<Input.TextArea
+					name="deskripsi"
+					value={record.deskripsi || ""}
+					onChange={(e) => handleChangePpmPoint(index, e)}
+					autoSize={{ minRows: 1, maxRows: 5 }}
+				/>
+			),
+			width: "75%",
+		},
+		{
+			title: "Aksi",
+			key: "aksi",
+			render: (_, __, index) => (
+				<Button
+					type="primary"
+					danger
+					icon={<DeleteOutlined />}
+					onClick={() => handleDeletePpmPoint(index)}></Button>
+			),
+			width: 100,
+		},
+	];
 
 	return (
 		<div className="p-6 bg-white shadow-lg rounded-lg">
 			<h1 className="text-2xl font-semibold mb-4 text-gray-800">Daftar PPM</h1>
-			<div className="mt-4 flex flex-col sm:flex-row items-center gap-4 mb-4">
-				<button
-					onClick={handleExportTemplatePpm}
-					className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
-					Download Template PPM
-				</button>
-				<button
-					onClick={() => setIsModalImportOpen(true)}
-					className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 w-full sm:w-auto">
+
+			<div className="mb-4 flex flex-wrap gap-2">
+				<Button
+					type="primary"
+					icon={<DownloadOutlined />}
+					onClick={handleExportTemplatePpm}>
+					Download Template
+				</Button>
+				<Button
+					type="default"
+					icon={<UploadOutlined />}
+					onClick={() => setIsModalImportOpen(true)}>
 					Import PPM
-				</button>
-				<ImportModal
-					isOpen={isModalImportOpen}
-					setIsOpen={setIsModalImportOpen}
-					handleImport={handleImportPpm}
-					title="Import PPM"
-				/>
-				<button
-					onClick={handleAddPpmPoint}
-					className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
+				</Button>
+				<Button
+					type="primary"
+					icon={<PlusOutlined />}
+					onClick={handleAddPpmPoint}>
 					Tambah PPM
-				</button>
-				<button
+				</Button>
+				<Button
+					type="primary"
+					icon={<SaveOutlined />}
 					onClick={handleSavePpms}
-					className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 w-full sm:w-auto">
+					style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
 					Simpan
-				</button>
+				</Button>
 			</div>
+
 			{alert && <div className="text-red-500 mb-4">{alert}</div>}
+
 			{loading ? (
 				<Spin />
 			) : (
-				<div className="overflow-x-auto ">
-					<table className="min-w-full bg-white border-collapse shadow-sm rounded-lg overflow-hidden">
-						<thead>
-							<tr className="bg-blue-100 text-gray-700">
-								<th className="px-4 py-3 border-b min-w-[50px] text-left">
-									No
-								</th>
-								<th className="px-4 py-3 border-b min-w-[100px] text-left">
-									Kode
-								</th>
-								<th className="px-4 py-3 border-b min-w-[200px] text-left">
-									Deskripsi
-								</th>
-								<th className="px-4 py-3 border-b min-w-[100px] text-left">
-									Aksi
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{ppmData.length === 0 ? (
-								<tr>
-									<td colSpan="4" className="text-center py-4 text-gray-500">
-										Tidak ada data
-									</td>
-								</tr>
-							) : (
-								ppmData.map((ppm, index) => (
-									<tr key={index} className="hover:bg-gray-50">
-										<td className="px-4 py-3 border-b text-gray-600">
-											{index + 1}
-										</td>
-										<td className="px-4 py-3 border-b text-gray-600">
-											{ppm.kode || "Masukkan PPM yang baru"}
-										</td>
-										<td className="px-4 py-3 border-b">
-											<input
-												type="text"
-												name="deskripsi"
-												value={ppm.deskripsi || ""}
-												onChange={(e) => handleChangePpmPoint(index, e)}
-												className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-											/>
-										</td>
-										<td className="px-4 py-3 border-b text-center">
-											<DeleteButton
-												onDelete={() => handleDeletePpmPoint(index)}
-												className="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 w-full sm:w-auto">
-												Hapus
-											</DeleteButton>
-										</td>
-									</tr>
-								))
-							)}
-						</tbody>
-					</table>
+				<div className="overflow-x-auto">
+					<Table
+						columns={columns}
+						dataSource={ppmData.map((item, index) => ({
+							...item,
+							key: index,
+						}))}
+						pagination={false}
+						bordered
+						style={{ minWidth: "400px" }}
+					/>
 				</div>
 			)}
+
+			{/* Modal Import */}
+			<Modal
+				title="Import PPM"
+				open={isModalImportOpen}
+				onCancel={() => setIsModalImportOpen(false)}
+				onOk={() => {
+					handleImportPpm();
+					message.success("Import berhasil");
+					setIsModalImportOpen(false);
+				}}
+				okText="Import"
+				cancelText="Batal">
+				<p>Silakan unggah file template untuk mengimpor data PPM.</p>
+			</Modal>
 		</div>
 	);
 };

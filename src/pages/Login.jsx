@@ -24,11 +24,11 @@ const Login = () => {
     <div className="flex justify-center items-center bg-blue-950 w-full h-screen">
       <Card className="w-96 shadow-lg">
         <Title level={2} className="text-center text-blue-950">Login</Title>
-        <Form layout="vertical" onFinish={selectedOption === "rps" ? handleSubmitRps : handleSubmit}>
+        <Form layout="vertical" onFinish={selectedOption === "dosen" ? handleSubmitRps : handleSubmit}>
           <Form.Item label="Pilih Opsi" name="option" rules={[{ required: true, message: "Silakan pilih opsi" }]}>            
 				<Select placeholder="Pilih opsi" onChange={setSelectedOption} value={selectedOption}>
 					<Option value="kurikulum">Penyusunan Kurikulum</Option>
-					<Option value="rps">Pengisian RPS</Option>
+					<Option value="dosen">Dosen</Option>
 				</Select>
           </Form.Item>
           <Form.Item label="Email" name="email" rules={[{ required: true, message: "Please enter your email" }]}>            

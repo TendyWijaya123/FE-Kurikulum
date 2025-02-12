@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { getDosenHasMatkul, upsertDosenHasMatkul } from "../../service/Dosen/dosenHasMatkul";
+import { getDosenHasMatkul, upsertDosenHasMatkul } from "../../service/PengisianRps/dosenHasMatkul";
 import { AuthContext } from "../../context/AuthProvider";
 import { message } from 'antd';
 

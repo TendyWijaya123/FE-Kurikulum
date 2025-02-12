@@ -1,6 +1,5 @@
 import api from "../../utils/axiosInstance";
 
-/* --------------------------------CPL API-------------------------------------------- */
 export const getDosen = async () => {
 	try {
 		const response = await api.get("/dosen");
@@ -11,12 +10,25 @@ export const getDosen = async () => {
 	}
 };
 
-export const upsertDosen = async (id) => {
+export const addDosen = async (data) => {
 	try {
-		const response = await api.post("/dosen", id);
+        console.log(data);
+		const response = await api.post("/dosen", data);
 		return response.data;
 	} catch (error) {
 		console.error("Error update dosen:", error);
+		throw error;
+	}
+};
+
+export const updateDosen = async (id, data) => {
+	try {
+        console.log(data);
+		const payload = { id, ...data };
+		const response = await api.put("/dosen", payload);
+		return response.data;
+	} catch (error) {
+		console.error("Error updating dosen:", error);
 		throw error;
 	}
 };
@@ -48,6 +60,15 @@ export const deleteDosens = async (data) => {
         }
         throw error;
     }
-    
+}
+
+export const getProdiDropdown = async (id) => {
+    try{
+        const response = await api.get(`/rps/prodi-dropdown/${id}`);
+        return response.data;
+    }catch (error){
+        console.error("Error get prodi:", error);
+		throw error;
+    }
 }
 

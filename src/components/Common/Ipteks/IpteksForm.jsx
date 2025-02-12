@@ -1,12 +1,19 @@
-// components/IpteksForm.jsx
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 export const IpteksForm = ({ onSave, onCancel }) => {
   const [values, setValues] = useState({
-    pengetahuan: '',
-    teknologi: '',
-    seni: ''
+    kategori: 'ilmu_pengetahuan',
+    deskripsi: '',
+    link_sumber: ''
   });
+
+  const deskripsiRef = useRef(null);
+
+  useEffect(() => {
+    if (deskripsiRef.current) {
+      deskripsiRef.current.focus();
+    }
+  }, []);
 
   const handleInputChange = (field, value) => {
     setValues(prev => ({
@@ -15,72 +22,88 @@ export const IpteksForm = ({ onSave, onCancel }) => {
     }));
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     const success = await onSave(values);
     if (success) {
       setValues({
-        pengetahuan: '',
-        teknologi: '',
-        seni: ''
+        kategori: 'ilmu_pengetahuan',
+        deskripsi: '',
+        link_sumber: ''
       });
+      if (deskripsiRef.current) {
+        deskripsiRef.current.focus();
+      }
     }
   };
 
   return (
-    <div className="mt-4 p-4 border rounded-lg bg-gray-50">
-      <h3 className="text-lg font-semibold mb-4">Tambah Data Baru</h3>
-      <div className="grid grid-cols-1 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Ilmu Pengetahuan
-          </label>
-          <input
-            type="text"
-            className="w-full px-3 py-2 border rounded-md"
-            value={values.pengetahuan}
-            onChange={(e) => handleInputChange('pengetahuan', e.target.value)}
-            placeholder="Masukkan ilmu pengetahuan"
+    <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+      <div className="text-xl font-bold mb-4 text-center">
+        Tambah IPTEKS Baru
+      </div>
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="mb-4">
+          <div className="mb-2 block text-sm font-bold text-gray-700">
+            Kategori
+          </div>
+          <select
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            value={values.kategori}
+            onChange={(e) => handleInputChange('kategori', e.target.value)}
+            required
+          >
+            <option value="ilmu_pengetahuan">Ilmu Pengetahuan</option>
+            <option value="teknologi">Teknologi</option>
+            <option value="seni">Seni</option>
+          </select>
+        </div>
+
+        <div className="mb-4">
+          <div className="mb-2 block text-sm font-bold text-gray-700">
+            Deskripsi
+          </div>
+          <textarea
+            ref={deskripsiRef}  // Menambahkan ref untuk auto-focus
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            value={values.deskripsi}
+            onChange={(e) => handleInputChange('deskripsi', e.target.value)}
+            placeholder="Masukkan deskripsi"
+            rows={4}
+            required
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Teknologi
-          </label>
+
+        <div className="mb-4">
+          <div className="mb-2 block text-sm font-bold text-gray-700">
+            Link Sumber
+          </div>
           <input
-            type="text"
-            className="w-full px-3 py-2 border rounded-md"
-            value={values.teknologi}
-            onChange={(e) => handleInputChange('teknologi', e.target.value)}
-            placeholder="Masukkan teknologi"
+            type="url"
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            value={values.link_sumber}
+            onChange={(e) => handleInputChange('link_sumber', e.target.value)}
+            placeholder="Masukkan link sumber"
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Seni
-          </label>
-          <input
-            type="text"
-            className="w-full px-3 py-2 border rounded-md"
-            value={values.seni}
-            onChange={(e) => handleInputChange('seni', e.target.value)}
-            placeholder="Masukkan seni"
-          />
-        </div>
-        <div className="flex justify-end gap-2 mt-2">
+
+        <div className="flex items-center justify-center space-x-4">
           <button
-            onClick={handleSubmit}
-            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Simpan
           </button>
           <button
+            type="button"
             onClick={onCancel}
-            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Batal
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

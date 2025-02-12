@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { getDosen, upsertDosen, deleteDosen, deleteDosens } from "../../service/Dosen/dosen";
+import { getDosen, addDosen, deleteDosen, deleteDosens, getProdiDropdown } from "../../service/PengisianRps/dosen";
 import { AuthContext } from "../../context/AuthProvider";
 import { message } from 'antd';
 
@@ -11,6 +11,11 @@ export const  useDosenData = () => {
     const [saving, setSaving] = useState(false);
     const [undoStack, setUndoStack] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [jurusanId, setJurusanId] = useState();
+    const [prodiDropdown, setProdiDropdown] =  useState([]);
+    const [jurusanDropdown, setJurusanDropdown] =  useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [filteredProdi, setFilteredProdi] = useState([]);
 
     // Fetch data
     useEffect(() => {
@@ -18,7 +23,9 @@ export const  useDosenData = () => {
             setLoading(true);
             try {
                 const data = await getDosen();
-                setDosen(data);
+                setDosen(data.dosens);
+                setJurusanDropdown(data.jurusans);
+                setProdiDropdown(data.prodis);
             } catch (error) {
                 console.error("Error fetching dosen:", error);
             } finally {
@@ -35,17 +42,29 @@ export const  useDosenData = () => {
                 dosen.map((item, index) => ({
                     key: 'dosen' + index + 1,
                     _id: item.id,
+                    kode: item.kode,
                     nip: item.nip,
                     nama: item.nama,
                     email: item.email,
-                    role: item.role
+                    jenisKelamin: item.jenis_kelamin,
+                    jurusan: item.jurusan_id,
+                    prodi: item.prodi.map((data) => data.name).join('\n'),
                 }))
             );
             console.log(dataSource);
         }else {
             setDataSource([]);
+
         }
     }, [dosen]);
+
+    useEffect(()=>{
+        if(jurusanId){
+            setFilteredProdi(prodiDropdown.filter(prodi => prodi.jurusan_id === jurusanId));
+        }else {
+            setFilteredProdi(prodiDropdown);
+        }
+    }, [jurusanId, prodiDropdown])
 
     // Save undo state
     const saveToUndoStack = (data) => {
@@ -120,10 +139,10 @@ export const  useDosenData = () => {
     
 
     // Save data to server
-    const handleSaveData = async () => {
+    const handleSaveAddData = async () => {
         setSaving(true);
         try {
-            await upsertDosen(dataSource);
+            await addDosen(dataSource);
             message.success('Data berhasil disimpan!');
         } catch (error) {
             message.error('Gagal menyimpan data!');
@@ -175,11 +194,16 @@ export const  useDosenData = () => {
         undoStack,
         rowSelection,
         selectedRowKeys,
+        filteredProdi,
+        jurusanDropdown,
+        modalVisible,
+        setModalVisible,
+        setJurusanId,
         handleUndo,
         handleSave,
         handleAddRow,
         handleDeleteRow,
-        handleSaveData,
+        handleSaveAddData,
         handleDeleteDosens,
     };
 };

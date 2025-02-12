@@ -6,7 +6,6 @@ export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
 	const [user, setUser] = useState(null);
-	const [permissions, setPermissions] = useState([]);
 	const [token, setToken] = useState(null);
 	const [loading, setLoading] = useState(true);
 
@@ -29,7 +28,6 @@ const AuthProvider = ({ children }) => {
 			}
 
 			setUser(decoded);
-			setPermissions(decoded.permissions || []);
 		} catch (error) {
 			console.error("Invalid or expired token:", error.message);
 			logout();
@@ -75,7 +73,6 @@ const AuthProvider = ({ children }) => {
 	const logout = () => {
 		localStorage.removeItem("authToken");
 		setUser(null);
-		setPermissions([]);
 		setToken(null);
 
 		axios
@@ -92,8 +89,7 @@ const AuthProvider = ({ children }) => {
 	};
 
 	return (
-		<AuthContext.Provider
-			value={{ user, permissions, token, login, logout,loginRps, loading }}>
+		<AuthContext.Provider value={{ user, token, login, logout,loginRps, loading }}>
 			{!loading && children}
 		</AuthContext.Provider>
 	);

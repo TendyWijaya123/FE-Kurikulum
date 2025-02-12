@@ -31,7 +31,7 @@ export const useLoginForm = () => {
 		try {
 			console.log({ email, password });
 			await loginRps(email, password);
-			navigate("/dashboard-rps");
+			navigate("/dashboard");
 		} catch (error) {
 			console.error("Login failed:", error.response?.data || error.message);
 			alert("Login failed, please try again.");
