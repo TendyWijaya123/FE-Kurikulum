@@ -57,7 +57,7 @@ const MatriksMpPMk = () => {
         
         title: "Materi Pembelajaran yang Ditunjang Pengetahuan untuk mendukung CPL",
         children: pengetahuan.map((item, colIndex) => ({
-            title: item.deskripsi,
+            title: item.kode_pengetahuan,
             dataIndex: `col${colIndex + 1}`,
             key: `col${colIndex + 1}`,
             align: "center",
@@ -91,7 +91,7 @@ const MatriksMpPMk = () => {
                             Tidak Tersedia
                             <Tooltip title="Pada matriks pengetahuan dan materi pembelajaran untuk cell ini tidak aktif, klik untuk menambahkan!!">
                                 <Popconfirm
-                                    title="Tambahkan relasi untuk pengetahuan dan materi pembelajaran"
+                                    title="Tambahkan hubungan untuk pengetahuan dan materi pembelajaran terkait"
                                     onConfirm={() => {
                                         navigate('/matriks-p-mp');
                                     }}

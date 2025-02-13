@@ -1,127 +1,193 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
+import { Table, Button, message, Popconfirm, Select, Spin, Form, Modal, Input } from "antd";
+import { DeleteOutlined, PlusOutlined, ImportOutlined, DownloadOutlined } from "@ant-design/icons";
 import DefaultLayout from "../layouts/DefaultLayout";
-import { Pagination } from "@mui/material";
 import { useIpteks } from "../hooks/useIpteks";
-import { IpteksTable } from "../components/Common/Ipteks/IpteksTable";
-import { IpteksForm } from "../components/Common/Ipteks/IpteksForm";
 import { AuthContext } from "../context/AuthProvider";
 import ImportModal from "../components/Modal/ImportModal";
 
 const Ipteks = () => {
   const { user } = useContext(AuthContext);
-  const [isAddingNew, setIsAddingNew] = useState(false);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [isModalImportOpen, setIsModalImportOpen] = useState(false);
+  const [focusedRowId, setFocusedRowId] = useState(null);
+  const tableRef = useRef(null);
+
   const {
     ipteksData,
     loading,
-    error,
-    notification,
-    currentPage,
-    totalPage,
-    setCurrentPage,
+    saving,
+    selectedRowKeys,
+    rowSelection,
+    handleSave,
     handleDelete,
     handleCreate,
-    handleUpdate,
+    handleSaveData,
     handleExportTemplateIpteks,
     handleImportIpteks,
     handleMultiDelete,
   } = useIpteks();
-  const [isModalImportOpen, setIsModalImportOpen] = useState(false);
+
+  const handleCreateWithFocus = () => {
+    const newId = handleCreate();
+    setFocusedRowId(newId);
+    
+    setTimeout(() => {
+      const row = document.querySelector(`[data-row-key="${newId}"]`);
+      if (row) {
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        const deskripsiInput = row.querySelector('textarea');
+        if (deskripsiInput) {
+          deskripsiInput.focus();
+        }
+      }
+    }, 100);
+  };
+
+  const columns = [
+    {
+      title: 'Kategori',
+      dataIndex: 'kategori',
+      key: 'kategori',
+      width: '20%',
+      render: (text, record) => (
+        <Select
+          value={text}
+          onChange={(value) => handleSave({ ...record, kategori: value })}
+          style={{ width: '100%' }}
+        >
+          <Select.Option value="ilmu_pengetahuan">Ilmu Pengetahuan</Select.Option>
+          <Select.Option value="teknologi">Teknologi</Select.Option>
+          <Select.Option value="seni">Seni</Select.Option>
+        </Select>
+      ),
+    },
+    {
+      title: 'Deskripsi',
+      dataIndex: 'deskripsi',
+      key: 'deskripsi',
+      width: '60%',
+      render: (text, record) => (
+        <Input.TextArea
+          value={text}
+          onChange={(e) => handleSave({ ...record, deskripsi: e.target.value })}
+          autoSize={{ minRows: 3 }}
+          style={{
+            border: "none",
+            outline: "none",
+            boxShadow: "none",
+            padding: 0,
+          }}
+          autoFocus={record.id === focusedRowId}
+        />
+      ),
+    },
+    {
+      title: 'Link',
+      dataIndex: 'link_sumber',
+      key: 'link_sumber',
+      width: '10%',
+      render: (text, record) => (
+        <Input
+          value={text}
+          onChange={(e) => handleSave({ ...record, link_sumber: e.target.value })}
+          style={{
+            border: "none",
+            outline: "none",
+            boxShadow: "none",
+            padding: 0,
+          }}
+        />
+      ),
+    },
+    {
+      title: 'Aksi',
+      key: 'action',
+      width: '5%',
+      render: (_, record) => (
+        <Popconfirm
+          title="Yakin ingin menghapus?"
+          onConfirm={() => handleDelete(record)}
+          okText="Ya"
+          cancelText="Tidak"
+        >
+          <Button
+            type="primary"
+            danger
+            icon={<DeleteOutlined />}
+          />
+        </Popconfirm>
+      ),
+    },
+  ];
 
   return (
     <DefaultLayout title="IPTEKS">
-      <div className="w-full flex flex-col justify-center items-start px-4 sm:px-6 lg:px-1">
-        <div className="w-full bg-white p-3 sm:p-5 rounded-lg shadow-md">
-		<div className="flex flex-col sm:flex-row gap-2 mb-4">
-			<button
-				onClick={handleExportTemplateIpteks}
-				className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm sm:text-base w-full sm:w-auto"
-			>
-				Download Template
-			</button>
-			<button
-				onClick={() => setIsModalImportOpen(true)}
-				className="bg-green-500 text-white py-1 px-4 rounded hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm sm:text-base w-full sm:w-auto"
-			>
-				Import IPTEKS
-			</button>
-			<button
-				onClick={() => setIsAddingNew(!isAddingNew)}
-				className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 text-sm sm:text-base w-full sm:w-auto"
-			>
-				{isAddingNew ? "Tutup Form" : "Tambah Data"}
-			</button>
-			{selectedItems.length > 0 && (
-				<button
-				onClick={() => {
-					handleMultiDelete(selectedItems);
-					setSelectedItems([]);
-				}}
-				className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm sm:text-base w-full sm:w-auto"
-				>
-				Hapus {selectedItems.length} Item
-				</button>
-			)}
-		</div>
-
-          <ImportModal
-            isOpen={isModalImportOpen}
-            setIsOpen={setIsModalImportOpen}
-            handleImport={handleImportIpteks}
-            title="Import IPTEKS"
-          />
-
-          {notification.message && (
-            <div
-              className={`px-4 py-2 rounded mb-4 text-sm sm:text-base ${
-                notification.type === "success"
-                  ? "bg-green-100 text-green-700 border border-green-400"
-                  : "bg-red-100 text-red-700 border border-red-400"
-              }`}
+      <div style={{ padding: '24px', background: '#fff', minHeight: '100%' }}>
+        <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
+          <Button 
+            onClick={handleExportTemplateIpteks} 
+            type="primary"
+            icon={<DownloadOutlined />}
+          >
+            Download Template
+          </Button>
+          <Button 
+            onClick={() => setIsModalImportOpen(true)} 
+            type="primary"
+            icon={<ImportOutlined />}
+          >
+            Import IPTEKS
+          </Button>
+          <Button 
+            onClick={handleCreateWithFocus} 
+            type="primary"
+            icon={<PlusOutlined />}
+          >
+            Tambah Baris
+          </Button>
+          <Button 
+            onClick={handleSaveData} 
+            type="primary"
+            loading={saving}
+          >
+            Simpan Data
+          </Button>
+          {selectedRowKeys.length > 0 && (
+            <Button
+              onClick={() => handleMultiDelete(selectedRowKeys)}
+              type="primary"
+              danger
+              icon={<DeleteOutlined />}
             >
-              {notification.message}
-            </div>
-          )}
-
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm sm:text-base">
-              {error}
-            </div>
-          )}
-
-          <div className="overflow-x-auto mb-6">
-            <IpteksTable
-              data={ipteksData}
-              loading={loading}
-              onDelete={handleDelete}
-              onUpdate={handleUpdate}
-              onMultiDelete={handleMultiDelete}
-              selectedItems={selectedItems}
-              setSelectedItems={setSelectedItems}
-            />
-          </div>
-
-          {!loading && ipteksData.length > 0 && (
-            <div className="flex justify-center sm:justify-between mt-4 mb-6 items-center overflow-x-auto py-2">
-              <Pagination
-                count={totalPage}
-                page={currentPage}
-                onChange={(event, page) => setCurrentPage(page)}
-                size="small"
-                className="min-w-full sm:min-w-0"
-              />
-            </div>
-          )}
-
-          {isAddingNew && (
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <IpteksForm 
-                onSave={handleCreate} 
-                onCancel={() => setIsAddingNew(false)} 
-              />
-            </div>
+              Hapus {selectedRowKeys.length} Item
+            </Button>
           )}
         </div>
+
+        <ImportModal
+          isOpen={isModalImportOpen}
+          setIsOpen={setIsModalImportOpen}
+          handleImport={handleImportIpteks}
+          title="Import IPTEKS"
+        />
+
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+            <Spin size="large" />
+          </div>
+        ) : (
+          <Table
+            ref={tableRef}
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={ipteksData.map(item => ({ ...item, key: item.id }))}
+            pagination={{ 
+              pageSize: 5,
+              onChange: () => setFocusedRowId(null)
+            }}
+            bordered
+          />
+        )}
       </div>
     </DefaultLayout>
   );
