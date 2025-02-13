@@ -230,11 +230,6 @@ const MenuPenyusunanKurikulum = () => {
 				icon={<TableChart />}
 			/>
 			<MenuItemSidebar
-				title="Dosen"
-				icon={<Assignment />}
-				url="/dosen"></MenuItemSidebar>
-
-			<MenuItemSidebar
 				title="Dosen Pengampu"
 				icon={<Assignment />}
 				url="/dosen-pengampu"></MenuItemSidebar>
@@ -250,6 +245,6 @@ const MenuPenyusunanKurikulum = () => {
 				url="/referensi-mata-kuliah"></MenuItemSidebar>
 		</>
 	);
-};
+};	
 
 export default MenuPenyusunanKurikulum;

@@ -9,24 +9,25 @@ import { useState } from "react";
 
 const Dosen = ()=>{
     const {
+        fetchDosen,
         loading,
         dataSource,
         saving,
         rowSelection,
         selectedRowKeys,
         modalVisible,
+        editModalVisible,
         setModalVisible,
+        setEditModalVisible,
         handleUndo,
         handleDeleteDosens,
     } = useDosenData();
 
-    const [editModalVisible, setEditModalVisible] = useState(false);
     const [selectedDosen, setSelectedDosen] = useState(null);
-
     const handleEdit = (record) => {
         setSelectedDosen({
             ...record,
-            prodi: record.prodi || [], // Pastikan prodi tidak null atau undefined
+            prodi: record.prodi || [],
         });
         setEditModalVisible(true);
     };
@@ -109,8 +110,8 @@ const Dosen = ()=>{
                     />
                 )}
 
-                <DosenCreateModal visible={modalVisible} onClose={() => setModalVisible(false)} />
-                <DosenEditModal visible={editModalVisible} dosenData={selectedDosen} onClose={() => setEditModalVisible(false)} />
+                <DosenCreateModal visible={modalVisible} onClose={() => {setModalVisible(false); fetchDosen();}} />
+                <DosenEditModal visible={editModalVisible} dosenData={selectedDosen} onClose={() => { setEditModalVisible(false); fetchDosen();}} />
             </div>
         </DefaultLayout>
     );

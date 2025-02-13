@@ -60,15 +60,15 @@ const DosenHasMatkul = () => {
             render: (text, record) =>
                 isEditing(record) ? (
                     <Select
-                    mode="multiple"
+                        mode="multiple"
                         value={
                             record.dosen_id !== undefined
                             ? record.dosen_id
                             : (record.dosen || []).map((nama) => {
                                 const foundDosen = dosenDropdown.find((d) => d.nama === nama);
                                 return foundDosen ? foundDosen.id : null;
-                            }).filter(Boolean) // Menghapus nilai null atau undefined
-                        } // Pastikan value sesuai dengan ID dosen yang dipilih
+                            }).filter(Boolean) 
+                        } 
                         onChange={(value) => handleSave({ ...record, dosen_id: value })}
                         style={{ width: "100%" }}
                         options={dosenDropdown.map((dosen) => ({
