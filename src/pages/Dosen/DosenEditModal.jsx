@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { Modal, Input, Select, Form, Button } from "antd";
+import { Modal, Input, Select, Form, Button, message} from "antd";
 import { useDosenData } from "../../hooks/Dosen/useDosenData";
 import { updateDosen } from "../../service/PengisianRps/dosen"; // Fungsi update
 
 const { Option } = Select;
 
 const DosenEditModal = ({ visible, onClose, dosenData }) => {
-    const { jurusanDropdown, filteredProdi, setJurusanId } = useDosenData();
+    const { jurusanDropdown, filteredProdi,prodiDropdown, setJurusanId } = useDosenData();
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [selectedProdi, setSelectedProdi] = useState([]);
@@ -20,11 +20,21 @@ const DosenEditModal = ({ visible, onClose, dosenData }) => {
                 nama: dosenData.nama,
                 email: dosenData.email,
                 jenisKelamin: dosenData.jenisKelamin,
-                jurusan: dosenData.jurusan,
-                prodi: Array.isArray(dosenData?.prodi) ? dosenData.prodi.map((p) => p.id) : [],
+                jurusan:jurusanDropdown.find((j) => j.nama === dosenData.jurusan)?.id || null,
+                isActive: dosenData.isActive === 1 ? true : false,
             });
-            setJurusanId(dosenData.jurusan)
-            setSelectedProdi(dosenData.prodi.map((p) => p.id));
+            setJurusanId(
+                jurusanDropdown.find((j) => j.nama === dosenData.jurusan)?.id || null
+            );
+            
+            const prodiIds = dosenData.prodi
+                .map((prodiNama) => {
+                    const foundProdi = prodiDropdown.find((p) => p.name === prodiNama);
+                    return foundProdi ? foundProdi.id : null;
+                })
+                .filter((id) => id !== null); // Menghapus nilai `null`
+            setSelectedProdi(prodiIds);
+            form.setFieldsValue({ prodi: prodiIds }); // Set nilai awal Select       
         }
     }, [dosenData, form]);
 
@@ -32,8 +42,8 @@ const DosenEditModal = ({ visible, onClose, dosenData }) => {
         try {
             setLoading(true);
             const values = await form.validateFields();
-            await updateDosen(dosenData._id, values); // Kirim update ke backend
-            console.log("Dosen berhasil diperbarui:", values);
+            await updateDosen(dosenData._id, values); 
+            message.success("Dosen berhasil diperbarui:");
             setLoading(false);
             onClose();
         } catch (error) {
@@ -57,10 +67,17 @@ const DosenEditModal = ({ visible, onClose, dosenData }) => {
             ]}
         >
             <Form form={form} layout="vertical">
-                <Form.Item name="kode" label="Kode Dosen" rules={[{ required: true, message: "Kode wajib diisi!" }]}>
+                <Form.Item name="kode" label="Kode Dosen" rules={[{ required: true, message: "Kode wajib diisi!" }, {max:6, message:  "maksimal 6 karakter"}]}>
                     <Input placeholder="Masukkan Kode Dosen" />
                 </Form.Item>
-                <Form.Item name="nip" label="NIP" rules={[{ required: true, message: "NIP wajib diisi!" }]}>
+                <Form.Item
+                    name="nip"
+                    label="NIP"
+                    rules={[
+                        { required: true, message: "NIP wajib diisi!" },
+                        { min: 18, max: 18, message: "NIP harus 18 karakter!" },
+                    ]}
+                >
                     <Input placeholder="Masukkan NIP" />
                 </Form.Item>
                 <Form.Item name="nama" label="Nama Dosen" rules={[{ required: true, message: "Nama wajib diisi!" }]}>
@@ -93,7 +110,7 @@ const DosenEditModal = ({ visible, onClose, dosenData }) => {
                     <Select
                         mode="multiple"
                         placeholder="Pilih Program Studi"
-                        value={selectedProdi}
+                        value={selectedProdi} 
                         onChange={(value) => setSelectedProdi(value)}
                     >
                         {filteredProdi.map((prodi) => (
@@ -101,6 +118,12 @@ const DosenEditModal = ({ visible, onClose, dosenData }) => {
                                 {prodi.name}
                             </Option>
                         ))}
+                    </Select>
+                </Form.Item>
+                <Form.Item name="isActive" label="Status" rules={[{ required: true }]}>
+                    <Select placeholder="Pilih status Dosen">
+                        <Option value={true}>Aktif</Option>
+                        <Option value={false}>Tidak Aktif</Option>
                     </Select>
                 </Form.Item>
             </Form>

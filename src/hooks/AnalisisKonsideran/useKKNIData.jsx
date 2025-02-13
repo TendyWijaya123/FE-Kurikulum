@@ -25,25 +25,25 @@ export const useKKNIData = () => {
 	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
 
+	const fetchKkni = async () => {
+		setLoading(true);
+		try {
+			if (user?.prodiId) {
+				const data = await getKkni(user.prodiId);
+				setKkni(data);
+			} else {
+				const prodis = await getProdiDropdown();
+				setProdiDropdown(prodis);
+			}
+		} catch (error) {
+			console.error("Error fetching kkni:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	// Fetch data
 	useEffect(() => {
-		const fetchKkni = async () => {
-			setLoading(true);
-			try {
-				if (user?.prodiId) {
-					const data = await getKkni(user.prodiId);
-					setKkni(data);
-				} else {
-					const prodis = await getProdiDropdown();
-					setProdiDropdown(prodis);
-				}
-			} catch (error) {
-				console.error("Error fetching kkni:", error);
-			} finally {
-				setLoading(false);
-			}
-		};
-
 		fetchKkni();
 	}, [user?.prodiId]);
 
@@ -177,6 +177,8 @@ export const useKKNIData = () => {
 	const handleImportKkni = async (file) => {
 		try {
 			await importKkni(file);
+			message.success('berhasil inport kkni');
+			await fetchKkni();
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
 		}
@@ -188,6 +190,7 @@ export const useKKNIData = () => {
 		try {
 			await postKkni(dataSource);
 			message.success("Data berhasil disimpan!");
+			await fetchKkni();
 		} catch (error) {
 			message.error("Gagal menyimpan data!");
 			console.error("Error saving kkni:", error);
@@ -233,6 +236,7 @@ export const useKKNIData = () => {
 			// Simpan data baru ke state
 			setDataSource(updatedDataSource);
 			setSelectedRowKeys([]); // Hapus pilihan row
+			await fetchKkni();
 		} catch (error) {
 			message.error("Gagal menghapus data!");
 			console.error("Error hapus bench kurikulum:", error);

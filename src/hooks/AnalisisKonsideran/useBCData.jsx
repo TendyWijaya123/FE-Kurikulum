@@ -26,25 +26,24 @@ export const useBCData = () => {
 	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
 
-	// Fetch data
-	useEffect(() => {
-		const fetchBenchKurikulums = async () => {
-			setLoading(true);
-			try {
-				if (user?.prodiId) {
-					const data = await getBenchKurikulums(user.prodiId);
-					setBenchKurikulums(data);
-				} else {
-					const prodis = await getProdiDropdown();
-					setProdiDropdown(prodis);
-				}
-			} catch (error) {
-				console.error("Error fetching bench kurikulums:", error);
-			} finally {
-				setLoading(false);
+	const fetchBenchKurikulums = async () => {
+		setLoading(true);
+		try {
+			if (user?.prodiId) {
+				const data = await getBenchKurikulums(user.prodiId);
+				setBenchKurikulums(data);
+			} else {
+				const prodis = await getProdiDropdown();
+				setProdiDropdown(prodis);
 			}
-		};
+		} catch (error) {
+			console.error("Error fetching bench kurikulums:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
 
+	useEffect(() => {
 		fetchBenchKurikulums();
 	}, [user?.prodiId]);
 
@@ -115,7 +114,8 @@ export const useBCData = () => {
 	const handleImportBenchKurikulum = async (file) => {
 		try {
 			await importBenchKurikulum(file);
-			message.success("berhasil mengimport data, tolong refreseh halaman!!")
+			message.success("berhasil mengimport data")
+			await fetchBenchKurikulums();
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
 		}
@@ -182,6 +182,7 @@ export const useBCData = () => {
 		try {
 			await postBenchKurikulms(dataSource);
 			message.success("Data berhasil disimpan!");
+			await fetchBenchKurikulums();
 		} catch (error) {
 			message.error("Gagal menyimpan data!");
 			console.error("Error saving bench kurikulums:", error);
@@ -215,6 +216,7 @@ export const useBCData = () => {
 
 			setDataSource(toKeep); // Memperbarui data tanpa data yang dihapus
 			setSelectedRowKeys([]);
+			await fetchBenchKurikulums();
 		} catch (error) {
 			message.error("Gagal menghapus data!");
 			console.error("Error hapus bench kurikulum:", error);

@@ -214,8 +214,8 @@ const MenuPenyusunanKurikulum = () =>{
 				title="Matriks CPL-MK"
 				icon={<TableChart />}
 			/>
-            <MenuItemSidebar title="Dosen" icon={<Assignment/>} url="/dosen" ></MenuItemSidebar>
-            <MenuItemSidebar title="Dosen Pengampu" icon={<Assignment/>} url="/dosen-pengampu" ></MenuItemSidebar>
+
+			<MenuItemSidebar title="Dosen Pengampu" icon={<Assignment/>} url="/dosen-pengampu" ></MenuItemSidebar>
         </>
     )
 }

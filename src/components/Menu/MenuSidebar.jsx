@@ -16,6 +16,7 @@ import {
 	Analytics,
 	TableChart,
 	ImportContacts,
+	NearMe,
 } from "@mui/icons-material";
 import MenuItemSidebar from "./MenuItemSidebar";
 import VisibleMenu from "./VisibleMenu";
@@ -30,7 +31,7 @@ const MenuSidebar = () => {
 	
 	return (
 		<ul>
-			 <MenuPenyusunanKurikulum />
+			 {selectedOption !== "dosen" ? <MenuPenyusunanKurikulum /> : <MenuRps/>}
 		</ul>
 	);
 };

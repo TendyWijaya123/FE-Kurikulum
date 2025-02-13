@@ -15,24 +15,25 @@ export const  useDosenData = () => {
     const [prodiDropdown, setProdiDropdown] =  useState([]);
     const [jurusanDropdown, setJurusanDropdown] =  useState([]);
     const [modalVisible, setModalVisible] = useState(false);
+    const [editModalVisible, setEditModalVisible] = useState(false);
     const [filteredProdi, setFilteredProdi] = useState([]);
+
+    const fetchDosen = async () => {
+        setLoading(true);
+        try {
+            const data = await getDosen();
+            setDosen(data.dosens);
+            setJurusanDropdown(data.jurusans);
+            setProdiDropdown(data.prodis);
+        } catch (error) {
+            console.error("Error fetching dosen:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // Fetch data
     useEffect(() => {
-        const fetchDosen = async () => {
-            setLoading(true);
-            try {
-                const data = await getDosen();
-                setDosen(data.dosens);
-                setJurusanDropdown(data.jurusans);
-                setProdiDropdown(data.prodis);
-            } catch (error) {
-                console.error("Error fetching dosen:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchDosen();
     }, [user]);
 
@@ -47,14 +48,13 @@ export const  useDosenData = () => {
                     nama: item.nama,
                     email: item.email,
                     jenisKelamin: item.jenis_kelamin,
-                    jurusan: item.jurusan_id,
-                    prodi: item.prodi.map((data) => data.name).join('\n'),
+                    jurusan: item.jurusan.nama,
+                    isActive: item.is_active,
+                    prodi: item.prodi.map((data) => data.name),
                 }))
             );
-            console.log(dataSource);
         }else {
             setDataSource([]);
-
         }
     }, [dosen]);
 
@@ -144,6 +144,7 @@ export const  useDosenData = () => {
         try {
             await addDosen(dataSource);
             message.success('Data berhasil disimpan!');
+            await fetchDosen();
         } catch (error) {
             message.error('Gagal menyimpan data!');
             console.error("Error saving dosen:", error);
@@ -178,6 +179,7 @@ export const  useDosenData = () => {
 
             setDataSource(toKeep);
             setSelectedRowKeys([]);
+            await fetchDosen();
         } catch (error) {
             message.error('Gagal menghapus data!');
             console.error("Error hapus dosen:", error);
@@ -196,8 +198,12 @@ export const  useDosenData = () => {
         selectedRowKeys,
         filteredProdi,
         jurusanDropdown,
+        prodiDropdown,
         modalVisible,
+        editModalVisible,
+        fetchDosen,
         setModalVisible,
+        setEditModalVisible,
         setJurusanId,
         handleUndo,
         handleSave,

@@ -6,7 +6,7 @@ import { addDosen } from "../../service/PengisianRps/dosen";
 const { Option } = Select;
 
 const DosenCreateModal = ({ visible, onClose }) => {
-    const { jurusanDropdown, filteredProdi, setJurusanId } = useDosenData();
+    const { jurusanDropdown, filteredProdi, setJurusanId, fetchDosen } = useDosenData();
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
     const [selectedProdi, setSelectedProdi] = useState([]);
@@ -19,6 +19,7 @@ const DosenCreateModal = ({ visible, onClose }) => {
             console.log("Data Dosen Baru:", values);
             setLoading(false);
             onClose();
+            await fetchDosen();
         } catch (error) {
             setLoading(false);
         }
@@ -39,12 +40,20 @@ const DosenCreateModal = ({ visible, onClose }) => {
             ]}
         >
             <Form form={form} layout="vertical">
-                <Form.Item name="kode" label="Kode Dosen" rules={[{ required: true, message: "Kode wajib diisi!" }]}>
+                <Form.Item name="kode" label="Kode Dosen" rules={[{ required: true, message: "Kode wajib diisi!" }, {max:6, message:  "maksimal 6 karakter"}]}>
                     <Input placeholder="Masukkan Kode Dosen" />
                 </Form.Item>
-                <Form.Item name="nip" label="NIP" rules={[{ required: true, message: "NIP wajib diisi!" }]}>
+                <Form.Item
+                    name="nip"
+                    label="NIP"
+                    rules={[
+                        { required: true, message: "NIP wajib diisi!" },
+                        { min: 18, max: 18, message: "NIP harus 18 karakter!" },
+                    ]}
+                >
                     <Input placeholder="Masukkan NIP" />
                 </Form.Item>
+
                 <Form.Item name="nama" label="Nama Dosen" rules={[{ required: true, message: "Nama wajib diisi!" }]}>
                     <Input placeholder="Masukkan Nama Dosen" />
                 </Form.Item>
