@@ -11,6 +11,16 @@ export const fetchMataKuliah = async () => {
 	}
 };
 
+export const fetchMataKuliahByJurusan = async () => {
+	try {
+		const response = await api.get("/mata-kuliah/show-jurusan");
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching Mata Kuliah by Jurusan:", error);
+		throw error;
+	}
+};
+
 export const createMataKuliah = async (mataKuliahData) => {
 	try {
 		const response = await api.post("/mata-kuliah", mataKuliahData);
@@ -27,6 +37,22 @@ export const updateMataKuliah = async (id, mataKuliahData) => {
 		return response.data;
 	} catch (error) {
 		console.error("Error updating Mata Kuliah:", error);
+		throw error;
+	}
+};
+
+export const assignReferensiKeMataKuliah = async (
+	mataKuliahId,
+	bukuReferensiId
+) => {
+	try {
+		const response = await api.post("/mata-kuliah/assign-referensi", {
+			mata_kuliah_id: mataKuliahId,
+			buku_referensi_id: bukuReferensiId,
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error assigning Buku Referensi to Mata Kuliah:", error);
 		throw error;
 	}
 };
