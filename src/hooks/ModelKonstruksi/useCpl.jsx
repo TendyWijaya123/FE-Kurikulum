@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
 	deleteCpl,
+	deleteCpls,
 	fetchCpls,
 	upsertCpl,
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
@@ -9,11 +10,22 @@ import { getCPLTemplate, importCPL } from "../../service/Import/ImportService";
 const useCpl = () => {
 	const [loading, setLoading] = useState(false);
 	const [cplData, setCplData] = useState([]);
+	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [alert, setAlert] = useState();
 
 	useEffect(() => {
 		fetchData();
 	}, []);
+
+	const rowSelection = {
+		selectedRowKeys,
+		onChange: (selectedKeys) => {
+			setSelectedRowKeys(selectedKeys);
+		},
+		getCheckboxProps: (record) => ({
+			disabled: !record.id,
+		}),
+	};
 
 	const fetchData = async () => {
 		setLoading(true);
@@ -105,6 +117,28 @@ const useCpl = () => {
 		}
 	};
 
+	const handleDestroyCpls = async () => {
+		console.log("Data yang dikirim:", { cpls_id: selectedRowKeys });
+
+		if (!Array.isArray(selectedRowKeys) || selectedRowKeys.length === 0) {
+			console.error(
+				"Error: cpls_id harus berupa array dengan setidaknya satu elemen."
+			);
+			return;
+		}
+
+		try {
+			await deleteCpls({ cpls_id: selectedRowKeys });
+			await fetchData();
+			setSelectedRowKeys([]);
+		} catch (error) {
+			console.error(
+				"Error deleting PPM:",
+				error.response?.data || error.message
+			);
+		}
+	};
+
 	return {
 		loading,
 		cplData,
@@ -116,6 +150,9 @@ const useCpl = () => {
 		handleDeleteCpls,
 		handleExportTemplateCpl,
 		handleImportCpl,
+		handleDestroyCpls,
+		rowSelection,
+		selectedRowKeys,
 	};
 };
 

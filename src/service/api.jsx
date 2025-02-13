@@ -450,7 +450,6 @@ export const upsertMisiPolban = async (misiPolbanData) => {
 	}
 };
 
-// Delete Misi Polban
 export const deleteMisiPolban = async (id) => {
 	try {
 		const response = await api.delete(`/misi-polban/delete/${id}`);
