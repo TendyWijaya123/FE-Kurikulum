@@ -38,6 +38,9 @@ const MatriksCplHasIea = () => {
                 onChange={(e) =>
                 handleCheckboxChange(record.key - 1, colIndex, e.target.checked)
                 }
+                style={{
+                    transform: "scale(1.2)", 
+                }}
             />
             ),
         })),

@@ -7,7 +7,6 @@ const EditUserForm = ({ userId }) => {
 	const {
 		loading,
 		prodiList,
-		roleList,
 		alert,
 		formData,
 		handleChangeForm,
@@ -97,28 +96,6 @@ const EditUserForm = ({ userId }) => {
 							{prodiList.map((prodi) => (
 								<option key={prodi.id} value={prodi.id}>
 									{prodi.name}
-								</option>
-							))}
-						</select>
-					</div>
-
-					<div className="mb-4">
-						<label
-							htmlFor="role_id"
-							className="block text-sm font-medium text-gray-700">
-							Role
-						</label>
-						<select
-							id="role_id"
-							name="role_id"
-							value={formData.role_id}
-							onChange={handleChangeForm}
-							className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-							required>
-							<option value="">Select Role</option>
-							{roleList.map((role) => (
-								<option key={role.id} value={role.id}>
-									{role.name}
 								</option>
 							))}
 						</select>

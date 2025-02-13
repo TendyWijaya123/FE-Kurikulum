@@ -1,48 +1,70 @@
 import { useState, useEffect, useContext } from "react";
-import { getPermission, upsertPermission, deletePermission, deletePermissions } from "../../service/permission";
+import { getDosen, addDosen, deleteDosen, deleteDosens, getProdiDropdown } from "../../service/PengisianRps/dosen";
 import { AuthContext } from "../../context/AuthProvider";
 import { message } from 'antd';
 
-export const  usePermissionData = () => {
-    const [permission, setPermission] = useState([]);
+export const  useDosenData = () => {
+    const [dosen, setDosen] = useState([]);
     const [loading, setLoading] = useState(false);
     const { user } = useContext(AuthContext);
     const [dataSource, setDataSource] = useState([]);
     const [saving, setSaving] = useState(false);
     const [undoStack, setUndoStack] = useState([]);
     const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+    const [jurusanId, setJurusanId] = useState();
+    const [prodiDropdown, setProdiDropdown] =  useState([]);
+    const [jurusanDropdown, setJurusanDropdown] =  useState([]);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [filteredProdi, setFilteredProdi] = useState([]);
 
     // Fetch data
     useEffect(() => {
-        const fetchPermission = async () => {
+        const fetchDosen = async () => {
             setLoading(true);
             try {
-                const data = await getPermission();
-                setPermission(data);
+                const data = await getDosen();
+                setDosen(data.dosens);
+                setJurusanDropdown(data.jurusans);
+                setProdiDropdown(data.prodis);
             } catch (error) {
-                console.error("Error fetching permission:", error);
+                console.error("Error fetching dosen:", error);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchPermission();
-    }, [user?.prodiId]);
+        fetchDosen();
+    }, [user]);
 
     useEffect(() => {
-        if (permission.length > 0) {
+        if (dosen.length > 0) {
             setDataSource(
-                permission.map((item, index) => ({
-                    key: 'permission' + index + 1,
+                dosen.map((item, index) => ({
+                    key: 'dosen' + index + 1,
                     _id: item.id,
-                    name: item.name
+                    kode: item.kode,
+                    nip: item.nip,
+                    nama: item.nama,
+                    email: item.email,
+                    jenisKelamin: item.jenis_kelamin,
+                    jurusan: item.jurusan_id,
+                    prodi: item.prodi.map((data) => data.name).join('\n'),
                 }))
             );
             console.log(dataSource);
         }else {
             setDataSource([]);
+
         }
-    }, [permission]);
+    }, [dosen]);
+
+    useEffect(()=>{
+        if(jurusanId){
+            setFilteredProdi(prodiDropdown.filter(prodi => prodi.jurusan_id === jurusanId));
+        }else {
+            setFilteredProdi(prodiDropdown);
+        }
+    }, [jurusanId, prodiDropdown])
 
     // Save undo state
     const saveToUndoStack = (data) => {
@@ -74,7 +96,7 @@ export const  usePermissionData = () => {
         // Simpan kondisi sebelum perubahan untuk undo
         saveToUndoStack([...dataSource]);
 
-        const existingKeys = dataSource.map((item) => parseInt(item.key.replace('permission', ''))).sort((a, b) => a - b);
+        const existingKeys = dataSource.map((item) => parseInt(item.key.replace('dosen', ''))).sort((a, b) => a - b);
         let newKeyNumber = 1;
 
         for (let i = 0; i < existingKeys.length; i++) {
@@ -86,7 +108,7 @@ export const  usePermissionData = () => {
     
         // Tambahkan baris baru
         const newRow = {
-            key: 'permission' + newKeyNumber, // Akan diperbarui nanti
+            key: 'dosen' + newKeyNumber, // Akan diperbarui nanti
             _id: null,
             name: '', // Akan diperbarui nanti
         };
@@ -103,7 +125,7 @@ export const  usePermissionData = () => {
 
         if (deleteData?._id !== null) {
             try {
-                await deletePermission(deleteData._id);
+                await c(deleteData._id);
             } catch (error) {
                 console.error("Error deleting delete:", error);
                 return;
@@ -117,14 +139,14 @@ export const  usePermissionData = () => {
     
 
     // Save data to server
-    const handleSaveData = async () => {
+    const handleSaveAddData = async () => {
         setSaving(true);
         try {
-            await upsertPermission(dataSource);
+            await addDosen(dataSource);
             message.success('Data berhasil disimpan!');
         } catch (error) {
             message.error('Gagal menyimpan data!');
-            console.error("Error saving permission:", error);
+            console.error("Error saving dosen:", error);
         } finally {
             setSaving(false);
         }
@@ -135,7 +157,7 @@ export const  usePermissionData = () => {
         onChange: (newSelectedRowKeys) => setSelectedRowKeys(newSelectedRowKeys),
     };
 
-    const handleDeletePermissions = async () => {
+    const handleDeleteDosens = async () => {
         setLoading(true);
         try {
             // Pisahkan data yang akan dihapus dan yang akan disimpan
@@ -151,14 +173,14 @@ export const  usePermissionData = () => {
                 { toDelete: [], toKeep: [] }
             );
             // Perbarui ulang key dan code agar tetap terurut
-            await deletePermissions(toDelete);
+            await deleteDosens(toDelete);
             message.success('Data berhasil dihapus!');
 
             setDataSource(toKeep);
             setSelectedRowKeys([]);
         } catch (error) {
             message.error('Gagal menghapus data!');
-            console.error("Error hapus permission:", error);
+            console.error("Error hapus dosen:", error);
         } finally {
             setLoading(false);
         }
@@ -166,18 +188,22 @@ export const  usePermissionData = () => {
          
 
     return {
-        permission,
         loading,
         dataSource,
         saving,
         undoStack,
         rowSelection,
         selectedRowKeys,
+        filteredProdi,
+        jurusanDropdown,
+        modalVisible,
+        setModalVisible,
+        setJurusanId,
         handleUndo,
         handleSave,
         handleAddRow,
         handleDeleteRow,
-        handleSaveData,
-        handleDeletePermissions,
+        handleSaveAddData,
+        handleDeleteDosens,
     };
 };
