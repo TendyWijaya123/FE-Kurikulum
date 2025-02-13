@@ -54,6 +54,7 @@ const useMataKuliah = () => {
 					metodePembelajaranResponse,
 					bentukPembelajaranResponse,
 				]) => {
+					console.log(mataKuliahResponse.data);
 					setMataKuliahData(mataKuliahResponse.data);
 					setFormulasiCpaDropdown(formulasiResponse.data);
 					setMetodePembelajaranDropdown(metodePembelajaranResponse.data);
@@ -100,6 +101,10 @@ const useMataKuliah = () => {
 				bentuk_pembelajaran: kemampuan.bentuk_pembelajaran || [],
 				metode_pembelajaran: kemampuan.metode_pembelajaran || [],
 			})),
+			tujuan_belajar: mataKuliah.tujuan_belajar.map((tujuan) => ({
+				kode: tujuan.kode,
+				deskripsi: tujuan.deskripsi,
+			})),
 		});
 		setIsModalUpdateVisible(true);
 	};
@@ -123,9 +128,12 @@ const useMataKuliah = () => {
 					metode_pembelajaran_ids: kemampuanAkhir.metode_pembelajaran,
 					bentuk_pembelajaran_ids: kemampuanAkhir.bentuk_pembelajaran,
 				})),
+				tujuan_belajar: newData.tujuan_belajar.map((tujuan) => ({
+					deskripsi: tujuan.deskripsi,
+				})),
 				formulasi_cpa_ids: newData.formulasi_cpas,
 			};
-
+			console.log(requestData);
 			await createMataKuliah(requestData);
 			setIsModalCreateVisible(false);
 			fetchData();
@@ -158,8 +166,12 @@ const useMataKuliah = () => {
 					metode_pembelajaran_ids: kemampuanAkhir.metode_pembelajaran,
 					bentuk_pembelajaran_ids: kemampuanAkhir.bentuk_pembelajaran,
 				})),
+				tujuan_belajar: editedData.tujuan_belajar.map((tujuan) => ({
+					deskripsi: tujuan.deskripsi,
+				})),
 				formulasi_cpa_ids: editedData.formulasi_cpas,
 			};
+			console.log(requestData);
 
 			await updateMataKuliah(editedData.id, requestData);
 			setIsModalUpdateVisible(false);

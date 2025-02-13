@@ -20,6 +20,9 @@ const CplTable = () => {
 		handleSaveCpls,
 		handleExportTemplateCpl,
 		handleImportCpl,
+		handleDestroyCpls,
+		rowSelection,
+		selectedRowKeys,
 	} = useCpl();
 
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
@@ -37,9 +40,6 @@ const CplTable = () => {
 			dataIndex: "kode",
 			key: "kode",
 			render: (text) => text || "Masukkan CPL yang baru",
-			defaultSortOrder: "descend",
-			sorter: (a, b) =>
-				a.kode.localeCompare(b.kode, undefined, { numeric: true }),
 			width: "20%",
 		},
 		{
@@ -100,6 +100,11 @@ const CplTable = () => {
 					style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
 					Simpan
 				</Button>
+				{selectedRowKeys.length > 0 && (
+					<Button danger type="primary" onClick={handleDestroyCpls}>
+						Hapus CPL terpilih
+					</Button>
+				)}
 			</div>
 
 			{alert && <div className="text-red-500 mb-4">{alert}</div>}
@@ -112,8 +117,9 @@ const CplTable = () => {
 						columns={columns}
 						dataSource={cplData.map((item, index) => ({
 							...item,
-							key: index,
+							key: item.id,
 						}))}
+						rowSelection={rowSelection}
 						pagination={false}
 						bordered
 						style={{ minWidth: "400px" }}

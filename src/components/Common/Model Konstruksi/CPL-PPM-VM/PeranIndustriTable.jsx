@@ -20,6 +20,9 @@ const PeranIndustriTable = () => {
 		handleSavePeranIndustri,
 		handleImportPeranIndustri,
 		handleExportTemplatePeranIndustri,
+		handleDestroyPeranIndustris,
+		selectedRowKeys,
+		rowSelection,
 	} = usePeranIndustri();
 
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
@@ -116,6 +119,11 @@ const PeranIndustriTable = () => {
 					style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
 					Simpan
 				</Button>
+				{selectedRowKeys.length > 0 && (
+					<Button danger type="primary" onClick={handleDestroyPeranIndustris}>
+						Hapus Peran Industri terpilih
+					</Button>
+				)}
 			</div>
 
 			{alert && <div className="text-red-500 mb-4">{alert}</div>}
@@ -128,8 +136,9 @@ const PeranIndustriTable = () => {
 						columns={columns}
 						dataSource={peranIndustriData.map((item, index) => ({
 							...item,
-							key: index,
+							key: item.id,
 						}))}
+						rowSelection={rowSelection}
 						pagination={false}
 						bordered
 						style={{ minWidth: "400px" }}

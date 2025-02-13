@@ -24,6 +24,7 @@ const ModalCreateMataKuliah = ({
 
 		formulasi_cpas: [],
 		kemampuan_akhir: [],
+		tujuan_belajar: [],
 	});
 
 	const handleAddKemampuan = () => {
@@ -37,6 +38,26 @@ const ModalCreateMataKuliah = ({
 		setNewData({
 			...newData,
 			kemampuan_akhir: newKemampuanAkhir,
+		});
+	};
+
+	const handleAddTujuanBelajar = () => {
+		const newTujuanBelajar = [...newData.tujuan_belajar];
+		newTujuanBelajar.push({
+			deskripsi: "",
+		});
+		setNewData({
+			...newData,
+			tujuan_belajar: newTujuanBelajar,
+		});
+	};
+
+	const handleRemoveTujuanBelajar = (index) => {
+		const newTujuanBelajar = [...newData.tujuan_belajar];
+		newTujuanBelajar.splice(index, 1);
+		setNewData({
+			...newData,
+			tujuan_belajar: newTujuanBelajar,
 		});
 	};
 
@@ -55,7 +76,11 @@ const ModalCreateMataKuliah = ({
 			open={isOpen}
 			onCancel={onClose}
 			footer={[
-				<Button key="cancel" onClick={() => onClose}>
+				<Button
+					key="cancel"
+					onClick={() => {
+						onClose;
+					}}>
 					Cancel
 				</Button>,
 				<Button
@@ -291,6 +316,55 @@ const ModalCreateMataKuliah = ({
 						onClick={handleAddKemampuan}
 						className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
 						Tambah Kemampuan
+					</button>
+				</div>
+				<div>
+					<h3 className="text-lg font-semibold">Tujuan Belajar</h3>
+					<div className="overflow-x-auto">
+						<table className="w-full min-w-[1000px] table-auto">
+							<thead>
+								<tr>
+									<th className="px-4 py-2 text-left">Kode</th>
+									<th className="px-4 py-2 text-left">Deskripsi</th>
+								</tr>
+							</thead>
+							<tbody>
+								{newData.tujuan_belajar?.map((tujuanBelajar, index) => (
+									<tr key={index}>
+										<td px-4 py-2>
+											Masukkan tujuan belajar yang baru
+										</td>
+										<td className="px-4 py-2">
+											<Input.TextArea
+												type="text"
+												value={tujuanBelajar.deskripsi}
+												onChange={(e) => {
+													const newTujuanBelajar = [...newData.tujuan_belajar];
+													newTujuanBelajar[index].deskripsi = e.target.value;
+													setNewData({
+														...newData,
+														tujuan_belajar: newTujuanBelajar,
+													});
+												}}
+												className="w-full mt-2"
+											/>
+										</td>
+										<td className="px-4 py-2">
+											<button
+												onClick={() => handleRemoveTujuanBelajar(index)}
+												className="text-red-500 hover:text-red-700">
+												Hapus
+											</button>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+					<button
+						onClick={handleAddTujuanBelajar}
+						className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+						Tambah Tujuan Belajar
 					</button>
 				</div>
 			</div>

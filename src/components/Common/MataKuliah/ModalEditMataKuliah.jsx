@@ -25,6 +25,15 @@ const ModalEditMataKuliah = ({
 		});
 	};
 
+	const handleRemoveTujuanBelajar = (index) => {
+		const newTujuanBelajar = [...editedData.tujuan_belajar];
+		newTujuanBelajar.splice(index, 1);
+		setEditedData({
+			...editedData,
+			tujuan_belajar: newTujuanBelajar,
+		});
+	};
+
 	const handleAddKemampuan = () => {
 		const newKemampuanAkhir = [...editedData.kemampuan_akhir];
 		newKemampuanAkhir.push({
@@ -36,6 +45,17 @@ const ModalEditMataKuliah = ({
 		setEditedData({
 			...editedData,
 			kemampuan_akhir: newKemampuanAkhir,
+		});
+	};
+
+	const handleAddTujuanBelajar = () => {
+		const newTujuanBelajar = [...editedData.tujuan_belajar];
+		newTujuanBelajar.push({
+			deskripsi: "",
+		});
+		setEditedData({
+			...editedData,
+			tujuan_belajar: newTujuanBelajar,
 		});
 	};
 
@@ -296,6 +316,65 @@ const ModalEditMataKuliah = ({
 						onClick={handleAddKemampuan}
 						className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
 						Tambah Kemampuan
+					</button>
+				</div>
+				<div>
+					<h3 className="text-lg font-semibold">Tujuan Belajar</h3>
+					<div className="overflow-x-auto">
+						{" "}
+						{/* Mengaktifkan scroll horizontal */}
+						<table className="w-full min-w-[1000px] table-auto">
+							{" "}
+							{/* Menambahkan min-width pada tabel */}
+							<thead>
+								<tr>
+									<th className="px-4 py-2 text-left">Kode</th>
+									<th className="px-4 py-2 text-left">Deskripsi</th>
+									<th className="px-4 py-2 text-left">Aksi</th>
+								</tr>
+							</thead>
+							<tbody>
+								{editedData.tujuan_belajar?.map((tujuanBelajar, index) => (
+									<tr key={index}>
+										<td>
+											{tujuanBelajar.kode
+												? tujuanBelajar.kode
+												: "Masukkan Tujuan Belajar yang baru"}
+										</td>
+										<td className="px-4 py-2">
+											<Input.TextArea
+												type="text"
+												value={tujuanBelajar.deskripsi}
+												onChange={(e) => {
+													const newTujuanBelajar = [
+														...editedData.tujuan_belajar,
+													];
+													newTujuanBelajar[index].deskripsi = e.target.value;
+													setEditedData({
+														...editedData,
+														tujuanBelajar: newTujuanBelajar,
+													});
+												}}
+												className="w-full mt-2"
+											/>
+										</td>
+
+										<td className="px-4 py-2">
+											<button
+												onClick={() => handleRemoveTujuanBelajar(index)}
+												className="text-red-500 hover:text-red-700">
+												Hapus
+											</button>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+					<button
+						onClick={handleAddTujuanBelajar}
+						className="mt-4 px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+						Tambah Tujuan Belajar
 					</button>
 				</div>
 			</div>

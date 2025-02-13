@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import {
 	deletePeranIndustri,
+	deletePeranIndustris,
 	fetchPeranIndustri,
 	upsertPeranIndustri,
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
@@ -13,7 +14,18 @@ const usePeranIndustri = () => {
 	const [peranIndustriData, setPeranIndustriData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [alert, setAlert] = useState(null);
+
+	const rowSelection = {
+		selectedRowKeys,
+		onChange: (selectedKeys) => {
+			setSelectedRowKeys(selectedKeys);
+		},
+		getCheckboxProps: (record) => ({
+			disabled: !record.id,
+		}),
+	};
 
 	const fetchData = async () => {
 		setLoading(true);
@@ -76,6 +88,27 @@ const usePeranIndustri = () => {
 		}
 	};
 
+	const handleDestroyPeranIndustris = async () => {
+		console.log(selectedRowKeys);
+		if (!Array.isArray(selectedRowKeys) || selectedRowKeys.length === 0) {
+			console.error(
+				"Error: peran Industri  harus berupa array dengan setidaknya satu elemen."
+			);
+			return;
+		}
+
+		try {
+			await deletePeranIndustris({ peran_industris_id: selectedRowKeys });
+			await fetchData();
+			setSelectedRowKeys([]);
+		} catch (error) {
+			console.error(
+				"Error deleting PPM:",
+				error.response?.data || error.message
+			);
+		}
+	};
+
 	const handleAddPeranIndustri = () => {
 		setPeranIndustriData((prev) => [...prev, { deskripsi: "", jabatan: "" }]);
 	};
@@ -122,6 +155,9 @@ const usePeranIndustri = () => {
 		handleAddPeranIndustri,
 		handlePeranIndustriChange,
 		handleDeletePeranIndustriPoint,
+		handleDestroyPeranIndustris,
+		rowSelection,
+		selectedRowKeys,
 		alert,
 	};
 };
