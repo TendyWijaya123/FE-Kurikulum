@@ -31,6 +31,19 @@ export const deleteCpl = async (id) => {
 	}
 };
 
+export const deleteCpls = async (cplData) => {
+	try {
+		const response = await api.delete("/cpls/multiple-delete", {
+			data: cplData,
+			headers: { "Content-Type": "application/json" },
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error deleting Cpl:", error);
+		throw error;
+	}
+};
+
 /* --------------------------------PPM API-------------------------------------------- */
 export const fetchPpms = async () => {
 	try {
@@ -48,6 +61,19 @@ export const upsertPpm = async (ppmData) => {
 		return response.data;
 	} catch (error) {
 		console.error("Error upserting PPM:", error);
+		throw error;
+	}
+};
+
+export const deletePpms = async (ppmData) => {
+	try {
+		const response = await api.delete("/ppms/multiple-delete", {
+			data: ppmData,
+			headers: { "Content-Type": "application/json" },
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error deleting PPM:", error);
 		throw error;
 	}
 };
@@ -93,6 +119,19 @@ export const deletePeranIndustri = async (id) => {
 		return response.data;
 	} catch (error) {
 		console.error("Error deleting Peran Industri:", error);
+		throw error;
+	}
+};
+
+export const deletePeranIndustris = async (peranIndustriData) => {
+	try {
+		const response = await api.delete("/peran-industri/multiple-delete", {
+			data: peranIndustriData,
+			headers: { "Content-Type": "application/json" },
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error deleting PeranIndustri:", error);
 		throw error;
 	}
 };

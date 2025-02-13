@@ -1,21 +1,36 @@
-import { Dashboard, People, School, Class, MenuBook, AccountTree, Assignment,
-	AdminPanelSettings, PersonAdd, Lock, VerifiedUser, Assessment, BarChart,
-	Science , Analytics, TableChart, ImportContacts
- } from "@mui/icons-material";
+import {
+	Dashboard,
+	People,
+	School,
+	Class,
+	MenuBook,
+	AccountTree,
+	Assignment,
+	AdminPanelSettings,
+	PersonAdd,
+	Lock,
+	VerifiedUser,
+	Assessment,
+	BarChart,
+	Science,
+	Analytics,
+	TableChart,
+	ImportContacts,
+} from "@mui/icons-material";
 import MenuItemSidebar from "./MenuItemSidebar";
 import VisibleMenu from "./VisibleMenu";
 import React, { useState, useEffect } from "react";
-const MenuPenyusunanKurikulum = () =>{
-    const [openMenu, setOpenMenu] = useState(null);
+const MenuPenyusunanKurikulum = () => {
+	const [openMenu, setOpenMenu] = useState(null);
 
-    useEffect(() => {
+	useEffect(() => {
 		const savedMenu = localStorage.getItem("openMenu");
 		if (savedMenu) {
 			setOpenMenu(savedMenu);
 		}
 	}, []);
 
-    const handleMenuToggle = (menuId) => {
+	const handleMenuToggle = (menuId) => {
 		const newOpenMenu = openMenu === menuId ? null : menuId;
 		setOpenMenu(newOpenMenu);
 		if (newOpenMenu) {
@@ -25,9 +40,9 @@ const MenuPenyusunanKurikulum = () =>{
 		}
 	};
 
-    return (
-        <>
-            {/* Dashboard */}
+	return (
+		<>
+			{/* Dashboard */}
 			<MenuItemSidebar
 				url="/dashboard"
 				title="Dashboard"
@@ -214,10 +229,22 @@ const MenuPenyusunanKurikulum = () =>{
 				title="Matriks CPL-MK"
 				icon={<TableChart />}
 			/>
+			<MenuItemSidebar
+				title="Dosen Pengampu"
+				icon={<Assignment />}
+				url="/dosen-pengampu"></MenuItemSidebar>
 
-			<MenuItemSidebar title="Dosen Pengampu" icon={<Assignment/>} url="/dosen-pengampu" ></MenuItemSidebar>
-        </>
-    )
-}
+			<MenuItemSidebar
+				title="Buku Referensi"
+				icon={<Assignment />}
+				url="/buku-referensi"></MenuItemSidebar>
+
+			<MenuItemSidebar
+				title="Referensi Mata Kuliah"
+				icon={<Assignment />}
+				url="/referensi-mata-kuliah"></MenuItemSidebar>
+		</>
+	);
+};	
 
 export default MenuPenyusunanKurikulum;

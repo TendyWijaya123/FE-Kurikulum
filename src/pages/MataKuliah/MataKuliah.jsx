@@ -46,6 +46,11 @@ const MataKuliah = () => {
 			key: "nama",
 		},
 		{
+			title: "Tujuan Belajar",
+			dataIndex: "tujuan",
+			key: "tujuan",
+		},
+		{
 			title: "Semester",
 			dataIndex: "semester",
 			key: "semester",
@@ -194,6 +199,15 @@ const MataKuliah = () => {
 			),
 		},
 	];
+
+	const tujuanBelajarColumns = [
+		{
+			title: "Kode",
+			dataIndex: "kode",
+			key: "kode",
+		},
+		{ title: "Deskripsi", dataIndex: "deskripsi", key: "deskripsi" },
+	];
 	return (
 		<DefaultLayout title="Mata Kuliah">
 			<div className="w-full bg-white p-4 rounded-lg shadow-md">
@@ -220,12 +234,27 @@ const MataKuliah = () => {
 								pagination={false}
 								expandable={{
 									expandedRowRender: (record) => (
-										<Table
-											columns={kemampuanAkhirColumns}
-											dataSource={record.kemampuan_akhir}
-											pagination={false}
-											rowKey="id"
-										/>
+										<>
+											<h3 className="text-lg font-semibold text-blue-600 mt-4 mb-2">
+												Kemampuan Akhir
+											</h3>
+											<Table
+												columns={kemampuanAkhirColumns}
+												dataSource={record.kemampuan_akhir}
+												pagination={false}
+												rowKey="id"
+											/>
+
+											<h3 className="text-lg font-semibold text-green-600 mt-6 mb-2">
+												Tujuan Belajar
+											</h3>
+											<Table
+												columns={tujuanBelajarColumns}
+												dataSource={record.tujuan_belajar}
+												pagination={false}
+												rowKey="id"
+											/>
+										</>
 									),
 								}}
 							/>

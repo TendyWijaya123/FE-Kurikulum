@@ -14,12 +14,15 @@ const PpmTable = () => {
 		loading,
 		ppmData,
 		alert,
+		rowSelection,
 		handleAddPpmPoint,
 		handleChangePpmPoint,
 		handleDeletePpmPoint,
 		handleSavePpms,
 		handleImportPpm,
 		handleExportTemplatePpm,
+		handleDestroyPpms,
+		selectedRowKeys,
 	} = usePpm();
 
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
@@ -36,7 +39,7 @@ const PpmTable = () => {
 			title: "Kode",
 			dataIndex: "kode",
 			key: "kode",
-			render: (text) => text || "Masukkan CPL yang baru",
+			render: (text) => text || "Masukkan PPM yang baru",
 			filterDropdown: true,
 			width: "20%",
 		},
@@ -98,6 +101,11 @@ const PpmTable = () => {
 					style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
 					Simpan
 				</Button>
+				{selectedRowKeys.length > 0 && (
+					<Button danger type="primary" onClick={handleDestroyPpms}>
+						Hapus PPM terpilih
+					</Button>
+				)}
 			</div>
 
 			{alert && <div className="text-red-500 mb-4">{alert}</div>}
@@ -110,8 +118,9 @@ const PpmTable = () => {
 						columns={columns}
 						dataSource={ppmData.map((item, index) => ({
 							...item,
-							key: index,
+							key: item.id,
 						}))}
+						rowSelection={rowSelection}
 						pagination={false}
 						bordered
 						style={{ minWidth: "400px" }}

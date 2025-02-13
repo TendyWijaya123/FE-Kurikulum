@@ -31,266 +31,281 @@ import MatriksMpPMk from "../pages/Matriks/MatriksMpPMk";
 import DashboardRps from "../pages/PengisianRPS/DashboardRps";
 import DosenHasMatkul from "../pages/Dosen/dosenHasMatkul";
 import Dosen from "../pages/Dosen/Dosen";
+import BukuReferensi from "../pages/BukuReferensi/BukuReferensi";
+import ReferensiMataKuliah from "../pages/ReferensiMataKuliah/ReferensiMataKuliah";
 
 export default function PenyusunanKurikulumRoutes() {
-    return (
-        <Routes>
-				<Route path="/" element={<Login />} />
-				<Route path="/login" element={<Login />} />
-				<Route path="/unauthorized" element={<Unauthorized />} />
-				<Route
-					path="/temporary-unavailable"
-					element={<TemporaryUnavailable />}
-				/>
-				<Route path="/coba" element={<Dashboard />} />
-				{/* User Pages */}
-				<Route
-					path="/users"
-					element={
-						<ProtectedRoute>
-							<Users />
-						</ProtectedRoute>
-					}
-				/>
+	return (
+		<Routes>
+			<Route path="/" element={<Login />} />
+			<Route path="/login" element={<Login />} />
+			<Route path="/unauthorized" element={<Unauthorized />} />
+			<Route path="/temporary-unavailable" element={<TemporaryUnavailable />} />
+			<Route path="/coba" element={<Dashboard />} />
+			{/* User Pages */}
+			<Route
+				path="/users"
+				element={
+					<ProtectedRoute>
+						<Users />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/user/create"
-					element={
-						<ProtectedRoute>
-							<CreateUser />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/user/create"
+				element={
+					<ProtectedRoute>
+						<CreateUser />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/user/edit/:userId"
-					element={
-						<ProtectedRoute>
-							<EditUser />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/user/edit/:userId"
+				element={
+					<ProtectedRoute>
+						<EditUser />
+					</ProtectedRoute>
+				}
+			/>
 
-				{/* Jurusan */}
-				<Route
-					path="/jurusans"
-					element={
-						<ProtectedRoute>
-							<Jurusans />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/jurusans/create"
-					element={
-						<ProtectedRoute>
-							<CreateJurusan />
-						</ProtectedRoute>
-					}
-				/>
+			{/* Jurusan */}
+			<Route
+				path="/jurusans"
+				element={
+					<ProtectedRoute>
+						<Jurusans />
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/jurusans/create"
+				element={
+					<ProtectedRoute>
+						<CreateJurusan />
+					</ProtectedRoute>
+				}
+			/>
 
-				{/* Prodi */}
-				<Route
-					path="/prodis"
-					element={
-						<ProtectedRoute>
-							<Prodis />
-						</ProtectedRoute>
-					}
-				/>
+			{/* Prodi */}
+			<Route
+				path="/prodis"
+				element={
+					<ProtectedRoute>
+						<Prodis />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/prodis/create"
-					element={
-						<ProtectedRoute>
-							<CreateProdi />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/prodis/create"
+				element={
+					<ProtectedRoute>
+						<CreateProdi />
+					</ProtectedRoute>
+				}
+			/>
 
-				{/* Kurikulum */}
+			{/* Kurikulum */}
 
-				<Route
-					path="/kurikulums"
-					element={
-						<ProtectedRoute>
-							<Kurikulums />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/kurikulum/create"
-					element={
-						<ProtectedRoute>
-							<CreateKurikulum />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/kurikulums"
+				element={
+					<ProtectedRoute>
+						<Kurikulums />
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/kurikulum/create"
+				element={
+					<ProtectedRoute>
+						<CreateKurikulum />
+					</ProtectedRoute>
+				}
+			/>
 
-				{/* VMT */}
+			{/* VMT */}
 
-				<Route
-					path="/vmt"
-					element={
-						<ProtectedRoute>
-							<VMT />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/vmt"
+				element={
+					<ProtectedRoute>
+						<VMT />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/cpl-ppm-vm"
-					element={
-						<ProtectedRoute isProdiRestricted={true}>
-							<CplPpmVm />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/cpl-ppm-vm"
+				element={
+					<ProtectedRoute isProdiRestricted={true}>
+						<CplPpmVm />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/matrix-cpl-ppm"
-					element={
-						<ProtectedRoute>
-							<MatrixCplPpm />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/matrix-cpl-ppm"
+				element={
+					<ProtectedRoute>
+						<MatrixCplPpm />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/dashboard"
-					element={
-						<ProtectedRoute>
-							<Dashboard />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/analisis-konsideran/sksu"
-					element={
-						<ProtectedRoute>
-							<SKSU />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/dashboard"
+				element={
+					<ProtectedRoute>
+						<Dashboard />
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/analisis-konsideran/sksu"
+				element={
+					<ProtectedRoute>
+						<SKSU />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/analisis-konsideran/bench-kurikulums"
-					element={
-						<ProtectedRoute>
-							<BenchKurikulums />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/analisis-konsideran/bench-kurikulums"
+				element={
+					<ProtectedRoute>
+						<BenchKurikulums />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/analisis-konsideran/kkni"
-					element={
-						<ProtectedRoute>
-							<KKNI />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/analisis-konsideran/kkni"
+				element={
+					<ProtectedRoute>
+						<KKNI />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/mp"
-					element={
-						<ProtectedRoute>
-							<MateriPembelajaran />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/matriks-cpl-iea"
-					element={
-						<ProtectedRoute>
-							<MatriksCplHasIea />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/matriks-p-mp"
-					element={
-						<ProtectedRoute>
-							<MatriksPHasMp />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/analisis-konsideran/ipteks"
-					element={
-						<ProtectedRoute>
-							<Ipteks />
-						</ProtectedRoute>
-					}
-				/>
-				{/* Pengetahuan */}
+			<Route
+				path="/mp"
+				element={
+					<ProtectedRoute>
+						<MateriPembelajaran />
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/matriks-cpl-iea"
+				element={
+					<ProtectedRoute>
+						<MatriksCplHasIea />
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/matriks-p-mp"
+				element={
+					<ProtectedRoute>
+						<MatriksPHasMp />
+					</ProtectedRoute>
+				}
+			/>
+			<Route
+				path="/analisis-konsideran/ipteks"
+				element={
+					<ProtectedRoute>
+						<Ipteks />
+					</ProtectedRoute>
+				}
+			/>
+			{/* Pengetahuan */}
 
-				<Route
-					path="/pengetahuan"
-					element={
-						<ProtectedRoute>
-							<Pengetahuan />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/pengetahuan"
+				element={
+					<ProtectedRoute>
+						<Pengetahuan />
+					</ProtectedRoute>
+				}
+			/>
 
-				{/* Mata Kuliah */}
+			{/* Mata Kuliah */}
 
-				<Route
-					path="/mata-kuliah"
-					element={
-						<ProtectedRoute>
-							<MataKuliah />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/mata-kuliah"
+				element={
+					<ProtectedRoute>
+						<MataKuliah />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/matrix-cpl-p"
-					element={
-						<ProtectedRoute>
-							<MatrixCplP />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/matrix-cpl-p"
+				element={
+					<ProtectedRoute>
+						<MatrixCplP />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/matriks-p-mp-mk"
-					element={
-						<ProtectedRoute>
-							<MatriksMpPMk />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/matriks-p-mp-mk"
+				element={
+					<ProtectedRoute>
+						<MatriksMpPMk />
+					</ProtectedRoute>
+				}
+			/>
 
-				<Route
-					path="/matrix-cpl-mk"
-					element={
-						<ProtectedRoute>
-							<MatrixCplMk />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/matrix-cpl-mk"
+				element={
+					<ProtectedRoute>
+						<MatrixCplMk />
+					</ProtectedRoute>
+				}
+			/>
 
-                <Route
-					path="/dosen"
-					element={
-						<ProtectedRoute>
-							<Dosen />
-						</ProtectedRoute>
-					}
-				/>
+			<Route
+				path="/dosen"
+				element={
+					<ProtectedRoute>
+						<Dosen />
+					</ProtectedRoute>
+				}
+			/>
 
-                <Route
-					path="/dosen-pengampu"
-					element={
-						<ProtectedRoute>
-							<DosenHasMatkul />
-						</ProtectedRoute>
-					}
-				/>
-			</Routes>
-            
+			<Route
+				path="/dosen-pengampu"
+				element={
+					<ProtectedRoute>
+						<DosenHasMatkul />
+					</ProtectedRoute>
+				}
+			/>
 
-    );
+			<Route
+				path="/buku-referensi"
+				element={
+					<ProtectedRoute>
+						<BukuReferensi />
+					</ProtectedRoute>
+				}
+			/>
+
+			<Route
+				path="/referensi-mata-kuliah"
+				element={
+					<ProtectedRoute>
+						<ReferensiMataKuliah />
+					</ProtectedRoute>
+				}
+			/>
+		</Routes>
+	);
 }
