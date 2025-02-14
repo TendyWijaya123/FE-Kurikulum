@@ -35,10 +35,9 @@ const useCreateUser = () => {
 		setFormData({ ...formData, [name]: value });
 	};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
+	const handleSubmit = async () => {
 		setLoading(true);
-		setAlert(null); // Clear previous alerts
+		setAlert(null);
 
 		try {
 			const response = await createUser(formData);

@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import useVmt from "../../../hooks/Vmt/useVmt";
 import { Spin } from "antd";
+import useVmtJurusan from "../../../hooks/Vmt/useVmtJurusan";
 
 const VisiJurusan = () => {
-	const { loading, alert, vmtJurusan, handleUpdateVmtJurusan } = useVmt();
+	const { loading, alert, vmtJurusan, handleUpdateVmtJurusan } =
+		useVmtJurusan();
 
 	// State untuk visi_jurusan dan visi_keilmuan_prodi
 	const [visiJurusanInput, setVisiJurusanInput] = useState({
@@ -40,7 +42,7 @@ const VisiJurusan = () => {
 				{loading ? (
 					<Spin />
 				) : (
-					<div className="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50">
+					<div className="flex items-center space-x-4 p-4  rounded-lg ">
 						<input
 							type="text"
 							name="visi_jurusan"
@@ -58,7 +60,7 @@ const VisiJurusan = () => {
 				{loading ? (
 					<Spin />
 				) : (
-					<div className="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50">
+					<div className="flex items-center space-x-4 p-4  rounded-lg ">
 						<input
 							type="text"
 							name="visi_keilmuan_prodi"

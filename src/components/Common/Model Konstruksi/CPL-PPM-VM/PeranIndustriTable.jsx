@@ -89,10 +89,6 @@ const PeranIndustriTable = () => {
 
 	return (
 		<div className="p-6 bg-white shadow-lg rounded-lg">
-			<h1 className="text-2xl font-semibold mb-4 text-gray-800">
-				Daftar Peran Industri
-			</h1>
-
 			<div className="mb-4 flex flex-wrap gap-2">
 				<Button
 					type="primary"

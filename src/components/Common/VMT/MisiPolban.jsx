@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import useVmt from "../../../hooks/Vmt/useVmt";
 import DeleteButton from "../../Button/DeleteButton";
-import { Spin } from "antd";
+import { Button, Spin } from "antd";
+import useVmtPolban from "../../../hooks/Vmt/useVmtPolban";
+import { SaveOutlined } from "@ant-design/icons";
 
 const MisiPolban = () => {
 	const {
@@ -9,7 +10,7 @@ const MisiPolban = () => {
 		handleDeleteMisiPolban,
 		handleUpsertMisiPolbans,
 		loading,
-	} = useVmt();
+	} = useVmtPolban();
 
 	const [misiPolban, setMisiPolban] = useState([]);
 
@@ -53,10 +54,6 @@ const MisiPolban = () => {
 
 	return (
 		<div className="w-full bg-white p-6 rounded-lg shadow-lg mb-4">
-			<h2 className="text-3xl font-semibold text-center mb-6 text-gray-800">
-				Misi Polban
-			</h2>
-
 			{loading ? (
 				<Spin />
 			) : (
@@ -64,7 +61,7 @@ const MisiPolban = () => {
 					{misiPolban.map((item, index) => (
 						<div
 							key={index}
-							className="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50">
+							className="flex items-center space-x-4 p-4 border rounded-lg ">
 							<input
 								type="text"
 								value={item.misi_polban}
@@ -92,11 +89,14 @@ const MisiPolban = () => {
 				</div>
 
 				<div className="mt-6 text-center">
-					<button
+					<Button
+						type="default"
+						icon={<SaveOutlined />}
 						onClick={() => handleUpsertMisiPolbans(misiPolban)}
-						className="px-6 py-3 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition duration-300">
+						className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
 						Simpan
-					</button>
+					</Button>
+					;
 				</div>
 			</div>
 		</div>

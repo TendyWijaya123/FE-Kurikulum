@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import useVmt from "../../../hooks/Vmt/useVmt";
 import DeleteButton from "../../Button/DeleteButton";
-import { Spin } from "antd";
+import { Button, Spin } from "antd";
+import useVmtJurusan from "../../../hooks/Vmt/useVmtJurusan";
+import { SaveOutlined } from "@mui/icons-material";
 
 const MisiJurusan = () => {
 	const {
@@ -9,7 +10,7 @@ const MisiJurusan = () => {
 		handleDeleteMisiJurusan,
 		handleUpsertMisiJurusans,
 		loading,
-	} = useVmt();
+	} = useVmtJurusan();
 
 	const [misiJurusan, setMisiJurusan] = useState([]);
 
@@ -53,10 +54,6 @@ const MisiJurusan = () => {
 
 	return (
 		<div className="w-full bg-white p-6 rounded-lg shadow-lg">
-			<h2 className="text-3xl font-semibold text-center mb-6 text-gray-800">
-				Misi Jurusan
-			</h2>
-
 			{loading ? (
 				<Spin />
 			) : (
@@ -64,7 +61,7 @@ const MisiJurusan = () => {
 					{misiJurusan.map((item, index) => (
 						<div
 							key={index}
-							className="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50">
+							className="flex items-center space-x-4 p-4 rounded-lg shadow-sm ">
 							<input
 								type="text"
 								value={item.misi_jurusan}
@@ -92,11 +89,14 @@ const MisiJurusan = () => {
 				</div>
 
 				<div className="mt-6 text-center">
-					<button
+					<Button
+						type="default"
+						icon={<SaveOutlined />}
 						onClick={() => handleUpsertMisiJurusans(misiJurusan)}
-						className="px-6 py-3 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition duration-300">
+						className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
 						Simpan
-					</button>
+					</Button>
+					;
 				</div>
 			</div>
 		</div>
