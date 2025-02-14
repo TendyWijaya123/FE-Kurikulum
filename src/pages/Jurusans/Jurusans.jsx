@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { getJurusans } from "../../service/api";
-import { Pagination, Skeleton } from "@mui/material";
+import { Table, Pagination, message, Skeleton } from "antd";
 import { useNavigate } from "react-router-dom";
-import { message } from "antd";
 
 const Jurusans = () => {
 	const [jurusans, setJurusans] = useState([]);
@@ -31,71 +30,40 @@ const Jurusans = () => {
 		fetchJurusans();
 	}, [currentPage]);
 
-	const handlePageChange = (event, page) => {
+	const handlePageChange = (page) => {
 		setCurrentPage(page);
 	};
 
+	const columns = [
+		{
+			title: "Nama Jurusan",
+			dataIndex: "nama",
+			key: "nama",
+		},
+		{
+			title: "Kategori",
+			dataIndex: "kategori",
+			key: "kategori",
+		},
+	];
+
 	return (
-		<DefaultLayout title="Semua  Jurusan">
+		<DefaultLayout title="Semua Jurusan">
 			<div className="w-full flex flex-col justify-center items-start pr-10">
 				<div className="m-4 w-full mr-10 bg-white p-5 rounded-lg shadow-md">
 					<h2 className="text-3xl font-semibold mb-2">Jurusan</h2>
-
-					{/* Scrollable table */}
-					<div className="overflow-x-auto">
-						<table className="min-w-full table-auto border-separate border-spacing-0 border border-gray-300">
-							<thead className="bg-gray-100">
-								<tr>
-									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Nama Jurusan
-									</th>
-									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Kategori
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{/* If loading, display Skeleton rows */}
-								{loading
-									? Array.from({ length: 5 }).map((_, index) => (
-											<tr key={index} className="hover:bg-gray-50">
-												<td className="border-b px-4 py-2">
-													<Skeleton variant="text" width="100%" />
-												</td>
-												<td className="border-b px-4 py-2">
-													<Skeleton variant="text" width="100%" />
-												</td>
-												<td className="border-b px-4 py-2">
-													<Skeleton
-														variant="rectangular"
-														width={80}
-														height={35}
-													/>
-													<Skeleton
-														variant="rectangular"
-														width={80}
-														height={35}
-													/>
-												</td>
-											</tr>
-									  ))
-									: jurusans.map((jurusan) => (
-											<tr key={jurusan.id} className="hover:bg-gray-50">
-												<td className="border-b px-4 py-2">{jurusan.nama}</td>
-												<td className="border-b px-4 py-2">
-													{jurusan.kategori}
-												</td>
-											</tr>
-									  ))}
-							</tbody>
-						</table>
-					</div>
-
-					{/* Pagination */}
-					<div className="flex justify-between mt-4 items-center">
+					<Table
+						columns={columns}
+						dataSource={jurusans}
+						loading={loading}
+						pagination={false}
+						rowKey={(record) => record.id}
+					/>
+					<div className="flex justify-start mt-4">
 						<Pagination
-							count={totalPage}
-							page={currentPage}
+							current={currentPage}
+							total={totalPage * 10}
+							pageSize={10}
 							onChange={handlePageChange}
 						/>
 					</div>

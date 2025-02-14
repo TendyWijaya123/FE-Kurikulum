@@ -1,18 +1,10 @@
 import { useEffect, useState } from "react";
 import DefaultLayout from "../../layouts/DefaultLayout";
-import {
-	Pagination,
-	Skeleton,
-	Alert,
-	Button,
-	TextField,
-	FormControl,
-	InputLabel,
-	Select,
-	MenuItem,
-} from "@mui/material";
+import { Table, Pagination, Alert, Button, Input, Select, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { getProdis, updateProdi } from "../../service/api";
+
+const { Option } = Select;
 
 const Prodis = () => {
 	const [prodis, setProdis] = useState([]);
@@ -48,7 +40,7 @@ const Prodis = () => {
 		fetchProdis();
 	}, [currentPage]);
 
-	const handlePageChange = (event, page) => {
+	const handlePageChange = (page) => {
 		setCurrentPage(page);
 	};
 
@@ -65,13 +57,13 @@ const Prodis = () => {
 		setLoading(true);
 		try {
 			await updateProdi(editingProdi.id, editingProdi);
+			message.success("Data Prodi berhasil diperbarui.");
 			setEditingProdi(null);
 			const data = await getProdis(currentPage);
 			setProdis(data.data);
 		} catch (error) {
-			setErrorMessage(
+			message.error(
 				error.response?.data?.message ||
-					error.message ||
 					"Terjadi kesalahan saat menyimpan data Prodi."
 			);
 		} finally {
@@ -87,167 +79,106 @@ const Prodis = () => {
 		}));
 	};
 
+	const columns = [
+		{
+			title: "Kode",
+			dataIndex: "kode",
+			render: (text, record) =>
+				editingProdi?.id === record.id ? (
+					<Input
+						name="kode"
+						value={editingProdi.kode}
+						onChange={handleInputChange}
+					/>
+				) : (
+					text
+				),
+		},
+		{
+			title: "Nama Prodi",
+			dataIndex: "name",
+			render: (text, record) =>
+				editingProdi?.id === record.id ? (
+					<Input
+						name="name"
+						value={editingProdi.name}
+						onChange={handleInputChange}
+					/>
+				) : (
+					text
+				),
+		},
+		{
+			title: "Jenjang",
+			dataIndex: "jenjang",
+		},
+		{
+			title: "Jurusan",
+			dataIndex: ["jurusan", "nama"],
+		},
+		{
+			title: "Status",
+			dataIndex: "is_active",
+			render: (text, record) =>
+				editingProdi?.id === record.id ? (
+					<Select
+						name="is_active"
+						value={editingProdi.is_active}
+						onChange={(value) =>
+							setEditingProdi({ ...editingProdi, is_active: value })
+						}>
+						<Option value={1}>Aktif</Option>
+						<Option value={0}>Tidak Aktif</Option>
+					</Select>
+				) : text ? (
+					"Aktif"
+				) : (
+					"Tidak Aktif"
+				),
+		},
+		{
+			title: "Aksi",
+			render: (_, record) =>
+				editingProdi?.id === record.id ? (
+					<>
+						<Button type="primary" onClick={handleSaveClick} loading={loading}>
+							Save
+						</Button>
+						<Button onClick={handleCancelClick} style={{ marginLeft: 8 }}>
+							Cancel
+						</Button>
+					</>
+				) : (
+					<Button onClick={() => handleEditClick(record.id)} type="default">
+						Edit
+					</Button>
+				),
+		},
+	];
+
 	return (
 		<DefaultLayout title="Program Studi">
 			<div className="w-full flex flex-col justify-center items-start pr-10">
 				<div className="m-4 w-full mr-10 bg-white p-5 rounded-lg shadow-md">
 					<h2 className="text-3xl font-semibold mb-2">Daftar Program Studi</h2>
 
-					{/* Display error alert if there's any error message */}
 					{errorMessage && (
-						<Alert severity="error" className="mb-4">
-							{errorMessage}
-						</Alert>
+						<Alert type="error" message={errorMessage} className="mb-4" />
 					)}
-
-					{/* Scrollable table */}
 					<div className="overflow-x-auto">
-						<table className="min-w-full table-auto border-separate border-spacing-0 border border-gray-300">
-							<thead className="bg-gray-100">
-								<tr>
-									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Kode
-									</th>
-									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Nama Prodi
-									</th>
-									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Jenjang
-									</th>
-									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Jurusan
-									</th>
-									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Status
-									</th>
-									<th className="px-4 py-2 border-b-2 border-gray-300 text-left text-sm font-semibold text-gray-700">
-										Aksi
-									</th>
-								</tr>
-							</thead>
-							<tbody>
-								{/* Loading state */}
-								{loading
-									? Array.from({ length: 5 }).map((_, index) => (
-											<tr key={index} className="hover:bg-gray-50">
-												<td className="border-b px-4 py-2">
-													<Skeleton variant="text" width="100%" />
-												</td>
-												<td className="border-b px-4 py-2">
-													<Skeleton variant="text" width="100%" />
-												</td>
-												<td className="border-b px-4 py-2">
-													<Skeleton variant="text" width="100%" />
-												</td>
-												<td className="border-b px-4 py-2">
-													<Skeleton variant="text" width="100%" />
-												</td>
-												<td className="border-b px-4 py-2">
-													<Skeleton
-														variant="rectangular"
-														width={80}
-														height={35}
-													/>
-												</td>
-											</tr>
-									  ))
-									: prodis.map((prodi) => (
-											<tr key={prodi.id} className="hover:bg-gray-50">
-												<td className="border-b px-4 py-2">
-													{editingProdi?.id === prodi.id ? (
-														<TextField
-															name="kode"
-															value={editingProdi.kode}
-															onChange={handleInputChange}
-															size="small"
-															variant="outlined"
-														/>
-													) : (
-														prodi.kode
-													)}
-												</td>
-												<td className="border-b px-4 py-2">
-													{editingProdi?.id === prodi.id ? (
-														<TextField
-															name="name"
-															value={editingProdi.name}
-															onChange={handleInputChange}
-															size="small"
-															variant="outlined"
-														/>
-													) : (
-														prodi.name
-													)}
-												</td>
-												<td className="border-b px-4 py-2">{prodi.jenjang}</td>
-												<td className="border-b px-4 py-2">
-													{prodi.jurusan?.nama}
-												</td>
-												<td className="border-b px-4 py-2">
-													{editingProdi?.id === prodi.id ? (
-														<FormControl fullWidth>
-															<InputLabel>Status Aktif</InputLabel>
-															<Select
-																name="is_active"
-																value={editingProdi.is_active}
-																onChange={handleInputChange}
-																label="Status Aktif">
-																<MenuItem value={true}>Aktif</MenuItem>
-																<MenuItem value={false}>Tidak Aktif</MenuItem>
-															</Select>
-														</FormControl>
-													) : prodi.is_active ? (
-														"Aktif"
-													) : (
-														"Tidak Aktif"
-													)}
-												</td>
-												<td className="border-b px-4 py-2">
-													{editingProdi?.id === prodi.id ? (
-														<>
-															<Button
-																variant="contained"
-																color="primary"
-																onClick={handleSaveClick}
-																size="small"
-																className="mr-2">
-																Save
-															</Button>
-															<Button
-																variant="contained"
-																color="secondary"
-																onClick={handleCancelClick}
-																size="small">
-																Cancel
-															</Button>
-														</>
-													) : (
-														<Button
-															variant="contained"
-															size="small"
-															onClick={() => handleEditClick(prodi.id)}
-															sx={{
-																backgroundColor: "rgb(250, 204, 21)", // Warna sesuai Tailwind bg-yellow-400
-																"&:hover": {
-																	backgroundColor: "rgb(234, 179, 8)", // Hover sesuai Tailwind hover:bg-yellow-400
-																},
-															}}
-															className="mr-2">
-															Edit
-														</Button>
-													)}
-												</td>
-											</tr>
-									  ))}
-							</tbody>
-						</table>
+						<Table
+							columns={columns}
+							dataSource={prodis}
+							loading={loading}
+							pagination={false}
+							rowKey="id"
+						/>
 					</div>
 
-					{/* Pagination */}
 					<div className="flex justify-between mt-4 items-center">
 						<Pagination
-							count={totalPage}
-							page={currentPage}
+							current={currentPage}
+							total={totalPage * 10}
 							onChange={handlePageChange}
 						/>
 					</div>

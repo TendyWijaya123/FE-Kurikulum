@@ -51,6 +51,7 @@ const MatrixCplMkTable = () => {
 								{cpls.map((cpl) => (
 									<th
 										key={cpl.id}
+										title={cpl.keterangan}
 										className="px-4 py-2 text-left font-semibold text-gray-700 border border-gray-200">
 										{cpl.kode}
 									</th>

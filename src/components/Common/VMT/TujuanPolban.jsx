@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
-import useVmt from "../../../hooks/Vmt/useVmt";
 import DeleteButton from "../../Button/DeleteButton";
-import { Spin } from "antd";
+import { Button, Spin } from "antd";
+import useVmtPolban from "../../../hooks/Vmt/useVmtPolban";
+import { PlusOutlined } from "@ant-design/icons";
+import { SaveOutlined } from "@mui/icons-material";
 
 const TujuanPolban = () => {
 	const {
@@ -9,7 +11,7 @@ const TujuanPolban = () => {
 		handleDeleteTujuanPolban,
 		handleUpsertTujuanPolbans,
 		loading,
-	} = useVmt();
+	} = useVmtPolban();
 
 	const [tujuanPolban, setTujuanPolban] = useState([]);
 
@@ -53,10 +55,6 @@ const TujuanPolban = () => {
 
 	return (
 		<div className="w-full bg-white p-6 rounded-lg shadow-lg mb-4">
-			<h2 className="text-3xl font-semibold text-center mb-6 text-gray-800">
-				Tujuan Polban
-			</h2>
-
 			{loading ? (
 				<Spin />
 			) : (
@@ -64,7 +62,7 @@ const TujuanPolban = () => {
 					{tujuanPolban.map((item, index) => (
 						<div
 							key={index}
-							className="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50">
+							className="flex items-center space-x-4 p-4 border rounded-lg ">
 							<input
 								type="text"
 								value={item.tujuan_polban}
@@ -83,20 +81,22 @@ const TujuanPolban = () => {
 			)}
 
 			<div className="flex gap-2 ">
-				<div className="flex justify-center mt-6">
-					<button
+				<div className="flex gap-4 justify-center mt-6">
+					<Button
+						type="primary"
+						icon={<PlusOutlined />}
 						onClick={handleAddPoint}
-						className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300">
+						className="h-10 px-6">
 						Tambah Point
-					</button>
-				</div>
+					</Button>
 
-				<div className="mt-6 text-center">
-					<button
+					<Button
+						type="default"
+						icon={<SaveOutlined />}
 						onClick={() => handleUpsertTujuanPolbans(tujuanPolban)}
-						className="px-6 py-3 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition duration-300">
+						className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
 						Simpan
-					</button>
+					</Button>
 				</div>
 			</div>
 		</div>
