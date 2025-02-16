@@ -27,27 +27,27 @@ export const useMPData = () => {
 	const [selectedProdi, setSelectedProdi] = useState(null);
 
 	// Fetch data
-	useEffect(() => {
-		const fetchMateriPembelajaran = async () => {
-			setLoading(true);
-			try {
-				if (user?.prodiId) {
-					const {data, knowledge} = await getMateriPembelajarans(user.prodiId);
-                    setKnowledgeDropdown(knowledge);
-					setMateriPembelajaran(data);
-				} else {
-					const prodis = await getProdiDropdown();
-					setProdiDropdown(prodis);
-				}
-			} catch (error) {
-				console.error("Error fetching materi pembelajaran:", error);
-			} finally {
-				setLoading(false);
+	const fetchMateriPembelajaran = async () => {
+		setLoading(true);
+		try {
+			if (user?.prodiId) {
+				const { data, knowledge } = await getMateriPembelajarans(user.prodiId);
+				setKnowledgeDropdown(knowledge);
+				setMateriPembelajaran(data);
+			} else {
+				const prodis = await getProdiDropdown();
+				setProdiDropdown(prodis);
 			}
-		};
-
+		} catch (error) {
+			console.error("Error fetching materi pembelajaran:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
+	
+	useEffect(() => {
 		fetchMateriPembelajaran();
-	}, [user?.prodiId]);
+	}, [user?.prodiId]);	
 
     useEffect(() => {
         if (materiPembelajaran.length > 0) {
@@ -202,12 +202,14 @@ export const useMPData = () => {
 	};
 
 	const handleImportMateriPembelajaran = async (file) => {
-		try {
-			await importMateriPembelajaran(file);
+        try {
+           await importMateriPembelajaran(file);
+		   message.success("Data berhasil disimpan!");
+		   await fetchMateriPembelajaran();
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
-		}
-	};
+        }
+    };
 
 	const handleDeleteMateriPembelajarans = async () => {
 		setLoading(true);

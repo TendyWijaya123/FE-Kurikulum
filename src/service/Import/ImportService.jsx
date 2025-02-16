@@ -195,20 +195,24 @@ export const getMateriPembelajaranTemplate = async () => {
 };
 
 export const importMateriPembelajaran = async (file) => {
-	const formData = new FormData();
-	formData.append("file", file);
+    const formData = new FormData();
+    formData.append("file", file);
 
-	try {
-		const response = await api.post("/materi-pembelajaran/import", formData, {
-			headers: {
-				"Content-Type": "multipart/form-data",
-			},
-		});
-		return response.data;
-	} catch (error) {
-		console.error("Error saat mengupload file", error);
-		throw error;
-	}
+    try {
+        const response = await api.post("/materi-pembelajaran/import", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+
+        // Wait for the backend to complete processing
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        return response.data;
+    } catch (error) {
+        console.error("Error saat mengupload file", error);
+        throw error;
+    }
 };
 
 export const getKkniTemplate = async () => {
