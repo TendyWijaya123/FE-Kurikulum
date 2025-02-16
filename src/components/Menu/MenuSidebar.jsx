@@ -26,12 +26,11 @@ import MenuRps from "./menuRps";
 import MenuPenyusunanKurikulum from "./menuPenyusunanKurikulum";
 
 const MenuSidebar = () => {
-	
 	const { selectedOption } = useContext(SelectionContext);
-	
+
 	return (
 		<ul>
-			 {selectedOption !== "dosen" ? <MenuPenyusunanKurikulum /> : <MenuRps/>}
+			{selectedOption !== "dosen" ? <MenuPenyusunanKurikulum /> : <MenuRps />}
 		</ul>
 	);
 };

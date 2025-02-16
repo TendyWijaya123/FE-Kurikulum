@@ -289,23 +289,7 @@ export default function PenyusunanKurikulumRoutes() {
 				}
 			/>
 
-			<Route
-				path="/buku-referensi"
-				element={
-					<ProtectedRoute>
-						<BukuReferensi />
-					</ProtectedRoute>
-				}
-			/>
-
-			<Route
-				path="/referensi-mata-kuliah"
-				element={
-					<ProtectedRoute>
-						<ReferensiMataKuliah />
-					</ProtectedRoute>
-				}
-			/>
+		
 		</Routes>
 	);
 }
