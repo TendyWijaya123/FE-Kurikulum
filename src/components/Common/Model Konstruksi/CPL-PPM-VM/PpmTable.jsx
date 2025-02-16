@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Table, Input, Button, Spin, Modal, message } from "antd";
 import usePpm from "../../../../hooks/ModelKonstruksi/usePpm";
+import ImportModal from "../../../Modal/ImportModal";
 import {
 	PlusOutlined,
 	SaveOutlined,
@@ -127,19 +128,12 @@ const PpmTable = () => {
 			)}
 
 			{/* Modal Import */}
-			<Modal
-				title="Import PPM"
-				open={isModalImportOpen}
-				onCancel={() => setIsModalImportOpen(false)}
-				onOk={() => {
-					handleImportPpm();
-					message.success("Import berhasil");
-					setIsModalImportOpen(false);
-				}}
-				okText="Import"
-				cancelText="Batal">
-				<p>Silakan unggah file template untuk mengimpor data PPM.</p>
-			</Modal>
+			<ImportModal	
+				isOpen={isModalImportOpen}
+				setIsOpen={setIsModalImportOpen}
+				handleImport={handleImportPpm}
+				title="Import CPL"
+				/>
 		</div>
 	);
 };

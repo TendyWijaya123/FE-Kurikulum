@@ -1,118 +1,263 @@
-// pages/Pengetahuan.jsx
 import React, { useState, useContext } from "react";
+import { Table, Button, message, Popconfirm, Spin, Input, Form, Modal } from "antd";
+import { DeleteOutlined, EditOutlined, PlusOutlined, ImportOutlined, DownloadOutlined, CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import DefaultLayout from "../layouts/DefaultLayout";
-import { Pagination } from "@mui/material";
 import { usePengetahuan } from "../hooks/usePengetahuan";
-import { PengetahuanTable } from "../components/Common/Pengetahuan/PengetahuanTable";
-import { PengetahuanForm } from "../components/Common/Pengetahuan/PengetahuanForm";
 import { AuthContext } from "../context/AuthProvider";
 import ImportModal from "../components/Modal/ImportModal";
 
 const Pengetahuan = () => {
-	const { user } = useContext(AuthContext);
-	const [isAddingNew, setIsAddingNew] = useState(false);
-	const {
-		pengetahuanData,
-		loading,
-		error,
-		notification,
-		currentPage,
-		totalPage,
-		setCurrentPage,
-		handleDelete,
-		handleCreate,
-		handleUpdate,
-		handleExportTemplatePengetahuan,
-		handleImportPengetahuan,
-	} = usePengetahuan();
+  const { user } = useContext(AuthContext);
+  const [isModalImportOpen, setIsModalImportOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [form] = Form.useForm();
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  
+  const {
+    pengetahuanData,
+    loading,
+    handleDelete,
+    handleCreate,
+    handleUpdate,
+    handleExportTemplatePengetahuan,
+    handleImportPengetahuan,
+  } = usePengetahuan();
 
-	const handleAddNew = () => {
-		setIsAddingNew(!isAddingNew);
-	};
+  const [editingKey, setEditingKey] = useState('');
+  const [editForm, setEditForm] = useState({
+    deskripsi: '',
+    kode_pengetahuan: ''
+  });
 
-	const handleCancelAdd = () => {
-		setIsAddingNew(false);
-	};
+  const handleAddSubmit = async (values) => {
+    const success = await handleCreate(values);
+    if (success) {
+      message.success("Data berhasil ditambahkan");
+      setIsAddModalOpen(false);
+      form.resetFields();
+    } else {
+      message.error("Gagal menambahkan data");
+    }
+  };
 
-	const handlePageChange = (event, page) => {
-		setCurrentPage(page);
-	};
+  const handleMultiDelete = async (keys) => {
+    try {
+      const deletePromises = keys.map(key => handleDelete(key));
+      await Promise.all(deletePromises);
+      message.success(`${keys.length} item berhasil dihapus`);
+      setSelectedRowKeys([]);
+    } catch (error) {
+      message.error("Gagal menghapus beberapa item");
+    }
+  };
 
-	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (newSelectedRowKeys) => {
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
+  };
 
-	return (
-		<DefaultLayout title="Pengetahuan">
-			<div className="w-full flex flex-col justify-center items-start pr-10">
-				<div className="m-4 w-full bg-white p-5 rounded-lg shadow-md">
-					<div className="flex justify-start gap-2 items-center mb-4">
-						<button
-							onClick={handleExportTemplatePengetahuan}
-							className="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full sm:w-auto">
-							Download Template Pengetahuan
-						</button>
-						<button
-							onClick={() => setIsModalImportOpen(true)}
-							className="bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 w-full sm:w-auto">
-							Import Pengetahuan
-						</button>
-						<ImportModal
-							isOpen={isModalImportOpen}
-							setIsOpen={setIsModalImportOpen}
-							handleImport={handleImportPengetahuan}
-							title="Import Pengetahuan"
-						/>
-						<button
-							onClick={handleAddNew}
-							className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-							{isAddingNew ? "Tutup Form" : "Tambah Data"}
-						</button>
-					</div>
+  const isEditing = (record) => record.id === editingKey;
 
-					{notification.message && (
-						<div
-							className={`px-4 py-2 rounded mb-4 ${
-								notification.type === "success"
-									? "bg-green-100 text-green-700 border border-green-400"
-									: "bg-red-100 text-red-700 border border-red-400"
-							}`}>
-							{notification.message}
-						</div>
-					)}
+  const edit = (record) => {
+    setEditForm({
+      deskripsi: record.deskripsi,
+      kode_pengetahuan: record.kode_pengetahuan
+    });
+    setEditingKey(record.id);
+  };
 
-					{error && (
-						<div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-							{error}
-						</div>
-					)}
+  const cancel = () => {
+    setEditingKey('');
+  };
 
-					<PengetahuanTable
-						data={pengetahuanData}
-						loading={loading}
-						onDelete={handleDelete}
-						onUpdate={handleUpdate}
-					/>
+  const save = async (id) => {
+    try {
+      const success = await handleUpdate(id, editForm);
+      if (success) {
+        message.success("Data berhasil diperbarui");
+        setEditingKey('');
+      } else {
+        message.error("Gagal memperbarui data");
+      }
+    } catch (errInfo) {
+      message.error("Terjadi kesalahan dalam menyimpan data");
+    }
+  };
 
-					{isAddingNew && (
-						<PengetahuanForm
-							onSave={handleCreate}
-							onCancel={handleCancelAdd}
-							kurikulumId={user?.kurikulumId}
-						/>
-					)}
+  const columns = [
+    {
+      title: 'Kode',
+      dataIndex: 'kode_pengetahuan',
+      key: 'kode_pengetahuan',
+      width: '10%',
+    },
+    {
+      title: 'Deskripsi',
+      dataIndex: 'deskripsi',
+      key: 'deskripsi',
+      width: '80%',
+      render: (text, record) => {
+        const editable = isEditing(record);
+        return editable ? (
+          <Input.TextArea
+            value={editForm.deskripsi}
+            onChange={(e) => setEditForm({ ...editForm, deskripsi: e.target.value })}
+            autoSize={{ minRows: 3 }}
+          />
+        ) : (
+          text
+        );
+      },
+    },
+    {
+      title: 'Aksi',
+      key: 'action',
+      width: '10%',
+      render: (_, record) => {
+        const editable = isEditing(record);
+        return (
+          <div style={{ display: 'flex', gap: '8px' }}>
+            {editable ? (
+              <>
+                <Button 
+                  type="primary" 
+                  icon={<CheckOutlined/>}
+                  onClick={() => save(record.id)}
+                />
+                <Button 
+                  icon={<CloseOutlined/>} 
+                  onClick={cancel}
+                />
+              </>
+            ) : (
+              <>
+                <Button
+                  type="primary"
+                  icon={<EditOutlined />}
+                  onClick={() => edit(record)}
+                />
+                <Popconfirm
+                  title="Yakin ingin menghapus?"
+                  onConfirm={async () => {
+                    try {
+                      const success = await handleDelete(record.id);
+                      if (success) {
+                        message.success("Data berhasil dihapus");
+                      } else {
+                        message.error("Gagal menghapus data");
+                      }
+                    } catch (error) {
+                      message.error("Terjadi kesalahan saat menghapus data");
+                    }
+                  }}
+                  okText="Ya"
+                  cancelText="Tidak"
+                >
+                  <Button type="primary" danger icon={<DeleteOutlined />} />
+                </Popconfirm>
+              </>
+            )}
+          </div>
+        );
+      },
+    },
+  ];
 
-					{!loading && pengetahuanData.length > 0 && (
-						<div className="flex justify-between mt-4 items-center">
-							<Pagination
-								count={totalPage}
-								page={currentPage}
-								onChange={handlePageChange}
-							/>
-						</div>
-					)}
-				</div>
-			</div>
-		</DefaultLayout>
-	);
+  return (
+    <DefaultLayout title="Pengetahuan">
+      <div style={{ padding: '24px', background: '#fff', minHeight: '100%' }}>
+        <div style={{ marginBottom: '16px', display: 'flex', gap: '8px' }}>
+          <Button 
+            onClick={handleExportTemplatePengetahuan} 
+            type="primary"
+            icon={<DownloadOutlined />}
+          >
+            Download Template
+          </Button>
+          <Button 
+            onClick={() => setIsModalImportOpen(true)} 
+            type="primary"
+            icon={<ImportOutlined />}
+          >
+            Import Pengetahuan
+          </Button>
+          <Button 
+            onClick={() => setIsAddModalOpen(true)} 
+            type="primary"
+            icon={<PlusOutlined />}
+          >
+            Tambah Data
+          </Button>
+          {selectedRowKeys.length > 0 && (
+            <Button
+              onClick={() => handleMultiDelete(selectedRowKeys)}
+              type="primary"
+              danger
+              icon={<DeleteOutlined />}
+            >
+              Hapus {selectedRowKeys.length} Item
+            </Button>
+          )}
+        </div>
+
+        <ImportModal
+          isOpen={isModalImportOpen}
+          setIsOpen={setIsModalImportOpen}
+          handleImport={handleImportPengetahuan}
+          title="Import Pengetahuan"
+        />
+
+        <Modal
+          title="Tambah Data Pengetahuan"
+          open={isAddModalOpen}
+          onCancel={() => {
+            setIsAddModalOpen(false);
+            form.resetFields();
+          }}
+          footer={null}
+        >
+          <Form
+            form={form}
+            onFinish={handleAddSubmit}
+            layout="vertical"
+          >
+            <Form.Item
+              name="deskripsi"
+              label="Deskripsi"
+              rules={[{ required: true, message: 'Masukkan deskripsi' }]}
+            >
+              <Input.TextArea rows={4} />
+            </Form.Item>
+            <Form.Item>
+              <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                <Button type="primary" htmlType="submit">Simpan</Button>
+                <Button onClick={() => {
+                  setIsAddModalOpen(false);
+                  form.resetFields();
+                }}>Batal</Button>
+              </div>
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        {loading ? (
+          <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+            <Spin size="large" />
+          </div>
+        ) : (
+          <Table
+            rowSelection={rowSelection}
+            columns={columns}
+            dataSource={pengetahuanData.map(item => ({ ...item, key: item.id }))}
+            pagination={{ pageSize: 5 }}
+            bordered
+          />
+        )}
+      </div>
+    </DefaultLayout>
+  );
 };
 
 export default Pengetahuan;
