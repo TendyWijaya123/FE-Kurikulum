@@ -8,7 +8,6 @@ const useCreateUser = () => {
 	const [formData, setFormData] = useState({
 		name: "",
 		email: "",
-		password: "",
 		prodi_id: "",
 	});
 
@@ -16,8 +15,7 @@ const useCreateUser = () => {
 		const fetchData = async () => {
 			setLoading(true);
 			try {
-				const [prodiResponse] = await Promise.all([getProdiDropdown()]);
-
+				const prodiResponse = await getProdiDropdown();
 				setProdiList(prodiResponse);
 			} catch (error) {
 				setAlert({ message: "Failed to fetch data.", severity: "error" });
@@ -35,38 +33,26 @@ const useCreateUser = () => {
 		setFormData({ ...formData, [name]: value });
 	};
 
-	const handleSubmit = async () => {
+	const handleSubmit = async (e) => {
+		e.preventDefault();
 		setLoading(true);
 		setAlert(null);
 
 		try {
-			const response = await createUser(formData);
-			setAlert({ message: "User created successfully!", severity: "success" });
-			console.log("User created successfully:", response);
+			await createUser(formData);
+			setAlert({ 
+				message: "User created successfully! Password has been sent to the user's email.", 
+				severity: "success" 
+			});
 		} catch (error) {
-			// Check for validation errors in the response
-			if (error.response && error.response.data && error.response.data.errors) {
-				const errorMessage = error.response.data.errors.email
-					? error.response.data.errors.email[0] // Show email error message if it exists
-					: "Failed to create user."; // Default message for other errors
-				setAlert({ message: errorMessage, severity: "error" });
-			} else {
-				setAlert({ message: "Failed to create user.", severity: "error" });
-			}
+			setAlert({ message: "Failed to create user.", severity: "error" });
 			console.error("Error creating user:", error);
 		} finally {
 			setLoading(false);
 		}
 	};
 
-	return {
-		loading,
-		prodiList,
-		alert,
-		formData,
-		handleChangeForm,
-		handleSubmit,
-	};
+	return { loading, prodiList, alert, formData, handleChangeForm, handleSubmit };
 };
 
 export default useCreateUser;
