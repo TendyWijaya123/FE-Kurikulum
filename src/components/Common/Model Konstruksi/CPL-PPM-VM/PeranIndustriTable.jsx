@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Table, Input, Button, Spin, Modal, message } from "antd";
 import usePeranIndustri from "../../../../hooks/ModelKonstruksi/usePeranIndustri";
+import ImportModal from "../../../Modal/ImportModal";
 import {
 	PlusOutlined,
 	SaveOutlined,
@@ -143,19 +144,12 @@ const PeranIndustriTable = () => {
 			)}
 
 			{/* Modal Import */}
-			<Modal
+			<ImportModal	
+				isOpen={isModalImportOpen}
+				setIsOpen={setIsModalImportOpen}
+				handleImport={handleImportPeranIndustri}
 				title="Import Peran Industri"
-				open={isModalImportOpen}
-				onCancel={() => setIsModalImportOpen(false)}
-				onOk={() => {
-					handleImportPeranIndustri();
-					message.success("Import berhasil");
-					setIsModalImportOpen(false);
-				}}
-				okText="Import"
-				cancelText="Batal">
-				<p>Silakan unggah file template untuk mengimpor data peran industri.</p>
-			</Modal>
+				/>
 		</div>
 	);
 };

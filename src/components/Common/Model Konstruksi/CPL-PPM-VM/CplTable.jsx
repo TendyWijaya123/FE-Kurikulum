@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Table, Input, Button, Spin, Modal, message } from "antd";
 import useCpl from "../../../../hooks/ModelKonstruksi/useCpl";
+import ImportModal from "../../../Modal/ImportModal";
 import {
 	PlusOutlined,
 	SaveOutlined,
@@ -126,19 +127,12 @@ const CplTable = () => {
 			)}
 
 			{/* Modal Import */}
-			<Modal
+			<ImportModal	
+				isOpen={isModalImportOpen}
+				setIsOpen={setIsModalImportOpen}
+				handleImport={handleImportCpl}
 				title="Import CPL"
-				open={isModalImportOpen}
-				onCancel={() => setIsModalImportOpen(false)}
-				onOk={() => {
-					handleImportCpl();
-					message.success("Import berhasil");
-					setIsModalImportOpen(false);
-				}}
-				okText="Import"
-				cancelText="Batal">
-				<p>Silakan unggah file template untuk mengimpor data CPL.</p>
-			</Modal>
+				/>
 		</div>
 	);
 };
