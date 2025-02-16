@@ -21,6 +21,11 @@ export const fetchMataKuliahByJurusan = async () => {
 	}
 };
 
+export const getMataKuliahByDosenPengampu = async () => {
+	const response = await api.get("/mata-kuliah/pengampu");
+	return response.data;
+};
+
 export const createMataKuliah = async (mataKuliahData) => {
 	try {
 		const response = await api.post("/mata-kuliah", mataKuliahData);
