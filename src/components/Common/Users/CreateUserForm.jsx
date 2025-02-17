@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert } from "@mui/material"; // Import Alert component from MUI
+import { Alert } from "@mui/material"; 
 import useCreateUser from "../../../hooks/Users/useCreateUser";
 
 const CreateUserForm = () => {
@@ -54,23 +54,6 @@ const CreateUserForm = () => {
 						type="email"
 						name="email"
 						value={formData.email}
-						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-						required
-					/>
-				</div>
-
-				<div className="mb-4">
-					<label
-						htmlFor="password"
-						className="block text-sm font-medium text-gray-700">
-						Password
-					</label>
-					<input
-						id="password"
-						type="password"
-						name="password"
-						value={formData.password}
 						onChange={handleChangeForm}
 						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
 						required

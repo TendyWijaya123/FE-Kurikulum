@@ -60,7 +60,6 @@ const MatrixPpmCplTable = () => {
 										{ppm.kode}
 									</td>
 									{cpls.map((cpl) => {
-										// Mengecek apakah ppmId ada di dalam ppm_ids
 										const isChecked = matrixData.some(
 											(item) =>
 												item.cpl_id === cpl.id && item.ppm_ids.includes(ppm.id)

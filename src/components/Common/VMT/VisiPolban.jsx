@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import useVmt from "../../../hooks/Vmt/useVmt";
 import { Spin } from "antd";
+import useVmtPolban from "../../../hooks/Vmt/useVmtPolban";
 
 const VisiPolban = () => {
-	const { loading, alert, vmtPolban, handleUpdateVmtPolban } = useVmt();
+	const { loading, vmtPolban, handleUpdateVmtPolban } = useVmtPolban();
 
 	const [visiPolbanInput, setVisiPolbanInput] = useState({
 		visi_polban: vmtPolban?.visi_polban || "",
@@ -30,10 +31,6 @@ const VisiPolban = () => {
 	return (
 		<div className="w-full bg-white p-6 rounded-lg shadow-lg mb-4">
 			<div className="space-y-4">
-				{/* Input untuk Visi Polban */}
-				<h2 className="text-3xl font-semibold text-center mb-6 text-gray-800">
-					Visi Polban
-				</h2>
 				{loading ? (
 					<Spin />
 				) : (

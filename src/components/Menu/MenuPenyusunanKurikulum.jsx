@@ -234,15 +234,7 @@ const MenuPenyusunanKurikulum = () => {
 				icon={<Assignment />}
 				url="/dosen-pengampu"></MenuItemSidebar>
 
-			<MenuItemSidebar
-				title="Buku Referensi"
-				icon={<Assignment />}
-				url="/buku-referensi"></MenuItemSidebar>
-
-			<MenuItemSidebar
-				title="Referensi Mata Kuliah"
-				icon={<Assignment />}
-				url="/referensi-mata-kuliah"></MenuItemSidebar>
+		
 		</>
 	);
 };	

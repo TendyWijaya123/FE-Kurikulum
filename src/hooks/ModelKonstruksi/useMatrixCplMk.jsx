@@ -17,6 +17,7 @@ const useMatrixCplMk = () => {
 			setLoading(true);
 			const data = await getMatrixCplMk();
 
+			console.log(data.cpls);
 			setCpls(data.cpls);
 			setMataKuliahs(data.mataKuliahs);
 

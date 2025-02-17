@@ -31,7 +31,7 @@ const MateriPembelajaran = ()=>{
     // Kolom tabel
     const columns = [
         {
-            title: 'Code',
+            title: 'Kode',
             dataIndex: 'code',
             key: 'code',
             render: (text) => (
@@ -39,7 +39,7 @@ const MateriPembelajaran = ()=>{
             ),
         },
         {
-            title: 'Description',
+            title: 'Deskripsi',
             dataIndex: 'description',
             key: 'description',
             render: (text, record) => (
@@ -169,7 +169,7 @@ const MateriPembelajaran = ()=>{
 							danger
 							style={{ marginBottom: "16px" }}
 							loading={loading}>
-							Hapus CPL Terpilih
+							Hapus MP Terpilih
 						</Button>
 					)}
 				</div>
