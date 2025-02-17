@@ -25,6 +25,82 @@ export const useKKNIData = () => {
 	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
 
+	const dataKemampuanKerjaKKNI = [
+		{ 
+			"level": 9,
+			"deskripsi": "Mampu mengembangkan pengetahuan, teknologi, dan/atau seni baru di dalam bidang keilmuannya atau praktek profesionalnya melalui riset, hingga menghasilkan karya kreatif, original, dan teruji.",
+			"jenjang": "Doktor"
+		},
+		{ 
+			"level": 8,
+			"deskripsi": "Mampu mengembangkan pengetahuan, teknologi, dan/atau seni di dalam bidang keilmuannya atau praktek profesionalnya melalui riset, hingga menghasilkan karya inovatif dan teruji.",
+			"jenjang": "Magister"
+		},
+		{ 
+			"level": 7,
+			"deskripsi": "Mampu merencanakan dan mengelola sumberdaya di bawah tanggung jawabnya, dan mengevaluasi secara komprehensif kerjanya dengan memanfaatkan ilmu pengetahuan, teknologi, dan/atau seni untuk menghasilkan langkah-langkah pengembangan strategis organisasi.",
+			"jenjang": "Profesi"
+		},
+		{ 
+			"level": 6,
+			"deskripsi": "Mampu mengaplikasikan bidang keahliannya dan memanfaatkan ilmu pengetahuan, teknologi, dan/atau seni pada bidangnya dalam penyelesaian masalah serta mampu beradaptasi terhadap situasi yang dihadapi.",
+			"jenjang": "Sarjana"
+		},
+		{ 
+			"level": 5,
+			"deskripsi": "Mampu menyelesaikan pekerjaan berlingkup luas, memilih metode yang sesuai dari beragam pilihan yang sudah maupun belum baku dengan menganalisis data, serta mampu menunjukkan kinerja dengan mutu dan kuantitas yang terukur.",
+			"jenjang": "Diploma 3"
+		},
+		{ 
+			"level": 4,
+			"deskripsi": "Mampu menyelesaikan tugas berlingkup luas dan kasus spesifik dengan mengadaptasi secara terbatas, memilih metode yang sesuai dari beberapa pilihan yang baku, serta mampu menunjukkan kinerja dengan mutu dan kuantitas yang terukur.",
+			"jenjang": "Diploma 2"
+		},
+		{ 
+			"level": 3,
+			"deskripsi": "Mampu melaksanakan serangkaian tugas spesifik, dengan menerjemahkan informasi dan menggunakan alat, berdasarkan sejumlah pilihan prosedur kerja, serta mampu menunjukkan kinerja dengan mutu dan kuantitas yang terukur, yang sebagian merupakan hasil kerja sendiri dengan pengawasan tidak langsung.",
+			"jenjang": "Diploma 1"
+		}
+	];
+
+	const dataPengetahuanKKNI = [
+		{ 
+			"level": 9,
+			"deskripsi": "Mampu memecahkan permasalahan sains, teknologi, dan/atau seni di dalam bidang keilmuannya melalui pendekatan inter, multi atau transdisipliner.",
+			"jenjang": "Doktor"
+		},
+		{ 
+			"level": 8,
+			"deskripsi": "Mampu memecahkan permasalahan ilmu pengetahuan, teknologi, dan/atau seni di dalam bidang keilmuannya melalui pendekatan inter atau multidisipliner.",
+			"jenjang": "Magister"
+		},
+		{ 
+			"level": 7,
+			"deskripsi": "Mampu memecahkan permasalahan sains, teknologi, dan/atau seni di dalam bidang keilmuannya melalui pendekatan monodisipliner.",
+			"jenjang": "Profesi"
+		},
+		{ 
+			"level": 6,
+			"deskripsi": "Menguasai konsep teoritis bidang pengetahuan tertentu secara umum dan konsep teoritis bagian khusus dalam bidang pengetahuan tersebut secara mendalam, serta mampu memformulasikan penyelesaian masalah prosedural.",
+			"jenjang": "Sarjana"
+		},
+		{ 
+			"level": 5,
+			"deskripsi": "Menguasai konsep teoritis bidang pengetahuan tertentu secara umum, serta mampu memformulasikan penyelesaian masalah prosedural.",
+			"jenjang": "Diploma 3"
+		},
+		{ 
+			"level": 4,
+			"deskripsi": "Menguasai beberapa prinsip dasar bidang keahlian tertentu dan mampu menyelaraskan dengan permasalahan faktual di bidang kerjanya.",
+			"jenjang": "Diploma 2"
+		},
+		{ 
+			"level": 3,
+			"deskripsi": "Memiliki pengetahuan operasional yang lengkap, prinsip-prinsip serta konsep umum yang terkait dengan fakta bidang keahlian tertentu, sehingga mampu menyelesaikan berbagai masalah yang lazim dengan metode yang sesuai.",
+			"jenjang": "Diploma 1"
+		}
+	];
+
 	const fetchKkni = async () => {
 		setLoading(true);
 		try {
@@ -255,6 +331,8 @@ export const useKKNIData = () => {
 		undoStack,
 		rowSelection,
 		selectedRowKeys,
+		dataKemampuanKerjaKKNI,
+		dataPengetahuanKKNI,
 		handleUndo,
 		handleSave,
 		handleAddRow,
