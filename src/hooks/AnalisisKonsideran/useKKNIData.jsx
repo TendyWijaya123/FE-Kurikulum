@@ -4,6 +4,7 @@ import {
 	deleteKkni,
 	postKkni,
 	deleteKknis,
+	autoCpl,
 } from "../../service/AnalisisKonsideran/kkni";
 import { getProdiDropdown } from "../../service/api";
 import { AuthContext } from "../../context/AuthProvider";
@@ -13,6 +14,7 @@ import {
 	getKkniTemplate,
 	importKkni,
 } from "../../service/Import/ImportService";
+import { ContactPageSharp } from "@mui/icons-material";
 
 export const useKKNIData = () => {
 	const [kkni, setKkni] = useState([]);
@@ -22,91 +24,27 @@ export const useKKNIData = () => {
 	const [saving, setSaving] = useState(false);
 	const [undoStack, setUndoStack] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+	const [selectedRowKeysCpl, setSelectedRowKeysCpl] = useState([]);
 	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
-
-	const dataKemampuanKerjaKKNI = [
-		{ 
-			"level": 9,
-			"deskripsi": "Mampu mengembangkan pengetahuan, teknologi, dan/atau seni baru di dalam bidang keilmuannya atau praktek profesionalnya melalui riset, hingga menghasilkan karya kreatif, original, dan teruji.",
-			"jenjang": "Doktor"
-		},
-		{ 
-			"level": 8,
-			"deskripsi": "Mampu mengembangkan pengetahuan, teknologi, dan/atau seni di dalam bidang keilmuannya atau praktek profesionalnya melalui riset, hingga menghasilkan karya inovatif dan teruji.",
-			"jenjang": "Magister"
-		},
-		{ 
-			"level": 7,
-			"deskripsi": "Mampu merencanakan dan mengelola sumberdaya di bawah tanggung jawabnya, dan mengevaluasi secara komprehensif kerjanya dengan memanfaatkan ilmu pengetahuan, teknologi, dan/atau seni untuk menghasilkan langkah-langkah pengembangan strategis organisasi.",
-			"jenjang": "Profesi"
-		},
-		{ 
-			"level": 6,
-			"deskripsi": "Mampu mengaplikasikan bidang keahliannya dan memanfaatkan ilmu pengetahuan, teknologi, dan/atau seni pada bidangnya dalam penyelesaian masalah serta mampu beradaptasi terhadap situasi yang dihadapi.",
-			"jenjang": "Sarjana"
-		},
-		{ 
-			"level": 5,
-			"deskripsi": "Mampu menyelesaikan pekerjaan berlingkup luas, memilih metode yang sesuai dari beragam pilihan yang sudah maupun belum baku dengan menganalisis data, serta mampu menunjukkan kinerja dengan mutu dan kuantitas yang terukur.",
-			"jenjang": "Diploma 3"
-		},
-		{ 
-			"level": 4,
-			"deskripsi": "Mampu menyelesaikan tugas berlingkup luas dan kasus spesifik dengan mengadaptasi secara terbatas, memilih metode yang sesuai dari beberapa pilihan yang baku, serta mampu menunjukkan kinerja dengan mutu dan kuantitas yang terukur.",
-			"jenjang": "Diploma 2"
-		},
-		{ 
-			"level": 3,
-			"deskripsi": "Mampu melaksanakan serangkaian tugas spesifik, dengan menerjemahkan informasi dan menggunakan alat, berdasarkan sejumlah pilihan prosedur kerja, serta mampu menunjukkan kinerja dengan mutu dan kuantitas yang terukur, yang sebagian merupakan hasil kerja sendiri dengan pengawasan tidak langsung.",
-			"jenjang": "Diploma 1"
-		}
-	];
-
-	const dataPengetahuanKKNI = [
-		{ 
-			"level": 9,
-			"deskripsi": "Mampu memecahkan permasalahan sains, teknologi, dan/atau seni di dalam bidang keilmuannya melalui pendekatan inter, multi atau transdisipliner.",
-			"jenjang": "Doktor"
-		},
-		{ 
-			"level": 8,
-			"deskripsi": "Mampu memecahkan permasalahan ilmu pengetahuan, teknologi, dan/atau seni di dalam bidang keilmuannya melalui pendekatan inter atau multidisipliner.",
-			"jenjang": "Magister"
-		},
-		{ 
-			"level": 7,
-			"deskripsi": "Mampu memecahkan permasalahan sains, teknologi, dan/atau seni di dalam bidang keilmuannya melalui pendekatan monodisipliner.",
-			"jenjang": "Profesi"
-		},
-		{ 
-			"level": 6,
-			"deskripsi": "Menguasai konsep teoritis bidang pengetahuan tertentu secara umum dan konsep teoritis bagian khusus dalam bidang pengetahuan tersebut secara mendalam, serta mampu memformulasikan penyelesaian masalah prosedural.",
-			"jenjang": "Sarjana"
-		},
-		{ 
-			"level": 5,
-			"deskripsi": "Menguasai konsep teoritis bidang pengetahuan tertentu secara umum, serta mampu memformulasikan penyelesaian masalah prosedural.",
-			"jenjang": "Diploma 3"
-		},
-		{ 
-			"level": 4,
-			"deskripsi": "Menguasai beberapa prinsip dasar bidang keahlian tertentu dan mampu menyelaraskan dengan permasalahan faktual di bidang kerjanya.",
-			"jenjang": "Diploma 2"
-		},
-		{ 
-			"level": 3,
-			"deskripsi": "Memiliki pengetahuan operasional yang lengkap, prinsip-prinsip serta konsep umum yang terkait dengan fakta bidang keahlian tertentu, sehingga mampu menyelesaikan berbagai masalah yang lazim dengan metode yang sesuai.",
-			"jenjang": "Diploma 1"
-		}
-	];
+	const [pengetahuanKkni, setPengetahuanKkni] = useState([]);
+	const [kemampuanKerjaKkni, setkemampuanKerjaKkni] = useState([]);
+	const [selectedPengetahuan, setSelectedPengetahuan] = useState(null);
+	const [selectedKemampuanKerja, setSelectedKemampuanKerja] = useState(null);
+	const [dataSaranCpl, setDataSaranCpl] = useState([]);
+	const [dataSourceCpl, setDataSourceCpl] = useState([]);
+	const [isAutoCpl, setAutoCpl] = useState(false);
 
 	const fetchKkni = async () => {
 		setLoading(true);
 		try {
 			if (user?.prodiId) {
 				const data = await getKkni(user.prodiId);
-				setKkni(data);
+				setKkni(data.kkni);
+				setPengetahuanKkni(data.pengetahuan);
+				setkemampuanKerjaKkni(data.kemampuanKerja);
+				setSelectedKemampuanKerja(data['kkni'][0].kemampuan_kerja_id);
+				setSelectedPengetahuan(data['kkni'][0].pengetahuan_kkni_id);
 			} else {
 				const prodis = await getProdiDropdown();
 				setProdiDropdown(prodis);
@@ -134,11 +72,26 @@ export const useKKNIData = () => {
 					prodiId: user.prodiId,
 				}))
 			);
-			console.log(dataSource);
 		} else {
 			setDataSource([]);
 		}
 	}, [kkni]);
+
+	useEffect(() => {
+		if (dataSaranCpl.length > 0) {
+			setDataSourceCpl(
+				dataSaranCpl.map((item, index) => ({
+					key: "saran cpl " + index + 1,
+					_id: null,
+					code: item.kode,
+					description: item.deskripsi,
+					prodiId: user.prodiId,
+				}))
+			);
+		} else {
+			setDataSourceCpl([]);
+		}
+	}, [dataSaranCpl]);
 
 	const handleProdiChange = async (value) => {
 		setSelectedProdi(value);
@@ -211,6 +164,20 @@ export const useKKNIData = () => {
 
 		// Temukan data yang akan dihapus
 		const deleteData = dataSource.find((item) => item.key === key);
+		if (!deleteData){
+			const newDataCpl = dataSourceCpl.filter((item) => item.key !== key);
+
+			// Perbarui ulang key dan code agar tetap urut
+			const updatedDataSource = newDataCpl.map((item, index) => ({
+				...item,
+				key: "saran cpl " + (index + 1), 
+				code: "CPL-" + (index + 1), 
+			}));
+
+			// Simpan data baru ke state
+			setDataSourceCpl(updatedDataSource);
+			return;
+		}
 
 		// Jika data memiliki `_id`, hapus dari server terlebih dahulu
 		if (deleteData?._id !== null) {
@@ -224,7 +191,7 @@ export const useKKNIData = () => {
 					`Gagal menghapus item dengan ID ${deleteData._id}:`,
 					error
 				);
-				return; // Keluar jika ada error
+				return;
 			}
 		}
 
@@ -264,7 +231,12 @@ export const useKKNIData = () => {
 	const handleSaveData = async () => {
 		setSaving(true);
 		try {
-			await postKkni(dataSource);
+			const data = {
+				dataSource: dataSource, 
+				selectedKemampuanKerja, 
+				selectedPengetahuan
+			};
+			await postKkni(data);
 			message.success("Data berhasil disimpan!");
 			await fetchKkni();
 		} catch (error) {
@@ -278,6 +250,11 @@ export const useKKNIData = () => {
 	const rowSelection = {
 		selectedRowKeys,
 		onChange: (newSelectedRowKeys) => setSelectedRowKeys(newSelectedRowKeys),
+	};
+
+	const rowSelectionCpl = {
+		selectedRowKeysCpl,
+		onChange: (newSelectedRowKeys) => setSelectedRowKeysCpl(newSelectedRowKeys),
 	};
 
 	const handleDeleteKknis = async () => {
@@ -321,18 +298,86 @@ export const useKKNIData = () => {
 		}
 	};
 
+	const handleautocpl = async ()=>{
+		setAutoCpl(true);
+		try{
+			const data = await autoCpl(user.prodiId, selectedPengetahuan,selectedKemampuanKerja);
+			setDataSaranCpl(data.data);
+			message.success('berhasil membuat rancangan cpl berdasarkan analisis konsideran');
+		}catch(error){
+			message.error('gagal membuat rancangan cpl');
+			console.error('error membuat rancangan cpl:', error);
+		}finally{
+			setAutoCpl(false);
+		}
+	};
+
+	const addToDataSource = () => {
+		setLoading(true);
+		try {
+			// Pisahkan data yang akan ditambahkan dan yang tetap disimpan
+			const { toAdd, toKeep } = dataSourceCpl.reduce(
+				(acc, item) => {
+					if (selectedRowKeysCpl.includes(item.key)) {
+						acc.toAdd.push(item);
+					} else {
+						acc.toKeep.push(item);
+					}
+					return acc;
+				},
+				{ toAdd: [], toKeep: [] }
+			);
+	
+			if (toAdd.length > 0) {
+				// Gabungkan data lama dengan data baru yang ditambahkan
+				const newDataSource = [...dataSource, ...toAdd].map((item, index) => ({
+					...item,
+					key: `kkni${index + 1}`, // Update key
+					code: `CPL-${index + 1}`, // Update code
+				}));
+	
+				setDataSource(newDataSource);
+				message.success("Data berhasil ditambahkan!");
+			}
+	
+			// Perbarui ulang data yang tersisa di dataSourceCpl agar tetap terurut
+			const updatedDataSourceCpl = toKeep.map((item, index) => ({
+				...item,
+				key: `kkni${index + 1}`, // Update key
+				code: `CPL-${index + 1}`, // Update code
+			}));
+	
+			setDataSourceCpl(updatedDataSourceCpl);
+			setSelectedRowKeysCpl([]); // Reset pilihan row
+		} catch (error) {
+			message.error("Gagal menghapus data!");
+			console.error("Error hapus bench kurikulum:", error);
+		} finally {
+			setLoading(false);
+		}
+	};	
+
 	return {
+		kemampuanKerjaKkni,
+		pengetahuanKkni,
 		selectedProdi,
 		prodiDropdown,
 		kkni,
 		loading,
 		dataSource,
+		dataSourceCpl,
 		saving,
 		undoStack,
 		rowSelection,
+		rowSelectionCpl,
+		selectedRowKeysCpl,
 		selectedRowKeys,
-		dataKemampuanKerjaKKNI,
-		dataPengetahuanKKNI,
+		selectedKemampuanKerja,
+		selectedPengetahuan,
+		dataSaranCpl,
+		isAutoCpl,
+		addToDataSource,
+		handleautocpl,
 		handleUndo,
 		handleSave,
 		handleAddRow,
@@ -343,5 +388,7 @@ export const useKKNIData = () => {
 		handleExportTemplateKkni,
 		handleImportKkni,
 		setDataSource,
+		setSelectedPengetahuan,
+		setSelectedKemampuanKerja
 	};
 };
