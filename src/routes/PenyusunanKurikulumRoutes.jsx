@@ -16,7 +16,7 @@ import VMT from "../pages/VMT/VMT";
 import BenchKurikulums from "../pages/AnalisisKonsideran/BenchKurikulums";
 import KKNI from "../pages/AnalisisKonsideran/KKNI/KKNI";
 import MateriPembelajaran from "../pages/MateriPembelajaran";
-import Ipteks from "../pages/Ipteks";
+import Ipteks from "../pages/AnalisisKonsideran/Ipteks";
 import CplPpmVm from "../pages/ModelKonstruksi/CPLPPMVM/CplPpmVm";
 import MatriksCplHasIea from "../pages/Matriks/MatriksCplHasIea";
 import MatrixCplPpm from "../pages/ModelKonstruksi/MatrixCplPpm/MatrixCplPpm";
