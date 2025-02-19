@@ -43,8 +43,10 @@ export const useKKNIData = () => {
 				setKkni(data.kkni);
 				setPengetahuanKkni(data.pengetahuan);
 				setkemampuanKerjaKkni(data.kemampuanKerja);
-				setSelectedKemampuanKerja(data['kkni'][0].kemampuan_kerja_id);
-				setSelectedPengetahuan(data['kkni'][0].pengetahuan_kkni_id);
+				if (data.kkni?.length > 0) {
+					setSelectedKemampuanKerja(data.kkni[0]?.kemampuan_kerja_id || null);
+					setSelectedPengetahuan(data.kkni[0]?.pengetahuan_kkni_id || null);
+				}
 			} else {
 				const prodis = await getProdiDropdown();
 				setProdiDropdown(prodis);
@@ -78,7 +80,7 @@ export const useKKNIData = () => {
 	}, [kkni]);
 
 	useEffect(() => {
-		if (dataSaranCpl.length > 0) {
+		if (dataSaranCpl?.length > 0) {
 			setDataSourceCpl(
 				dataSaranCpl.map((item, index) => ({
 					key: "saran cpl " + index + 1,
@@ -303,7 +305,11 @@ export const useKKNIData = () => {
 		try{
 			const data = await autoCpl(user.prodiId, selectedPengetahuan,selectedKemampuanKerja);
 			setDataSaranCpl(data.data);
-			message.success('berhasil membuat rancangan cpl berdasarkan analisis konsideran');
+			if(dataSaranCpl == null){
+				message.warning(' rancangan cpl kosong lengkapi analisis konsideran');
+			}else {
+				message.success('berhasil membuat rancangan cpl berdasarkan analisis konsideran');
+			}
 		}catch(error){
 			message.error('gagal membuat rancangan cpl');
 			console.error('error membuat rancangan cpl:', error);

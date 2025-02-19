@@ -73,12 +73,8 @@ export const deleteKkni = async (id) => {
 
 export const autoCpl = async (prodiId, pengatahuanId, kemampuanKerjaId) => {
     try {
-        const response = await api.get('/kkni/auto', {
-            params: {
-                prodiId,
-                pengatahuanId,
-                kemampuanKerjaId,
-            },
+        const response = await api.get(`/kkni/auto`, {
+            params: { prodiId, pengatahuanId, kemampuanKerjaId  }
         });
         return response.data;
     } catch (error) {
