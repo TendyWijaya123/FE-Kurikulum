@@ -147,11 +147,6 @@ const MenuPenyusunanKurikulum = () => {
 						title="BenchKurikulums"
 						icon={<BarChart />}
 					/>
-					<MenuItemSidebar
-						url="/analisis-konsideran/kkni"
-						title="KKNI"
-						icon={<School />}
-					/>
 					<VisibleMenu>
 						<MenuItemSidebar
 							url="/analisis-konsideran/ipteks"
@@ -159,6 +154,11 @@ const MenuPenyusunanKurikulum = () => {
 							icon={<Science />}
 						/>
 					</VisibleMenu>
+					<MenuItemSidebar
+						url="/analisis-konsideran/kkni"
+						title="KKNI"
+						icon={<School />}
+					/>
 				</VisibleMenu>
 			</MenuItemSidebar>
 

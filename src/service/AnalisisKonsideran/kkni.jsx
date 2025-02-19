@@ -1,24 +1,10 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:8000/api";
-
-const api = axios.create({
-	baseURL: API_URL,
-	headers: {
-		"Content-Type": "application/json",
-		Accept: "application/json",
-	},
-});
+import api from "../../utils/axiosInstance";
 
 export const getKkni = async (prodiId) => {
     try {
-        const token = localStorage.getItem("authToken");
-
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
         const response = await api.get(`/kkni`, {
-            params: { prodiId },
-            headers,
+            params: { prodiId }
         });
         return response.data;
     } catch (error) {
@@ -35,11 +21,7 @@ export const getKkni = async (prodiId) => {
 export const postKkni = async (data) => {
     try
     {
-        const token = localStorage.getItem("authToken");
-
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        console.log(data);
-        const response = await api.post(`/kkni`, data, {headers});
+        const response = await api.post(`/kkni`, data);
 
         return response.data;
     } catch (error) {
@@ -56,12 +38,8 @@ export const postKkni = async (data) => {
 
 export const deleteKknis = async (data) => {
     try{
-        const token = localStorage.getItem("authToken");
-
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
         const response = await api.delete(`/kkni`, {
-            headers,
             data,
         });
 
@@ -80,11 +58,7 @@ export const deleteKknis = async (data) => {
 
 export const deleteKkni = async (id) => {
     try{
-        const token = localStorage.getItem("authToken");
-
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-        const response = await api.delete(`/kkni/${id}`, {headers});
+        const response = await api.delete(`/kkni/${id}`);
         return response.data;
     }catch (error){
         if(error.response) {
@@ -96,3 +70,19 @@ export const deleteKkni = async (id) => {
 		throw error;
     }
 }
+
+export const autoCpl = async (prodiId, pengatahuanId, kemampuanKerjaId) => {
+    try {
+        const response = await api.get(`/kkni/auto`, {
+            params: { prodiId, pengatahuanId, kemampuanKerjaId  }
+        });
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            console.error("Error fetching KKNI:", error.response.data);
+        } else {
+            console.error("Error fetching KKNI:", error.message);
+        }
+        throw error;
+    }
+};

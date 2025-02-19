@@ -23,7 +23,14 @@ const Login = () => {
   return (
     <div className="flex justify-center items-center bg-blue-950 w-full h-screen">
       <Card className="w-96 shadow-lg">
-        <Title level={2} className="text-center text-blue-950">Login</Title>
+        <div className="flex flex-col items-center mb-4">
+          <img src="/img/polban.png" alt="Logo Polban" className="w-16 h-16" />
+          <h1 className="text-blue-950 font-bold font-sans text-xl mt-4 text-center">
+            Penyusunan <span className="text-blue-500">Kurikulum</span>
+          </h1>
+        </div>
+
+        {/* <Title level={2} className="text-center text-blue-950">Login</Title> */}
         <Form layout="vertical" onFinish={selectedOption === "dosen" ? handleSubmitRps : handleSubmit}>
           <Form.Item label="Pilih Opsi" name="option" rules={[{ required: true, message: "Silakan pilih opsi" }]}>            
 				<Select placeholder="Pilih opsi" onChange={setSelectedOption} value={selectedOption}>
