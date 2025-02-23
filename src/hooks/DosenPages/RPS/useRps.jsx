@@ -22,7 +22,6 @@ const useRps = (id) => {
 		setError(null);
 		try {
 			const data = await getRps(id);
-			console.log(data.data.mataKuliah);
 			setRpsData(data?.data?.rps || null);
 			setMataKuliahData(data?.data?.mataKuliah || null);
 			setCplDropdown(data?.data?.mataKuliah?.cpls || null);
@@ -62,7 +61,7 @@ const useRps = (id) => {
 			setError(err);
 			message.error(err.response.data.message || "Gagal Menambahkan RPS");
 			console.error(error);
-      throw err
+			throw err;
 		} finally {
 			setLoading(false);
 		}

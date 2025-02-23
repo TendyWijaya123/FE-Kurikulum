@@ -76,6 +76,12 @@ const MataKuliah = () => {
 							dataIndex: "teori_m",
 							key: "teori_m",
 						},
+						{
+							title: "Total",
+							render: (_, record, index) => {
+								return record.teori_pt + record.teori_bt + record.teori_m;
+							},
+						},
 					],
 				},
 				{
@@ -95,6 +101,12 @@ const MataKuliah = () => {
 							title: "M",
 							dataIndex: "praktek_m",
 							key: "praktek_m",
+						},
+						{
+							title: "Total",
+							render: (_, record, index) => {
+								return record.praktek_pt + record.praktek_bt + record.praktek_m;
+							},
 						},
 					],
 				},
