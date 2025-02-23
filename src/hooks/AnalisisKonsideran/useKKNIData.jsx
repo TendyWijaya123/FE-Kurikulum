@@ -304,15 +304,16 @@ export const useKKNIData = () => {
 		setAutoCpl(true);
 		try{
 			const data = await autoCpl(user.prodiId, selectedPengetahuan,selectedKemampuanKerja);
-			setDataSaranCpl(data.data);
-			if(dataSaranCpl == null){
-				message.warning(' rancangan cpl kosong lengkapi analisis konsideran');
-			}else {
-				message.success('berhasil membuat rancangan cpl berdasarkan analisis konsideran');
+			if(data.warning){
+				message.warning('analisis konsideran belum lengkap');
+				return;
 			}
+			setDataSaranCpl(data.data);
+			message.success('berhasil membuat rancangan cpl berdasarkan analisis konsideran');
 		}catch(error){
 			message.error('gagal membuat rancangan cpl');
 			console.error('error membuat rancangan cpl:', error);
+			setDataSaranCpl([]);
 		}finally{
 			setAutoCpl(false);
 		}
