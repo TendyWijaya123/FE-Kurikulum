@@ -471,30 +471,15 @@ export const getPengetahuan = async () => {
 	}
 };
 
-export const createPengetahuan = async (data) => {
+export const upsertPengetahuan = async (data) => {
 	try {
-		const response = await api.post("/pengetahuan", data);
-
-		if (!response.data) {
-			throw new Error("Tidak ada response dari server");
-		}
-
-		return response.data;
+	  const response = await api.post("/pengetahuan/upsert", data);
+	  return response.data;
 	} catch (error) {
-		console.error("Error creating Pengetahuan:", error);
-		throw error.response?.data || error;
+	  console.error("Error upserting Pengetahuan:", error);
+	  throw error.response?.data || error;
 	}
-};
-
-export const updatePengetahuan = async (id, data) => {
-	try {
-		const response = await api.put(`/pengetahuan/${id}`, data);
-		return response.data;
-	} catch (error) {
-		console.error("Error updating Pengetahuan:", error);
-		throw error;
-	}
-};
+  };
 
 export const deletePengetahuan = async (id) => {
 	try {

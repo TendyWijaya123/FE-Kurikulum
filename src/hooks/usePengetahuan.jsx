@@ -1,120 +1,242 @@
 import { useState, useEffect, useContext } from "react";
 import {
-	getPengetahuan,
-	deletePengetahuan,
-	createPengetahuan,
-	updatePengetahuan,
+  getPengetahuan,
+  deletePengetahuan,
+  upsertPengetahuan,
 } from "../service/api";
 import { AuthContext } from "../context/AuthProvider";
 import {
-	getPengetahuanTemplate,
-	importPengetahuan,
+  getPengetahuanTemplate,
+  importPengetahuan,
 } from "../service/Import/ImportService";
+import { message } from "antd";
+
+const notifications = {
+  success: {
+    delete: "Data berhasil dihapus",
+    create: "Data berhasil ditambahkan",
+    update: "Data berhasil diperbarui",
+    saveAll: "Data berhasil disimpan",
+    import: "Data berhasil diimport"
+  },
+  error: {
+    fetch: "Gagal mengambil data pengetahuan",
+    delete: "Gagal menghapus data",
+    create: "Gagal menambah data",
+    update: "Gagal memperbarui data",
+    saveAll: "Gagal menyimpan data",
+    import: "Gagal mengunggah file. Coba lagi",
+  }
+};
 
 export const usePengetahuan = () => {
-	const [pengetahuanData, setPengetahuanData] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPage, setTotalPage] = useState(1);
-	const [error, setError] = useState(null);
-	const [notification, setNotification] = useState({ message: "", type: "" });
-	const { user } = useContext(AuthContext);
+  const [pengetahuanData, setPengetahuanData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const { user } = useContext(AuthContext);
+  const [undoStack, setUndoStack] = useState([]);
+  
+  // Function to save current state to undo stack
+  const saveToUndoStack = (data) => {
+    setUndoStack((prevStack) => [...prevStack, [...data]]);
+  };
 
-	const showNotification = (message, type) => {
-		setNotification({ message, type });
-		setTimeout(() => setNotification({ message: "", type: "" }), 3000);
-	};
+  // Handle Undo
+  const handleUndo = () => {
+    if (undoStack.length > 0) {
+      const previousState = undoStack[undoStack.length - 1];
+      setUndoStack(undoStack.slice(0, -1));
+      setPengetahuanData(previousState);
+    }
+  };
 
-	const fetchPengetahuan = async () => {
-		setLoading(true);
-		setError(null);
-		try {
-			const response = await getPengetahuan({ page: currentPage });
-			setPengetahuanData(response.data);
-			setTotalPage(response.totalPages);
-		} catch (err) {
-			setError(err.response?.data?.message || "Gagal mengambil data.");
-		} finally {
-			setLoading(false);
-		}
-	};
+  const fetchPengetahuan = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await getPengetahuan();
+      setPengetahuanData(response.data.map(item => ({
+        ...item,
+        key: item.id
+      })));
+    } catch (err) {
+      setError(err.response?.data?.message || notifications.error.fetch);
+      message.error(notifications.error.fetch);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-	const handleDelete = async (id) => {
-		try {
-			await deletePengetahuan(id);
-			showNotification("Data berhasil dihapus.", "success");
-			fetchPengetahuan();
-		} catch (err) {
-			showNotification(
-				err.response?.data?.message || "Gagal menghapus data.",
-				"error"
-			);
-		}
-	};
+  const handleDelete = async (id) => {
+    try {
+      await deletePengetahuan(id);
+      // Update local state instead of refetching
+      setPengetahuanData(prevData => prevData.filter(item => item.id !== id));
+      return true;
+    } catch (err) {
+      message.error(err.response?.data?.message || notifications.error.delete);
+      return false;
+    }
+  };
 
-	const handleCreate = async (data) => {
-		try {
-			await createPengetahuan({ ...data, kurikulum_id: user?.kurikulumId });
-			showNotification("Data berhasil ditambahkan.", "success");
-			fetchPengetahuan();
-			return true;
-		} catch (err) {
-			showNotification(
-				err.response?.data?.message || "Gagal menambah data.",
-				"error"
-			);
-			return false;
-		}
-	};
+  const handleMultiDelete = async (keys) => {
+    try {
+      saveToUndoStack(pengetahuanData);
+      
+      const deletePromises = keys.map(key => deletePengetahuan(key));
+      await Promise.all(deletePromises);
+      
+      setPengetahuanData(prevData => 
+        prevData.filter(item => !keys.includes(item.key))
+      );
+      
+      message.success(`${keys.length} item berhasil dihapus`);
+      setSelectedRowKeys([]);
+      return true;
+    } catch (error) {
+      message.error(notifications.error.delete);
+      return false;
+    }
+  };
 
-	const handleUpdate = async (id, data) => {
-		try {
-			await updatePengetahuan(id, data);
-			showNotification("Data berhasil diperbarui.", "success");
-			fetchPengetahuan();
-			return true;
-		} catch (err) {
-			showNotification(
-				err.response?.data?.message || "Gagal memperbarui data.",
-				"error"
-			);
-			return false;
-		}
-	};
+  const handleCreate = async (values) => {
+    try {
+      const newItem = {
+        id: null,
+        deskripsi: values.deskripsi,
+        kode_pengetahuan: 'Auto',
+      };
+      
+      saveToUndoStack(pengetahuanData);
+      const data = [newItem];
+      await upsertPengetahuan(data);
+      message.success(notifications.success.create);
+      fetchPengetahuan();
+      return true;
+    } catch (err) {
+      message.error(err.response?.data?.message || notifications.error.create);
+      return false;
+    }
+  };
 
-	const handleExportTemplatePengetahuan = async () => {
-		try {
-			await getPengetahuanTemplate();
-		} catch (error) {
-			setAlert(`Terjadi kesalahan: ${error.message || error}`);
-		}
-	};
+  const handleBatchCreate = async (entries) => {
+    try {
+      saveToUndoStack(pengetahuanData);
+      const data = entries.map(entry => ({
+        id: null,
+        deskripsi: entry.deskripsi,
+        kode_pengetahuan: 'Auto',
+      }));
+      
+      await upsertPengetahuan(data);
+      message.success(notifications.success.create);
+      fetchPengetahuan();
+      return true;
+    } catch (err) {
+      message.error(err.response?.data?.message || notifications.error.create);
+      return false;
+    }
+  };
 
-	const handleImportPengetahuan = async (file) => {
-		try {
-			await importPengetahuan(file);
-			fetchPengetahuan();
-		} catch (error) {
-			message.error("Gagal mengunggah file. Coba lagi.");
-		}
-	};
+  const handleFieldEdit = (record, field, value) => {
+    saveToUndoStack(pengetahuanData);
+    const newData = [...pengetahuanData];
+    const index = newData.findIndex(item => record.key === item.key);
+    if (index > -1) {
+      const item = newData[index];
+      newData.splice(index, 1, { ...item, [field]: value });
+      setPengetahuanData(newData);
+    }
+  };
 
-	useEffect(() => {
-		fetchPengetahuan();
-	}, [currentPage]);
+  const handleAddRow = () => {
+    saveToUndoStack(pengetahuanData);
+    const newRow = {
+      id: null,
+      key: `new-${Date.now()}`,
+      kode_pengetahuan: 'Auto',
+      deskripsi: '',
+    };
+    setPengetahuanData([...pengetahuanData, newRow]);
+  };
 
-	return {
-		pengetahuanData,
-		loading,
-		error,
-		notification,
-		currentPage,
-		totalPage,
-		setCurrentPage,
-		handleDelete,
-		handleCreate,
-		handleUpdate,
-		handleExportTemplatePengetahuan,
-		handleImportPengetahuan,
-	};
+  const handleDeleteRow = async (record) => {
+	if (record.id === null) {
+	  setPengetahuanData((prevData) => prevData.filter(item => item.key !== record.key));
+	  message.success("Baris berhasil dihapus");
+	} else {
+	  const success = await handleDelete(record.id);
+	  if (success) {
+		message.success(notifications.success.delete);
+	  }
+	}
+  };
+  
+  const handleSaveAll = async () => {
+    setSaving(true);
+    try {
+      const itemsToSave = pengetahuanData.filter(item => item.deskripsi.trim() !== '');
+      
+      const payload = itemsToSave.map(item => ({
+        id: item.id,
+        deskripsi: item.deskripsi,
+      }));
+      
+      await upsertPengetahuan(payload);
+      message.success(notifications.success.saveAll);
+      fetchPengetahuan();
+      return true;
+    } catch (error) {
+      message.error(notifications.error.saveAll);
+      return false;
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleExportTemplatePengetahuan = async () => {
+    try {
+      await getPengetahuanTemplate();
+    } catch (error) {
+      message.error(`Gagal mengunduh template: ${error.message || error}`);
+    }
+  };
+
+  const handleImportPengetahuan = async (file) => {
+    try {
+      await importPengetahuan(file);
+      message.success(notifications.success.import);
+      fetchPengetahuan();
+      return true;
+    } catch (error) {
+      message.error(notifications.error.import);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    fetchPengetahuan();
+  }, []);
+
+  return {
+    pengetahuanData,
+    loading,
+    saving,
+    error,
+    selectedRowKeys,
+    setSelectedRowKeys,
+    handleDelete,
+    handleCreate,
+    handleMultiDelete,
+    handleExportTemplatePengetahuan,
+    handleImportPengetahuan,
+    handleFieldEdit,
+    handleAddRow,
+    handleSaveAll,
+    handleUndo,
+    handleBatchCreate,
+	handleDeleteRow
+  };
 };
