@@ -6,6 +6,7 @@ import {
 	updateBukuReferensi,
 	deleteBukuReferensi,
 } from "../../service/BukuReferensi/BukuReferensiService";
+import { getBukuReferensiTemplate, importBukuReferensi } from "../../service/Import/ImportService";
 
 const useBukuReferensi = () => {
 	const [buku, setBuku] = useState([]);
@@ -64,6 +65,25 @@ const useBukuReferensi = () => {
 		}
 	};
 
+	const handleExportTemplate = async () => {
+        try {
+            await getBukuReferensiTemplate();
+			message.success("Berhasil mengunduh template");
+        } catch (error) {
+            message.error(`Terjadi kesalahan: ${error.message || error}`);
+        }
+    };
+
+    const handleImportBukuReferensi = async (file) => {
+        try {
+            await importBukuReferensi(file);
+            message.success("Data berhasil diimport");
+            fetchData();
+        } catch (error) {
+            message.error("Gagal mengunggah file. Coba lagi.");
+        }
+    };
+
 	return {
 		buku,
 		loading,
@@ -74,6 +94,8 @@ const useBukuReferensi = () => {
 		handleEdit,
 		handleDelete,
 		handleSubmit,
+		handleExportTemplate,
+		handleImportBukuReferensi
 	};
 };
 

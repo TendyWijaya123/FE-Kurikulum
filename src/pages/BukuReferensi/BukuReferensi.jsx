@@ -2,6 +2,9 @@ import { Table, Button, Modal, Form, Input } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import useBukuReferensi from "../../hooks/BukuReferensi/useBukuReferensi";
+import ImportModal from "../../components/Modal/ImportModal";
+import { useState } from "react";
+import { UploadOutlined, DownloadOutlined } from "@ant-design/icons";
 
 const BukuReferensi = () => {
 	const {
@@ -14,23 +17,40 @@ const BukuReferensi = () => {
 		handleEdit,
 		handleDelete,
 		handleSubmit,
+		handleExportTemplate,
+		handleImportBukuReferensi
 	} = useBukuReferensi();
 
 	const [form] = Form.useForm();
+	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
 	return (
 		<DefaultLayout title="Buku Referensi">
 			<div className="p-4 bg-white rounded-lg shadow-md">
-				<Button
-					type="primary"
-					icon={<PlusOutlined />}
-					onClick={() => {
-						form.resetFields();
-						handleAdd();
-					}}
-					className="mb-4">
-					Tambah Buku
-				</Button>
+				<div className="flex space-x-2 mb-4">
+					<Button
+						type="primary"
+						icon={<DownloadOutlined />}
+						onClick={handleExportTemplate}>
+						Download Template
+					</Button>
+					<Button
+						type="default"
+						icon={<UploadOutlined />}
+						onClick={() => setIsModalImportOpen(true)}>
+						Import CPL
+					</Button>
+					<Button
+						type="primary"
+						icon={<PlusOutlined />}
+						onClick={() => {
+							form.resetFields();
+							handleAdd();
+						}}
+						className="mb-4">
+						Tambah Buku
+					</Button>
+				</div>
 				<Table
 					columns={[
 						{ title: "Judul", dataIndex: "judul", key: "judul" },
@@ -64,6 +84,13 @@ const BukuReferensi = () => {
 					rowKey="id"
 				/>
 			</div>
+
+			<ImportModal	
+				isOpen={isModalImportOpen}
+				setIsOpen={setIsModalImportOpen}
+				handleImport={handleImportBukuReferensi}
+				title="Import Buku Referensi"
+				/>
 
 			<Modal
 				title={editingBuku ? "Edit Buku Referensi" : "Tambah Buku Referensi"}

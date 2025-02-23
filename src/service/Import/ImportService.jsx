@@ -325,3 +325,36 @@ export const importBenchKurikulum = async (file) => {
 		throw error;
 	}
 };
+export const getBukuReferensiTemplate = async () => {
+	try {
+		const response = await api.get(`/buku-referensi/template`, { responseType: "blob" });
+		const url = window.URL.createObjectURL(new Blob([response.data]));
+		const link = document.createElement("a");
+		link.href = url;
+		link.setAttribute("download", "buku_referensi_template.xlsx");
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	} catch (error) {
+		console.error("Error saat mendownload template", error);
+		throw error;
+	}
+};
+
+export const importBukuReferensi = async (file) => {
+	const formData = new FormData();
+	formData.append("file", file);
+
+	try {
+		const response = await api.post("/buku-referensi/import", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error saat mengupload file", error);
+		throw error;
+	}
+};
+	
