@@ -43,10 +43,6 @@ export const useKKNIData = () => {
 				setKkni(data.kkni);
 				setPengetahuanKkni(data.pengetahuan);
 				setkemampuanKerjaKkni(data.kemampuanKerja);
-				if (data.kkni?.length > 0) {
-					setSelectedKemampuanKerja(data.kkni[0]?.kemampuan_kerja_id || null);
-					setSelectedPengetahuan(data.kkni[0]?.pengetahuan_kkni_id || null);
-				}
 			} else {
 				const prodis = await getProdiDropdown();
 				setProdiDropdown(prodis);
@@ -310,6 +306,7 @@ export const useKKNIData = () => {
 			}
 			setDataSaranCpl(data.data);
 			message.success('berhasil membuat rancangan cpl berdasarkan analisis konsideran');
+			setSelectedRowKeysCpl([]);
 		}catch(error){
 			message.error('gagal membuat rancangan cpl');
 			console.error('error membuat rancangan cpl:', error);
