@@ -46,6 +46,18 @@ export const updateMataKuliah = async (id, mataKuliahData) => {
 	}
 };
 
+export const updateDeskripsiSingkatMK = async (id, deskripsi) => {
+	try {
+		const response = await api.put(`/mata-kuliah/pengampu/${id}`, {
+			deskripsi_singkat: deskripsi,
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error updating Mata Kuliah:", error);
+		throw error;
+	}
+};
+
 export const assignReferensiKeMataKuliah = async (
 	mataKuliahId,
 	bukuReferensiId
