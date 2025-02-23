@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
-import { getMataKuliahByDosenPengampu } from "../../../service/MataKuliah/MataKuliahService";
+import {
+	getMataKuliahByDosenPengampu,
+	updateDeskripsiSingkatMK,
+} from "../../../service/MataKuliah/MataKuliahService";
 import { message } from "antd";
 import { useNavigate } from "react-router-dom";
 
@@ -28,11 +31,22 @@ const useMataKuliahPengampu = () => {
 		navigate(`/rps/${id}`);
 	};
 
+	const handleUpdateSingkatMataKuliah = async (id, deskripsi) => {
+		await updateDeskripsiSingkatMK(id, deskripsi);
+		fetchMataKuliahPengampuData();
+	};
+
 	useEffect(() => {
 		fetchMataKuliahPengampuData();
 	}, []);
 
-	return { mataKuliahPengampuData, loading, error, handleNavigate };
+	return {
+		mataKuliahPengampuData,
+		loading,
+		error,
+		handleUpdateSingkatMataKuliah,
+		handleNavigate,
+	};
 };
 
 export default useMataKuliahPengampu;

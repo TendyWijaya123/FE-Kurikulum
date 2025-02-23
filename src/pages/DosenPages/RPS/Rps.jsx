@@ -16,6 +16,7 @@ import {
 } from "antd";
 import Accordion from "../../../components/Accordion/Accordion";
 import { useState } from "react";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const Rps = () => {
 	const { mata_kuliah_id } = useParams();
@@ -106,9 +107,9 @@ const Rps = () => {
 			key: "kode",
 		},
 		{
-			title: "Deskripsi",
-			dataIndex: "deskripsi",
-			key: "deskripsi",
+			title: "Keterangan",
+			dataIndex: "keterangan",
+			key: "keterangan",
 		},
 	];
 
@@ -130,30 +131,106 @@ const Rps = () => {
 			title: "Minggu",
 			dataIndex: "minggu",
 			key: "minggu",
+			width: 80,
 		},
 		{
 			title: "Pokok Bahasan",
 			dataIndex: "pokok_bahasan",
 			key: "pokok_bahasan",
+			width: 300,
+		},
+		{
+			title:
+				"Modalitas, Bentuk, Strategi, dan Metode Pembelajaran (Media dan Sumber Belajar)",
+			dataIndex: "modalitas_bentuk_strategi_metodepembelajaran",
+			key: "modalitas_bentuk_strategi_metodepembelajaran",
+			width: 350,
+			render: (_, record) => {
+				return (
+					record.modalitas_bentuk_strategi_metodepembelajaran || "Belum Diisi"
+				);
+			},
+		},
+		{
+			title: "Instrumen Penilaian",
+			dataIndex: "instrumen_penilaian",
+			key: "instrumen_penilaian",
+			width: 200,
+			render: (_, record) => {
+				return record.instrumen_penilaian || "Belum Diisi";
+			},
+		},
+		{
+			title: "Beban Belajar Mahasiswa",
+			dataIndex: "",
+			key: "beban_belajar",
+			width: 250,
+			render: () => {
+				return (
+					<>
+						<h1 className="font-bold">Teori</h1>
+						<ul>
+							<li>BT: {mataKuliahData.teori_bt}</li>
+							<li>PT: {mataKuliahData.teori_pt}</li>
+							<li>M: {mataKuliahData.teori_m}</li>
+						</ul>
+						<h1 className="font-bold">Praktek</h1>
+						<ul>
+							<li>BT: {mataKuliahData.praktek_bt}</li>
+							<li>PT: {mataKuliahData.praktek_pt}</li>
+							<li>M: {mataKuliahData.praktek_m}</li>
+						</ul>
+					</>
+				);
+			},
+		},
+		{
+			title: "Hasil Belajar",
+			dataIndex: "hasil_belajar",
+			key: "hasil_belajar",
+			width: 300,
+			render: (_, record) => {
+				return record.hasil_belajar || "Belum Diisi";
+			},
+		},
+		{
+			title: "Capaian Pembelajaran Lulusan",
+			key: "cpl",
+			dataIndex: "cpl",
+			width: 100,
+			render: (_, record) => {
+				return record.cpl?.kode || "Belum Diisi";
+			},
+		},
+		{
+			title: "Tujuan Belajar",
+			key: "tujuan_belajar",
+			dataIndex: "tujuan_belajar",
+			width: 100,
+			render: (_, record) => {
+				return record.tujuan_belajar?.kode || "Belum Diisi";
+			},
 		},
 		{
 			title: "Bobot Penilaian",
 			dataIndex: "bobot_penilaian",
 			key: "bobot_penilaian",
+			width: 100,
 		},
 		{
 			title: "Action",
 			key: "action",
+			width: 150,
 			render: (_, record) => (
 				<>
-					<Button onClick={() => handleEdit(record)} type="link">
-						Edit
+					<Button onClick={() => handleEdit(record)} type="primary">
+						<EditOutlined />
 					</Button>
 					<Popconfirm
 						title="Are you sure to delete this RPS?"
 						onConfirm={() => handleDelete(record.id)}>
-						<Button type="link" danger>
-							Delete
+						<Button type="primary" danger>
+							<DeleteOutlined />
 						</Button>
 					</Popconfirm>
 				</>
@@ -199,10 +276,8 @@ const Rps = () => {
 				<Spin spinning={loading}>
 					<Descriptions bordered column={1}>
 						<Descriptions.Item label="Deskripsi Singkat MK">
-							Lorem ipsum dolor sit amet, consectetur adipisicing elit. Neque,
-							possimus animi aut recusandae doloribus amet quis sunt velit
-							assumenda at error inventore eum dicta? Officia aliquam soluta
-							minima rem quas.
+							{mataKuliahData.deskripsi_singkat ||
+								"Belum Mengisikan Deskripsi Singkat"}
 						</Descriptions.Item>
 
 						<Descriptions.Item label="Bahan Kajian/Materi Pembelajaran">
