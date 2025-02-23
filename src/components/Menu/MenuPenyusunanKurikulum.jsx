@@ -49,21 +49,6 @@ const MenuPenyusunanKurikulum = () => {
 				icon={<Dashboard />}
 				isOpen={openMenu === "dashboard"}
 				onToggle={() => handleMenuToggle("dashboard")}>
-				<MenuItemSidebar
-					url="/dashboard/overview"
-					title="Overview"
-					icon={<Dashboard />}>
-					<MenuItemSidebar
-						url="/dashboard/stats"
-						title="Stats"
-						icon={<Dashboard />}
-					/>
-				</MenuItemSidebar>
-				<MenuItemSidebar
-					url="/dashboard/stats"
-					title="Stats"
-					icon={<Dashboard />}
-				/>
 			</MenuItemSidebar>
 
 			{/* Users */}
