@@ -14,6 +14,12 @@ import ModalEditMataKuliah from "../../components/Common/MataKuliah/ModalEditMat
 import useMataKuliah from "../../hooks/MataKuliah/useMataKuliah";
 import DeleteButton from "../../components/Button/DeleteButton";
 import { DeleteOutline, EditOutlined } from "@mui/icons-material";
+import {
+	DownloadOutlined,
+	PlusOutlined,
+	UploadOutlined,
+} from "@ant-design/icons";
+import ImportModal from "../../components/Modal/ImportModal";
 
 const MataKuliah = () => {
 	const {
@@ -25,6 +31,10 @@ const MataKuliah = () => {
 		editedData,
 		isModalCreateVisible,
 		isModalUpdateVisible,
+		isModalImportVisible,
+		setIsModalImportVisible,
+		handleExportTemplateMataKuliah,
+		handleImportMataKuliah,
 		handleModalCreateClose,
 		handleModalUpdateClose,
 		handleOnEdit,
@@ -231,13 +241,31 @@ const MataKuliah = () => {
 					</div>
 				) : (
 					<>
-						<button
-							className="px-2  py-2 mb-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-all duration-200"
-							onClick={() => {
-								setIsModalCreateVisible(true);
-							}}>
-							Tambah Mata Kuliah
-						</button>
+						<div className="mb-4 flex flex-wrap gap-2">
+							<Button
+								type="primary"
+								icon={<DownloadOutlined />}
+								onClick={handleExportTemplateMataKuliah}>
+								Download Template
+							</Button>
+
+							<Button
+								type="default"
+								icon={<UploadOutlined />}
+								onClick={() => setIsModalImportVisible(true)}>
+								Import Mata Kuliah
+							</Button>
+
+							<Button
+								type="primary"
+								icon={<PlusOutlined />}
+								onClick={() => {
+									setIsModalCreateVisible(true);
+								}}>
+								Tambah Mata Kuliah
+							</Button>
+						</div>
+
 						<div className="overflow-x-auto">
 							<Table
 								columns={columns}
@@ -292,6 +320,13 @@ const MataKuliah = () => {
 				metodePembelajaranDropdown={metodePembelajaranDropdown}
 				bentukPembelajaranDropdown={bentukPembelajaranDropdown}
 				onSave={handleCreateSave}
+			/>
+
+			<ImportModal
+				isOpen={isModalImportVisible}
+				setIsOpen={setIsModalImportVisible}
+				handleImport={handleImportMataKuliah}
+				title="Import Mata Kuliah"
 			/>
 		</DefaultLayout>
 	);

@@ -48,8 +48,7 @@ const MenuPenyusunanKurikulum = () => {
 				title="Dashboard"
 				icon={<Dashboard />}
 				isOpen={openMenu === "dashboard"}
-				onToggle={() => handleMenuToggle("dashboard")}>
-			</MenuItemSidebar>
+				onToggle={() => handleMenuToggle("dashboard")}></MenuItemSidebar>
 
 			{/* Users */}
 			<VisibleMenu>
@@ -219,9 +218,19 @@ const MenuPenyusunanKurikulum = () => {
 				icon={<Assignment />}
 				url="/dosen-pengampu"></MenuItemSidebar>
 
-		
+			<MenuItemSidebar
+				title="Export"
+				icon={<Assignment />}
+				isOpen={openMenu === "Export"}
+				onToggle={() => handleMenuToggle("Export")}>
+				<MenuItemSidebar
+					url="/export-penyusunan-kurikulum"
+					title="Export Penyusunan Kurikulum"
+					icon={<TableChart />}
+				/>
+			</MenuItemSidebar>
 		</>
 	);
-};	
+};
 
 export default MenuPenyusunanKurikulum;

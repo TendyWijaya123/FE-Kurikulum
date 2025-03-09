@@ -9,6 +9,10 @@ import {
 	fetchMetodePembelajaranDropdown,
 	updateMataKuliah,
 } from "../../service/MataKuliah/MataKuliahService";
+import {
+	getMataKuliahTemplate,
+	importMataKuliah,
+} from "../../service/Import/ImportService";
 
 const useMataKuliah = () => {
 	const [mataKuliahData, setMataKuliahData] = useState([]);
@@ -23,6 +27,7 @@ const useMataKuliah = () => {
 	const [error, setError] = useState(null);
 	const [alert, setAlert] = useState(null);
 	const [editedData, setEditedData] = useState({});
+	const [isModalImportVisible, setIsModalImportVisible] = useState(false);
 	const [isModalCreateVisible, setIsModalCreateVisible] = useState(false);
 	const [isModalUpdateVisible, setIsModalUpdateVisible] = useState(false);
 
@@ -78,6 +83,10 @@ const useMataKuliah = () => {
 
 	const handleModalUpdateClose = () => {
 		setIsModalUpdateVisible(false);
+	};
+
+	const handleModalImportVisible = () => {
+		setIsModalImportVisible((prev) => !prev);
 	};
 
 	const handleOnEdit = (index) => {
@@ -186,6 +195,23 @@ const useMataKuliah = () => {
 		}
 	};
 
+	const handleImportMataKuliah = async (file) => {
+		try {
+			await importMataKuliah(file);
+			fetchData();
+		} catch (error) {
+			message.error("Gagal mengunggah file. Coba lagi.");
+		}
+	};
+
+	const handleExportTemplateMataKuliah = async () => {
+		try {
+			await getMataKuliahTemplate();
+		} catch (error) {
+			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		}
+	};
+
 	const handleDelete = async (id) => {
 		try {
 			await deleteMataKuliah(id);
@@ -211,12 +237,17 @@ const useMataKuliah = () => {
 		editedData,
 		isModalCreateVisible,
 		isModalUpdateVisible,
+		isModalImportVisible,
+		setIsModalImportVisible,
 		handleModalCreateClose,
 		handleModalUpdateClose,
+		handleModalImportVisible,
 		handleOnEdit,
 		handleCreateSave,
 		handleUpdate,
 		handleDelete,
+		handleExportTemplateMataKuliah,
+		handleImportMataKuliah,
 		setIsModalCreateVisible,
 		setIsModalUpdateVisible,
 	};
