@@ -33,6 +33,8 @@ import DosenHasMatkul from "../pages/Dosen/DosenHasMatkul";
 import Dosen from "../pages/Dosen/Dosen";
 import BukuReferensi from "../pages/BukuReferensi/BukuReferensi";
 import ReferensiMataKuliah from "../pages/ReferensiMataKuliah/ReferensiMataKuliah";
+import PenyusunanKurikulumExportPage from "../pages/PenyusunanKurikulum/PenyusunanKurikulumExport";
+import PenyusunanKurikulumExport from "../pages/PenyusunanKurikulum/PenyusunanKurikulumExport";
 
 export default function PenyusunanKurikulumRoutes() {
 	return (
@@ -289,7 +291,14 @@ export default function PenyusunanKurikulumRoutes() {
 				}
 			/>
 
-		
+			<Route
+				path="/export-penyusunan-kurikulum"
+				element={
+					<ProtectedRoute>
+						<PenyusunanKurikulumExport />
+					</ProtectedRoute>
+				}
+			/>
 		</Routes>
 	);
 }

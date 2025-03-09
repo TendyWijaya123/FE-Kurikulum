@@ -129,6 +129,17 @@ export const getProdiDropdown = async () => {
 	}
 };
 
+export const getProdiKurikulumDropdown = async () => {
+	try {
+		const response = await api.get("/prodi/dropdown-prodi-kurikulum");
+		console.log(response.data);
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching Prodi dropdown:", error);
+		throw error;
+	}
+};
+
 /* -----------------------------Jurusan API----------------------------- */
 export const getJurusans = async (page) => {
 	try {
@@ -293,19 +304,19 @@ export const getIpteks = async (prodiId) => {
 
 export const createIpteks = async (data) => {
 	try {
-	  const token = localStorage.getItem("authToken");
-	  const response = await api.post('/ipteks', data, {
-		headers: {
-		  'Content-Type': 'application/json',
-		  Authorization: `Bearer ${token}`
-		}
-	  });
-	  return response.data;
+		const token = localStorage.getItem("authToken");
+		const response = await api.post("/ipteks", data, {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		return response.data;
 	} catch (error) {
-	  console.error("Error creating/updating IPTEKS:", error);
-	  throw error;
+		console.error("Error creating/updating IPTEKS:", error);
+		throw error;
 	}
-  };
+};
 
 export const updateIpteks = async (id, data) => {
 	try {
@@ -320,8 +331,8 @@ export const updateIpteks = async (id, data) => {
 	} catch (error) {
 		console.error("Error updating IPTEKS:", error);
 		throw error;
-	  console.error("Error creating/updating IPTEKS:", error);
-	  throw error;
+		console.error("Error creating/updating IPTEKS:", error);
+		throw error;
 	}
 };
 
@@ -340,51 +351,51 @@ export const deleteIpteks = async (id) => {
 	}
 };
 
-  export const getIpteksTemplate = async () => {
+export const getIpteksTemplate = async () => {
 	try {
-	  const token = localStorage.getItem("authToken");
-	  const response = await api.get('/ipteks/template', {
-		headers: {
-		  Authorization: `Bearer ${token}`
-		},
-		responseType: 'blob' // Important for downloading files
-	  });
-	  
-	  // Create a URL for the blob and trigger download
-	  const url = window.URL.createObjectURL(new Blob([response.data]));
-	  const link = document.createElement('a');
-	  link.href = url;
-	  link.setAttribute('download', 'ipteks-template.xlsx'); // or whatever file extension you're using
-	  document.body.appendChild(link);
-	  link.click();
-	  link.remove();
-	  window.URL.revokeObjectURL(url);
-	  
-	  return response.data;
-	} catch (error) {
-	  console.error("Error downloading IPTEKS template:", error);
-	  throw error;
-	}
-  };
+		const token = localStorage.getItem("authToken");
+		const response = await api.get("/ipteks/template", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			responseType: "blob", // Important for downloading files
+		});
 
-  export const importIpteks = async (file) => {
-	try {
-	  const token = localStorage.getItem("authToken");
-	  const formData = new FormData();
-	  formData.append('file', file);
-	  
-	  const response = await api.post('/ipteks/import', formData, {
-		headers: {
-		  Authorization: `Bearer ${token}`,
-		  'Content-Type': 'multipart/form-data'
-		}
-	  });
-	  return response.data;
+		// Create a URL for the blob and trigger download
+		const url = window.URL.createObjectURL(new Blob([response.data]));
+		const link = document.createElement("a");
+		link.href = url;
+		link.setAttribute("download", "ipteks-template.xlsx"); // or whatever file extension you're using
+		document.body.appendChild(link);
+		link.click();
+		link.remove();
+		window.URL.revokeObjectURL(url);
+
+		return response.data;
 	} catch (error) {
-	  console.error("Error importing IPTEKS:", error);
-	  throw error;
+		console.error("Error downloading IPTEKS template:", error);
+		throw error;
 	}
-  };
+};
+
+export const importIpteks = async (file) => {
+	try {
+		const token = localStorage.getItem("authToken");
+		const formData = new FormData();
+		formData.append("file", file);
+
+		const response = await api.post("/ipteks/import", formData, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"Content-Type": "multipart/form-data",
+			},
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error importing IPTEKS:", error);
+		throw error;
+	}
+};
 
 /* -----------------------------Vmt Polban API----------------------------- */
 
@@ -473,13 +484,13 @@ export const getPengetahuan = async () => {
 
 export const upsertPengetahuan = async (data) => {
 	try {
-	  const response = await api.post("/pengetahuan/upsert", data);
-	  return response.data;
+		const response = await api.post("/pengetahuan/upsert", data);
+		return response.data;
 	} catch (error) {
-	  console.error("Error upserting Pengetahuan:", error);
-	  throw error.response?.data || error;
+		console.error("Error upserting Pengetahuan:", error);
+		throw error.response?.data || error;
 	}
-  };
+};
 
 export const deletePengetahuan = async (id) => {
 	try {

@@ -127,12 +127,12 @@ const CplTable = () => {
 			)}
 
 			{/* Modal Import */}
-			<ImportModal	
+			<ImportModal
 				isOpen={isModalImportOpen}
 				setIsOpen={setIsModalImportOpen}
 				handleImport={handleImportCpl}
 				title="Import CPL"
-				/>
+			/>
 		</div>
 	);
 };

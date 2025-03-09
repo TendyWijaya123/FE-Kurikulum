@@ -213,11 +213,17 @@ const ModalEditMataKuliah = ({
 							{/* Menambahkan min-width pada tabel */}
 							<thead>
 								<tr>
-									<th className="px-4 py-2 text-left">Deskripsi</th>
-									<th className="px-4 py-2 text-left">Estimasi Beban Kerja</th>
-									<th className="px-4 py-2 text-left">Bentuk Pembelajaran</th>
-									<th className="px-4 py-2 text-left">Metode Pembelajaran</th>
-									<th className="px-4 py-2 text-left">Aksi</th>
+									<th className="px-4 py-2 text-left w-[40%]">Deskripsi</th>
+									<th className="px-4 py-2 text-left w-[20%]">
+										Estimasi Beban Kerja
+									</th>
+									<th className="px-4 py-2 text-left w-[20%]">
+										Bentuk Pembelajaran
+									</th>
+									<th className="px-4 py-2 text-left w-[15%]">
+										Metode Pembelajaran
+									</th>
+									<th className="px-4 py-2 text-left w-[5%]">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>

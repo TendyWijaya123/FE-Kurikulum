@@ -195,30 +195,30 @@ export const getMateriPembelajaranTemplate = async () => {
 };
 
 export const importMateriPembelajaran = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    
-    console.log('File yang akan diupload:', file);
-    
-    try {
-        const response = await api.post("/materi-pembelajaran/import", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
-        
-        console.log('Response dari server:', response.data);
-        
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        
-        return response.data;
-    } catch (error) {
-        console.error("Error detail:", {
-            message: error.message,
-            response: error.response?.data
-        });
-        throw error;
-    }
+	const formData = new FormData();
+	formData.append("file", file);
+
+	console.log("File yang akan diupload:", file);
+
+	try {
+		const response = await api.post("/materi-pembelajaran/import", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+
+		console.log("Response dari server:", response.data);
+
+		await new Promise((resolve) => setTimeout(resolve, 1000));
+
+		return response.data;
+	} catch (error) {
+		console.error("Error detail:", {
+			message: error.message,
+			response: error.response?.data,
+		});
+		throw error;
+	}
 };
 
 export const getKkniTemplate = async () => {
@@ -327,7 +327,9 @@ export const importBenchKurikulum = async (file) => {
 };
 export const getBukuReferensiTemplate = async () => {
 	try {
-		const response = await api.get(`/buku-referensi/template`, { responseType: "blob" });
+		const response = await api.get(`/buku-referensi/template`, {
+			responseType: "blob",
+		});
 		const url = window.URL.createObjectURL(new Blob([response.data]));
 		const link = document.createElement("a");
 		link.href = url;
@@ -357,4 +359,39 @@ export const importBukuReferensi = async (file) => {
 		throw error;
 	}
 };
-	
+
+/* -----------------------------MataKuliah IMPORT----------------------------- */
+export const getMataKuliahTemplate = async () => {
+	try {
+		const response = await api.get(`/mata-kuliah/template`, {
+			responseType: "blob",
+		});
+		const url = window.URL.createObjectURL(new Blob([response.data]));
+		const link = document.createElement("a");
+		link.href = url;
+		link.setAttribute("download", "template_matakuliah.xlsx");
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	} catch (error) {
+		console.error("Error saat mendownload template", error);
+		throw error;
+	}
+};
+
+export const importMataKuliah = async (file) => {
+	const formData = new FormData();
+	formData.append("file", file);
+
+	try {
+		const response = await api.post("/mata-kuliah/import", formData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error saat mengupload file", error);
+		throw error;
+	}
+};
