@@ -25,11 +25,13 @@ import { usePengetahuan } from "../hooks/usePengetahuan";
 import { AuthContext } from "../context/AuthProvider";
 import ImportModal from "../components/Modal/ImportModal";
 import VisibleMenu from "../components/Menu/VisibleMenu";
+import { ProdiContext } from "../context/ProdiProvider";
 
 const Pengetahuan = () => {
 	const { user } = useContext(AuthContext);
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
-
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
+		useContext(ProdiContext);
 	const {
 		pengetahuanData,
 		loading,
@@ -103,6 +105,20 @@ const Pengetahuan = () => {
 
 	return (
 		<DefaultLayout title="Pengetahuan">
+			<VisibleMenu allowedRoles={"P2MPP"}>
+				<Select
+					placeholder="Pilih Program Studi"
+					options={prodiDropdown.map((prodi) => ({
+						label: prodi.name,
+						value: prodi.id,
+					}))}
+					defaultValue={selectedProdiId}
+					onChange={(value) => handleChangeSelectedProdiId(value)}
+					style={{ width: 250 }}
+					allowClear
+					onClear={() => handleChangeSelectedProdiId(null)}
+				/>
+			</VisibleMenu>
 			<div style={{ padding: "15px", background: "#fff", minHeight: "100%" }}>
 				<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
 					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
