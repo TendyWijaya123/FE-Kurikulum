@@ -15,8 +15,10 @@ import {
 	importKkni,
 } from "../../service/Import/ImportService";
 import { ContactPageSharp } from "@mui/icons-material";
+import { ProdiContext } from "../../context/ProdiProvider";
 
 export const useKKNIData = () => {
+	const { selectedProdiId } = useContext(ProdiContext);
 	const [kkni, setKkni] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const { user } = useContext(AuthContext);
@@ -35,18 +37,13 @@ export const useKKNIData = () => {
 	const [dataSourceCpl, setDataSourceCpl] = useState([]);
 	const [isAutoCpl, setAutoCpl] = useState(false);
 
-	const fetchKkni = async () => {
+	const fetchKkni = async (prodiId = null) => {
 		setLoading(true);
 		try {
-			if (user?.prodiId) {
-				const data = await getKkni(user.prodiId);
-				setKkni(data.kkni);
-				setPengetahuanKkni(data.pengetahuan);
-				setkemampuanKerjaKkni(data.kemampuanKerja);
-			} else {
-				const prodis = await getProdiDropdown();
-				setProdiDropdown(prodis);
-			}
+			const data = await getKkni(prodiId);
+			setKkni(data.kkni);
+			setPengetahuanKkni(data.pengetahuan);
+			setkemampuanKerjaKkni(data.kemampuanKerja);
 		} catch (error) {
 			console.error("Error fetching kkni:", error);
 		} finally {
@@ -56,8 +53,8 @@ export const useKKNIData = () => {
 
 	// Fetch data
 	useEffect(() => {
-		fetchKkni();
-	}, [user?.prodiId]);
+		fetchKkni(selectedProdiId);
+	}, [selectedProdiId]);
 
 	useEffect(() => {
 		if (kkni.length > 0) {
@@ -162,14 +159,14 @@ export const useKKNIData = () => {
 
 		// Temukan data yang akan dihapus
 		const deleteData = dataSource.find((item) => item.key === key);
-		if (!deleteData){
+		if (!deleteData) {
 			const newDataCpl = dataSourceCpl.filter((item) => item.key !== key);
 
 			// Perbarui ulang key dan code agar tetap urut
 			const updatedDataSource = newDataCpl.map((item, index) => ({
 				...item,
-				key: "saran cpl " + (index + 1), 
-				code: "CPL-" + (index + 1), 
+				key: "saran cpl " + (index + 1),
+				code: "CPL-" + (index + 1),
 			}));
 
 			// Simpan data baru ke state
@@ -218,7 +215,7 @@ export const useKKNIData = () => {
 	const handleImportKkni = async (file) => {
 		try {
 			await importKkni(file);
-			message.success('berhasil inport kkni');
+			message.success("berhasil inport kkni");
 			await fetchKkni();
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
@@ -230,9 +227,9 @@ export const useKKNIData = () => {
 		setSaving(true);
 		try {
 			const data = {
-				dataSource: dataSource, 
-				selectedKemampuanKerja, 
-				selectedPengetahuan
+				dataSource: dataSource,
+				selectedKemampuanKerja,
+				selectedPengetahuan,
 			};
 			await postKkni(data);
 			message.success("Data berhasil disimpan!");
@@ -296,22 +293,28 @@ export const useKKNIData = () => {
 		}
 	};
 
-	const handleautocpl = async ()=>{
+	const handleautocpl = async () => {
 		setAutoCpl(true);
-		try{
-			const data = await autoCpl(user.prodiId, selectedPengetahuan,selectedKemampuanKerja);
-			if(data.warning){
-				message.warning('analisis konsideran belum lengkap');
+		try {
+			const data = await autoCpl(
+				user.prodiId,
+				selectedPengetahuan,
+				selectedKemampuanKerja
+			);
+			if (data.warning) {
+				message.warning("analisis konsideran belum lengkap");
 				return;
 			}
 			setDataSaranCpl(data.data);
-			message.success('berhasil membuat rancangan cpl berdasarkan analisis konsideran');
+			message.success(
+				"berhasil membuat rancangan cpl berdasarkan analisis konsideran"
+			);
 			setSelectedRowKeysCpl([]);
-		}catch(error){
-			message.error('gagal membuat rancangan cpl');
-			console.error('error membuat rancangan cpl:', error);
+		} catch (error) {
+			message.error("gagal membuat rancangan cpl");
+			console.error("error membuat rancangan cpl:", error);
 			setDataSaranCpl([]);
-		}finally{
+		} finally {
 			setAutoCpl(false);
 		}
 	};
@@ -331,7 +334,7 @@ export const useKKNIData = () => {
 				},
 				{ toAdd: [], toKeep: [] }
 			);
-	
+
 			if (toAdd.length > 0) {
 				// Gabungkan data lama dengan data baru yang ditambahkan
 				const newDataSource = [...dataSource, ...toAdd].map((item, index) => ({
@@ -339,18 +342,18 @@ export const useKKNIData = () => {
 					key: `kkni${index + 1}`, // Update key
 					code: `CPL-${index + 1}`, // Update code
 				}));
-	
+
 				setDataSource(newDataSource);
 				message.success("Data berhasil ditambahkan!");
 			}
-	
+
 			// Perbarui ulang data yang tersisa di dataSourceCpl agar tetap terurut
 			const updatedDataSourceCpl = toKeep.map((item, index) => ({
 				...item,
 				key: `kkni${index + 1}`, // Update key
 				code: `CPL-${index + 1}`, // Update code
 			}));
-	
+
 			setDataSourceCpl(updatedDataSourceCpl);
 			setSelectedRowKeysCpl([]); // Reset pilihan row
 		} catch (error) {
@@ -359,7 +362,7 @@ export const useKKNIData = () => {
 		} finally {
 			setLoading(false);
 		}
-	};	
+	};
 
 	return {
 		kemampuanKerjaKkni,
@@ -393,6 +396,6 @@ export const useKKNIData = () => {
 		handleImportKkni,
 		setDataSource,
 		setSelectedPengetahuan,
-		setSelectedKemampuanKerja
+		setSelectedKemampuanKerja,
 	};
 };

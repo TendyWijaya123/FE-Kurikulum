@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
 	deletePeranIndustri,
 	deletePeranIndustris,
@@ -9,8 +9,10 @@ import {
 	getPeranIndustriTemplate,
 	importPeranIndustri,
 } from "../../service/Import/ImportService";
+import { ProdiContext } from "../../context/ProdiProvider";
 
 const usePeranIndustri = () => {
+	const { selectedProdiId } = useContext(ProdiContext);
 	const [peranIndustriData, setPeranIndustriData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
@@ -27,10 +29,10 @@ const usePeranIndustri = () => {
 		}),
 	};
 
-	const fetchData = async () => {
+	const fetchData = async (prodiId = null) => {
 		setLoading(true);
 		try {
-			const response = await fetchPeranIndustri();
+			const response = await fetchPeranIndustri(prodiId);
 			setPeranIndustriData(response.data);
 		} catch (err) {
 			setError(err);
@@ -40,8 +42,8 @@ const usePeranIndustri = () => {
 	};
 
 	useEffect(() => {
-		fetchData();
-	}, []);
+		fetchData(selectedProdiId);
+	}, [selectedProdiId]);
 
 	const handleSavePeranIndustri = async () => {
 		setLoading(true);

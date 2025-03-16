@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
 	deletePpm,
 	deletePpms,
@@ -6,16 +6,18 @@ import {
 	upsertPpm,
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
 import { getPPMTemplate, importPpm } from "../../service/Import/ImportService";
+import { ProdiContext } from "../../context/ProdiProvider";
 
 const usePpm = () => {
+	const { selectedProdiId } = useContext(ProdiContext);
 	const [loading, setLoading] = useState(false);
 	const [ppmData, setPpmData] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [alert, setAlert] = useState();
 
 	useEffect(() => {
-		fetchData();
-	}, []);
+		fetchData(selectedProdiId);
+	}, [selectedProdiId]);
 
 	const rowSelection = {
 		selectedRowKeys,
@@ -49,10 +51,10 @@ const usePpm = () => {
 		}
 	};
 
-	const fetchData = async () => {
+	const fetchData = async (prodiId = null) => {
 		setLoading(true);
 		try {
-			const data = await fetchPpms();
+			const data = await fetchPpms(prodiId);
 			setPpmData(data.data);
 		} catch (error) {
 			console.error(error);

@@ -1,12 +1,16 @@
 import api from "../../../utils/axiosInstance";
 
 /* --------------------------------CPL API-------------------------------------------- */
-export const fetchCpls = async () => {
+export const fetchCpls = async (prodiId = null) => {
 	try {
-		const response = await api.get("/cpls");
+		const params = prodiId ? { prodiId } : {};
+		const response = await api.get("/cpls", { params });
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching CPLs:", error);
+		console.error(
+			"Error fetching CPLs:",
+			error.response?.data || error.message
+		);
 		throw error;
 	}
 };
@@ -45,9 +49,10 @@ export const deleteCpls = async (cplData) => {
 };
 
 /* --------------------------------PPM API-------------------------------------------- */
-export const fetchPpms = async () => {
+export const fetchPpms = async (prodiId = null) => {
 	try {
-		const response = await api.get("/ppms");
+		const params = prodiId ? { prodiId } : {};
+		const response = await api.get("/ppms", { params });
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching PPMs:", error);
@@ -90,9 +95,10 @@ export const deletePpm = async (id) => {
 
 /* --------------------------------Peran Industri API-------------------------------------------- */
 
-export const fetchPeranIndustri = async () => {
+export const fetchPeranIndustri = async (prodiId = null) => {
 	try {
-		const response = await api.get("/peran-industri");
+		const params = prodiId ? { prodiId } : {};
+		const response = await api.get("/peran-industri", { params });
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching Peran Industri:", error);

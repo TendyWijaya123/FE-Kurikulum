@@ -9,6 +9,7 @@ import {
 	DownloadOutlined,
 	DeleteOutlined,
 } from "@ant-design/icons";
+import VisibleMenu from "../../../Menu/VisibleMenu";
 
 const PeranIndustriTable = () => {
 	const {
@@ -69,20 +70,22 @@ const PeranIndustriTable = () => {
 			title: "Aksi",
 			key: "aksi",
 			render: (_, __, index) => (
-				<Button
-					type="primary"
-					danger
-					icon={<DeleteOutlined />}
-					onClick={() =>
-						Modal.confirm({
-							title: "Konfirmasi Hapus",
-							content: "Apakah Anda yakin ingin menghapus item ini?",
-							okText: "Hapus",
-							okType: "danger",
-							cancelText: "Batal",
-							onOk: () => handleDeletePeranIndustriPoint(index),
-						})
-					}></Button>
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<Button
+						type="primary"
+						danger
+						icon={<DeleteOutlined />}
+						onClick={() =>
+							Modal.confirm({
+								title: "Konfirmasi Hapus",
+								content: "Apakah Anda yakin ingin menghapus item ini?",
+								okText: "Hapus",
+								okType: "danger",
+								cancelText: "Batal",
+								onOk: () => handleDeletePeranIndustriPoint(index),
+							})
+						}></Button>
+				</VisibleMenu>
 			),
 			width: 100,
 		},
@@ -91,36 +94,38 @@ const PeranIndustriTable = () => {
 	return (
 		<div className="p-6 bg-white shadow-lg rounded-lg">
 			<div className="mb-4 flex flex-wrap gap-2">
-				<Button
-					type="primary"
-					icon={<DownloadOutlined />}
-					onClick={handleExportTemplatePeranIndustri}>
-					Download Template
-				</Button>
-				<Button
-					type="default"
-					icon={<UploadOutlined />}
-					onClick={() => setIsModalImportOpen(true)}>
-					Import Peran Industri
-				</Button>
-				<Button
-					type="primary"
-					icon={<PlusOutlined />}
-					onClick={handleAddPeranIndustri}>
-					Tambah Peran
-				</Button>
-				<Button
-					type="primary"
-					icon={<SaveOutlined />}
-					onClick={handleSavePeranIndustri}
-					style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
-					Simpan
-				</Button>
-				{selectedRowKeys.length > 0 && (
-					<Button danger type="primary" onClick={handleDestroyPeranIndustris}>
-						Hapus Peran Industri terpilih
+				<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+					<Button
+						type="primary"
+						icon={<DownloadOutlined />}
+						onClick={handleExportTemplatePeranIndustri}>
+						Download Template
 					</Button>
-				)}
+					<Button
+						type="default"
+						icon={<UploadOutlined />}
+						onClick={() => setIsModalImportOpen(true)}>
+						Import Peran Industri
+					</Button>
+					<Button
+						type="primary"
+						icon={<PlusOutlined />}
+						onClick={handleAddPeranIndustri}>
+						Tambah Peran
+					</Button>
+					<Button
+						type="primary"
+						icon={<SaveOutlined />}
+						onClick={handleSavePeranIndustri}
+						style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
+						Simpan
+					</Button>
+					{selectedRowKeys.length > 0 && (
+						<Button danger type="primary" onClick={handleDestroyPeranIndustris}>
+							Hapus Peran Industri terpilih
+						</Button>
+					)}
+				</VisibleMenu>
 			</div>
 
 			{alert && <div className="text-red-500 mb-4">{alert}</div>}
@@ -144,12 +149,12 @@ const PeranIndustriTable = () => {
 			)}
 
 			{/* Modal Import */}
-			<ImportModal	
+			<ImportModal
 				isOpen={isModalImportOpen}
 				setIsOpen={setIsModalImportOpen}
 				handleImport={handleImportPeranIndustri}
 				title="Import Peran Industri"
-				/>
+			/>
 		</div>
 	);
 };

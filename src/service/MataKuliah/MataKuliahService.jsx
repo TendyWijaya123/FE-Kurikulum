@@ -1,9 +1,10 @@
 import api from "../../utils/axiosInstance";
 
 /* -------------------------------------Mata Kuliah API -------------------------------------------------- */
-export const fetchMataKuliah = async () => {
+export const fetchMataKuliah = async (prodiId = null) => {
 	try {
-		const response = await api.get("/mata-kuliah");
+		const params = prodiId ? { prodiId } : {};
+		const response = await api.get("/mata-kuliah", { params });
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching Mata Kuliah:", error);

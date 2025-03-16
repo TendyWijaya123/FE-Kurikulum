@@ -3,6 +3,7 @@ import { Select, Spin, Typography, Button } from "antd";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { getProdiKurikulumDropdown } from "../../service/api";
 import { exportPenyusunanKurikulum } from "../../service/Export/ExportService";
+import { DownloadOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
@@ -55,7 +56,7 @@ const PenyusunanKurikulumExport = () => {
 
 	return (
 		<DefaultLayout title="Export Penyusunan Kurikulum">
-			<div className="w-full max-w-lg mx-auto p-6 bg-white shadow-lg rounded-lg">
+			<div className="w-full  mx-auto p-6 bg-white shadow-lg rounded-lg">
 				<Title level={4} className="text-center text-gray-700 mb-4">
 					Pilih Prodi dan Kurikulum
 				</Title>
@@ -66,7 +67,7 @@ const PenyusunanKurikulumExport = () => {
 					</div>
 				) : (
 					<>
-						<div className="mb-4">
+						<div className="mb-4 ">
 							<Title level={5} className="text-gray-600">
 								Pilih Program Studi
 							</Title>
@@ -100,12 +101,13 @@ const PenyusunanKurikulumExport = () => {
 						</div>
 
 						<Button
+							icon={<DownloadOutlined />}
 							type="primary"
 							disabled={!selectedKurikulum || downloading}
 							loading={downloading}
 							onClick={handleDownload}
 							className="w-full">
-							{downloading ? "Downloading..." : "Download Template"}
+							{downloading ? "Downloading..." : "Download "}
 						</Button>
 					</>
 				)}

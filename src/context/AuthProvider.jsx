@@ -26,7 +26,6 @@ const AuthProvider = ({ children }) => {
 			if (decoded.exp && Date.now() >= decoded.exp * 1000) {
 				throw new Error("Token has expired");
 			}
-
 			setUser(decoded);
 		} catch (error) {
 			console.error("Invalid or expired token:", error.message);
@@ -45,7 +44,6 @@ const AuthProvider = ({ children }) => {
 			const { token } = response.data;
 			localStorage.setItem("authToken", token);
 			setToken(token);
-
 			decodeToken(token);
 		} catch (error) {
 			console.error("Error logging in:", error.response?.data || error.message);
@@ -55,10 +53,13 @@ const AuthProvider = ({ children }) => {
 
 	const loginRps = async (email, password) => {
 		try {
-			const response = await axios.post("http://localhost:8000/api/login-dosen", {
-				email,
-				password,
-			});
+			const response = await axios.post(
+				"http://localhost:8000/api/login-dosen",
+				{
+					email,
+					password,
+				}
+			);
 			const { token } = response.data;
 			localStorage.setItem("authToken", token);
 			setToken(token);
@@ -71,7 +72,7 @@ const AuthProvider = ({ children }) => {
 	};
 
 	const logout = () => {
-		localStorage.removeItem("authToken");
+		localStorage.clear();
 		setUser(null);
 		setToken(null);
 
@@ -89,7 +90,8 @@ const AuthProvider = ({ children }) => {
 	};
 
 	return (
-		<AuthContext.Provider value={{ user, token, login, logout,loginRps, loading }}>
+		<AuthContext.Provider
+			value={{ user, token, login, logout, loginRps, loading }}>
 			{!loading && children}
 		</AuthContext.Provider>
 	);

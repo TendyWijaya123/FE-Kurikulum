@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import DeleteButton from "../../Button/DeleteButton";
 import { Button, Spin } from "antd";
 import useVmtPolban from "../../../hooks/Vmt/useVmtPolban";
-import { SaveOutlined } from "@ant-design/icons";
+import { PlusOutlined, SaveOutlined } from "@ant-design/icons";
+import VisibleMenu from "../../Menu/VisibleMenu";
 
 const MisiPolban = () => {
 	const {
@@ -69,11 +70,13 @@ const MisiPolban = () => {
 								className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
 								placeholder="Masukkan Misi Polban"
 							/>
-							<DeleteButton
-								className="text-red-500 hover:text-red-700 transition-colors duration-200"
-								onDelete={() => handleDeletePoint(index)}>
-								Hapus
-							</DeleteButton>
+							<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+								<DeleteButton
+									className="text-red-500 hover:text-red-700 transition-colors duration-200"
+									onDelete={() => handleDeletePoint(index)}>
+									Hapus
+								</DeleteButton>
+							</VisibleMenu>
 						</div>
 					))}
 				</div>
@@ -81,21 +84,27 @@ const MisiPolban = () => {
 
 			<div className="flex gap-2 ">
 				<div className="flex justify-center mt-6">
-					<button
-						onClick={handleAddPoint}
-						className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300">
-						Tambah Point
-					</button>
+					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+						<Button
+							type="primary"
+							icon={<PlusOutlined />}
+							onClick={handleAddPoint}
+							className="h-10 px-6">
+							Tambah Point
+						</Button>
+					</VisibleMenu>
 				</div>
 
 				<div className="mt-6 text-center">
-					<Button
-						type="default"
-						icon={<SaveOutlined />}
-						onClick={() => handleUpsertMisiPolbans(misiPolban)}
-						className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
-						Simpan
-					</Button>
+					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+						<Button
+							type="default"
+							icon={<SaveOutlined />}
+							onClick={() => handleUpsertMisiPolbans(misiPolban)}
+							className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
+							Simpan
+						</Button>
+					</VisibleMenu>
 					;
 				</div>
 			</div>

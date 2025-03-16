@@ -6,8 +6,8 @@ export const updateMatrixMpPMK = async (data) => {
 		const response = await api.put("/matrix-mp-p-mk", data);
 		return response.data;
 	} catch (error) {
-		if(error.response) {
-            console.error("Error Put matrix mp p mk:", error.response.data);
+		if (error.response) {
+			console.error("Error Put matrix mp p mk:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
 			console.error("Error Put matrix mp p mk:", error.message);
@@ -16,14 +16,16 @@ export const updateMatrixMpPMK = async (data) => {
 	}
 };
 
-export const getMatrixMpPMK = async (prodiId) => {
+export const getMatrixMpPMK = async (prodiId = null) => {
 	try {
-		const response = await api.get("/matrix-mp-p-mk", {params: {prodiId}});
+		const params = prodiId ? { prodiId } : {};
+
+		const response = await api.get("/matrix-mp-p-mk", { params });
 		console.log(response.data);
 		return response.data;
 	} catch (error) {
-		if(error.response) {
-            console.error("Error Get matriks matrix mp p mk:", error.response.data);
+		if (error.response) {
+			console.error("Error Get matriks matrix mp p mk:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
 			console.error("Error Get matrix mp p mk:", error.message);

@@ -14,8 +14,10 @@ import {
 	getBenchKurikulumTemplate,
 	importBenchKurikulum,
 } from "../../service/Import/ImportService";
+import { ProdiContext } from "../../context/ProdiProvider";
 
 export const useBCData = () => {
+	const { selectedProdiId } = useContext(ProdiContext);
 	const [benchKurikulums, setBenchKurikulums] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const { user } = useContext(AuthContext);
@@ -26,16 +28,11 @@ export const useBCData = () => {
 	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
 
-	const fetchBenchKurikulums = async () => {
+	const fetchBenchKurikulums = async (prodiId = null) => {
 		setLoading(true);
 		try {
-			if (user?.prodiId) {
-				const data = await getBenchKurikulums(user.prodiId);
-				setBenchKurikulums(data);
-			} else {
-				const prodis = await getProdiDropdown();
-				setProdiDropdown(prodis);
-			}
+			const data = await getBenchKurikulums(prodiId);
+			setBenchKurikulums(data);
 		} catch (error) {
 			console.error("Error fetching bench kurikulums:", error);
 		} finally {
@@ -44,8 +41,8 @@ export const useBCData = () => {
 	};
 
 	useEffect(() => {
-		fetchBenchKurikulums();
-	}, [user?.prodiId]);
+		fetchBenchKurikulums(selectedProdiId);
+	}, [selectedProdiId]);
 
 	useEffect(() => {
 		if (benchKurikulums.length > 0) {
@@ -114,7 +111,7 @@ export const useBCData = () => {
 	const handleImportBenchKurikulum = async (file) => {
 		try {
 			await importBenchKurikulum(file);
-			message.success("berhasil mengimport data")
+			message.success("berhasil mengimport data");
 			await fetchBenchKurikulums();
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");

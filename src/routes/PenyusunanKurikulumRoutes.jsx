@@ -49,7 +49,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/users"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute allowedRoles={["P2MPP"]}>
 						<Users />
 					</ProtectedRoute>
 				}
@@ -58,7 +58,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/user/create"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute allowedRoles={["P2MPP"]}>
 						<CreateUser />
 					</ProtectedRoute>
 				}
@@ -67,7 +67,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/user/edit/:userId"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute allowedRoles={["P2MPP"]}>
 						<EditUser />
 					</ProtectedRoute>
 				}
@@ -77,7 +77,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/jurusans"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute allowedRoles={["P2MPP"]}>
 						<Jurusans />
 					</ProtectedRoute>
 				}
@@ -85,7 +85,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/jurusans/create"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute allowedRoles={["P2MPP"]}>
 						<CreateJurusan />
 					</ProtectedRoute>
 				}
@@ -95,7 +95,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/prodis"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute allowedRoles={["P2MPP"]}>
 						<Prodis />
 					</ProtectedRoute>
 				}
@@ -104,7 +104,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/prodis/create"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute allowedRoles={["P2MPP"]}>
 						<CreateProdi />
 					</ProtectedRoute>
 				}
@@ -115,7 +115,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/kurikulums"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute allowedRoles={["P2MPP"]}>
 						<Kurikulums />
 					</ProtectedRoute>
 				}
@@ -123,7 +123,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/kurikulum/create"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute allowedRoles={["P2MPP"]}>
 						<CreateKurikulum />
 					</ProtectedRoute>
 				}
@@ -143,7 +143,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/cpl-ppm-vm"
 				element={
-					<ProtectedRoute isProdiRestricted={true}>
+					<ProtectedRoute>
 						<CplPpmVm />
 					</ProtectedRoute>
 				}

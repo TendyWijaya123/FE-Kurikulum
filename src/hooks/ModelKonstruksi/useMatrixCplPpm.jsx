@@ -1,21 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
 	getMatrixCplPpm,
 	updateMatrixCplPpm,
 } from "../../service/ModelKonstruksi/Matrix/MatrixCplPpmService";
 import { message } from "antd";
+import { ProdiContext } from "../../context/ProdiProvider";
 
 const useMatrixCplPpm = () => {
+	const { selectedProdiId } = useContext(ProdiContext);
 	const [cpls, setCpls] = useState([]);
 	const [ppms, setPpms] = useState([]);
 	const [matrixData, setMatrixData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
-	const fetchMatrixData = async () => {
+	const fetchMatrixData = async (prodiId = null) => {
 		try {
 			setLoading(true);
-			const data = await getMatrixCplPpm();
+			const data = await getMatrixCplPpm(prodiId);
 
 			setCpls(data.cpls);
 			setPpms(data.ppms);
@@ -61,8 +63,8 @@ const useMatrixCplPpm = () => {
 	};
 
 	useEffect(() => {
-		fetchMatrixData();
-	}, []);
+		fetchMatrixData(selectedProdiId);
+	}, [selectedProdiId]);
 
 	return {
 		cpls,

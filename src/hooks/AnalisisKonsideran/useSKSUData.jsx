@@ -13,8 +13,10 @@ import {
 	getSksuTemplate,
 	importSksu,
 } from "../../service/Import/ImportService";
+import { ProdiContext } from "../../context/ProdiProvider";
 
 export const useSKSUData = () => {
+	const { selectedProdiId } = useContext(ProdiContext);
 	const [sksu, setSksu] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const { user } = useContext(AuthContext);
@@ -25,17 +27,11 @@ export const useSKSUData = () => {
 	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
 
-	// Fetch data
-	const fetchSKSU = async () => {
+	const fetchSKSU = async (prodiId = null) => {
 		setLoading(true);
 		try {
-			if (user?.prodiId) {
-				const data = await getSksu(user.prodiId);
-				setSksu(data);
-			} else {
-				const prodis = await getProdiDropdown();
-				setProdiDropdown(prodis);
-			}
+			const data = await getSksu(prodiId);
+			setSksu(data);
 		} catch (error) {
 			console.error("Error fetching SKSU:", error);
 		} finally {
@@ -43,10 +39,9 @@ export const useSKSUData = () => {
 		}
 	};
 
-	// Load data when user changes
 	useEffect(() => {
-		fetchSKSU();
-	}, [user?.prodiId]);
+		fetchSKSU(selectedProdiId);
+	}, [selectedProdiId]);
 
 	useEffect(() => {
 		if (sksu.length > 0) {

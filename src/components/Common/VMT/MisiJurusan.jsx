@@ -3,6 +3,8 @@ import DeleteButton from "../../Button/DeleteButton";
 import { Button, Spin } from "antd";
 import useVmtJurusan from "../../../hooks/Vmt/useVmtJurusan";
 import { SaveOutlined } from "@mui/icons-material";
+import { PlusOutlined } from "@ant-design/icons";
+import VisibleMenu from "../../Menu/VisibleMenu";
 
 const MisiJurusan = () => {
 	const {
@@ -69,11 +71,13 @@ const MisiJurusan = () => {
 								className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
 								placeholder="Masukkan Misi Jurusan"
 							/>
-							<DeleteButton
-								onDelete={() => handleDeletePoint(index)}
-								className="text-red-500 hover:text-red-700 transition-colors duration-200">
-								Hapus
-							</DeleteButton>
+							<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+								<DeleteButton
+									onDelete={() => handleDeletePoint(index)}
+									className="text-red-500 hover:text-red-700 transition-colors duration-200">
+									Hapus
+								</DeleteButton>
+							</VisibleMenu>
 						</div>
 					))}
 				</div>
@@ -81,22 +85,27 @@ const MisiJurusan = () => {
 
 			<div className="flex gap-2 ">
 				<div className="flex justify-center mt-6">
-					<button
-						onClick={handleAddPoint}
-						className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition duration-300">
-						Tambah Point
-					</button>
+					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+						<Button
+							type="primary"
+							icon={<PlusOutlined />}
+							onClick={handleAddPoint}
+							className="h-10 px-6">
+							Tambah Point
+						</Button>
+					</VisibleMenu>
 				</div>
 
 				<div className="mt-6 text-center">
-					<Button
-						type="default"
-						icon={<SaveOutlined />}
-						onClick={() => handleUpsertMisiJurusans(misiJurusan)}
-						className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
-						Simpan
-					</Button>
-					;
+					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+						<Button
+							type="default"
+							icon={<SaveOutlined />}
+							onClick={() => handleUpsertMisiJurusans(misiJurusan)}
+							className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
+							Simpan
+						</Button>
+					</VisibleMenu>
 				</div>
 			</div>
 		</div>
