@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Card, Select, Row, Col, Typography, Divider, Table, Space, message, Spin, Button, Empty } from 'antd';
-import { 
-  BookOutlined, 
-  AimOutlined, 
-  EyeOutlined, 
-  BulbOutlined, 
-  ReadOutlined,
-  ReloadOutlined 
-} from '@ant-design/icons';
-import DefaultLayout from "../layouts/DefaultLayout";
-import { useDashboardData } from '../hooks/useDashboardData';
-import Accordion from '../components/Accordion/Accordion';
+import { Card, Select, Row, Col, Typography, Divider, Table, Space, message, Spin, Tooltip, Empty, Popconfirm } from 'antd';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import DefaultLayout from "../../layouts/DefaultLayout";
+import { useDashboardData } from '../../hooks/Dashboard/useDashboardData';
+import Accordion from '../../components/Accordion/Accordion';
+import { useDashboardDetailData } from '../../hooks/Dashboard/userDashboardDetailData';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
 
-const Dashboard = () => {
+const DashboardDetail = () => {
     const {
         loading,
         curriculumData,
@@ -25,11 +19,36 @@ const Dashboard = () => {
         selectedProdi,
         handleJurusanChange,
         handleProdiChange,
-    } = useDashboardData();
+    } = useDashboardDetailData();
 
   const cplColumns = [
     { title: 'Kode', dataIndex: 'kode', key: 'kode', width: '30%' },
-    { title: 'Keterangan', dataIndex: 'keterangan', key: 'keterangan', width: '70%' }
+    { title: 'Keterangan', dataIndex: 'keterangan', key: 'keterangan', width: '70%' },
+    {
+      title: 'status',
+      dataIndex: 'issues',
+      key: 'issues',
+      width: '30%',
+      align: 'center',
+      render: (issues) => {
+        if (!issues || issues === "CPL sesuai dengan standar.") {
+          return <Tooltip title="CPL sesuai"><Text type="success">✅</Text></Tooltip>;
+        } else {
+          return (
+            <Tooltip title="Klik untuk melihat detail">
+              <Popconfirm
+                  title={issues}
+                  // onConfirm={}
+                  okText="Perbaikan"
+                  cancelText="Batal"
+              >
+                  <ExclamationCircleOutlined style={{ color: 'red', cursor: 'pointer' }}/>
+              </Popconfirm>
+            </Tooltip>
+          );
+        }
+      }
+    }
   ];
 
   const ppmColumns = [
@@ -113,10 +132,11 @@ const Dashboard = () => {
                         <Divider />
                         <Title level={4}>Misi</Title>
                         <ul>
-                            {Array.isArray(curriculumData.visi_misi.misiJurusans) && 
-                            curriculumData.visi_misi.misiJurusans.map((misi, index) => (
-                                <li key={misi.id}>{misi.deskripsi}</li>
-                            ))}
+                          {curriculumData.visi_misi?.misi_jurusans?.map((misi, index) => (
+                              <li key={misi.id}>
+                                  {index + 1}. {misi.misi_jurusan}
+                              </li>
+                          ))}
                         </ul>
                         </>
                     ) : (
@@ -137,7 +157,7 @@ const Dashboard = () => {
                     <Card 
                     bordered
                     >
-                    <Table 
+                    <Table
                         columns={cplColumns}
                         dataSource={curriculumData?.cpls || []}
                         rowKey="id"
@@ -208,4 +228,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default DashboardDetail;

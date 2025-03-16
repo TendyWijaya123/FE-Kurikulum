@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "../pages/Dashboard";
+import Dashboard from "../pages/Dashboard/Dashboard";
 import Login from "../pages/Login";
 import ProtectedRoute from "../ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
@@ -35,6 +35,7 @@ import BukuReferensi from "../pages/BukuReferensi/BukuReferensi";
 import ReferensiMataKuliah from "../pages/ReferensiMataKuliah/ReferensiMataKuliah";
 import PenyusunanKurikulumExportPage from "../pages/PenyusunanKurikulum/PenyusunanKurikulumExport";
 import PenyusunanKurikulumExport from "../pages/PenyusunanKurikulum/PenyusunanKurikulumExport";
+import DashboardDetail from "../pages/Dashboard/DashboardDetail";
 
 export default function PenyusunanKurikulumRoutes() {
 	return (
@@ -165,6 +166,17 @@ export default function PenyusunanKurikulumRoutes() {
 					</ProtectedRoute>
 				}
 			/>
+
+			<Route
+				path="/dashboard-detail"
+				element={
+					<ProtectedRoute>
+						<DashboardDetail />
+					</ProtectedRoute>
+				}
+			/>
+
+
 			<Route
 				path="/analisis-konsideran/sksu"
 				element={

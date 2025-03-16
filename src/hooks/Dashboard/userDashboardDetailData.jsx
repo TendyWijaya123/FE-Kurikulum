@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { fetchCurriculumData, fetchJurusan, fetchProdi } from "../service/Dashboard";
+import { fetchCurriculumData, fetchJurusan, fetchProdi } from "../../service/Dashboard/Dashboard";
 
-export const useDashboardData = () => {
+export const useDashboardDetailData = () => {
     const [loading, setLoading] = useState(false);
     const [jurusans, setJurusans] = useState([]);
     const [prodis, setProdis] = useState([]);
