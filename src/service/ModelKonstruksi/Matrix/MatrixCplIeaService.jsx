@@ -5,8 +5,8 @@ export const updateMatrixCplIea = async (data) => {
 		const response = await api.put("/matrix-cpl-iea", data);
 		return response.data;
 	} catch (error) {
-		if(error.response) {
-            console.error("Error Put matriks cpl iea:", error.response.data);
+		if (error.response) {
+			console.error("Error Put matriks cpl iea:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
 			console.error("Error Put matriks cpl iea:", error.message);
@@ -15,13 +15,14 @@ export const updateMatrixCplIea = async (data) => {
 	}
 };
 
-export const getMatrixCplIea = async (prodiId) => {
+export const getMatrixCplIea = async (prodiId = null) => {
 	try {
-		const response = await api.get("/matrix-cpl-iea", {params: {prodiId}});
+		const params = prodiId ? { prodiId } : {};
+		const response = await api.get("/matrix-cpl-iea", { params });
 		return response.data;
 	} catch (error) {
-		if(error.response) {
-            console.error("Error Get matriks cpl iea:", error.response.data);
+		if (error.response) {
+			console.error("Error Get matriks cpl iea:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
 			console.error("Error Get matriks cpl iea:", error.message);

@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import DeleteButton from "../../Button/DeleteButton";
 import { Button, Spin } from "antd";
 import useVmtPolban from "../../../hooks/Vmt/useVmtPolban";
-import { PlusOutlined } from "@ant-design/icons";
-import { SaveOutlined } from "@mui/icons-material";
+import { PlusOutlined, SaveOutlined } from "@ant-design/icons";
+import VisibleMenu from "../../Menu/VisibleMenu";
 
 const TujuanPolban = () => {
 	const {
@@ -70,11 +70,13 @@ const TujuanPolban = () => {
 								className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
 								placeholder="Masukkan Tujuan Polban"
 							/>
-							<DeleteButton
-								onDelete={() => handleDeletePoint(index)}
-								className="text-red-500 hover:text-red-700 transition-colors duration-200">
-								Hapus
-							</DeleteButton>
+							<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+								<DeleteButton
+									onDelete={() => handleDeletePoint(index)}
+									className="text-red-500 hover:text-red-700 transition-colors duration-200">
+									Hapus
+								</DeleteButton>
+							</VisibleMenu>
 						</div>
 					))}
 				</div>
@@ -82,21 +84,25 @@ const TujuanPolban = () => {
 
 			<div className="flex gap-2 ">
 				<div className="flex gap-4 justify-center mt-6">
-					<Button
-						type="primary"
-						icon={<PlusOutlined />}
-						onClick={handleAddPoint}
-						className="h-10 px-6">
-						Tambah Point
-					</Button>
+					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+						<Button
+							type="primary"
+							icon={<PlusOutlined />}
+							onClick={handleAddPoint}
+							className="h-10 px-6">
+							Tambah Point
+						</Button>
+					</VisibleMenu>
 
-					<Button
-						type="default"
-						icon={<SaveOutlined />}
-						onClick={() => handleUpsertTujuanPolbans(tujuanPolban)}
-						className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
-						Simpan
-					</Button>
+					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+						<Button
+							type="default"
+							icon={<SaveOutlined />}
+							onClick={() => handleUpsertTujuanPolbans(tujuanPolban)}
+							className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
+							Simpan
+						</Button>
+					</VisibleMenu>
 				</div>
 			</div>
 		</div>

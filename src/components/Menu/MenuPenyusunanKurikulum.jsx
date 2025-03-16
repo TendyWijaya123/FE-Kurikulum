@@ -50,69 +50,67 @@ const MenuPenyusunanKurikulum = () => {
 				isOpen={openMenu === "dashboard"}
 				onToggle={() => handleMenuToggle("dashboard")}></MenuItemSidebar>
 
-			{/* Users */}
-			<VisibleMenu>
+			<VisibleMenu allowedRoles={["P2MPP"]}>
+				{/* Users */}
 				<MenuItemSidebar
 					title="Users"
 					icon={<People />}
 					isOpen={openMenu === "users"}
 					onToggle={() => handleMenuToggle("users")}>
 					<MenuItemSidebar url="/users" title="Users" icon={<People />} />
-					<VisibleMenu>
-						<MenuItemSidebar
-							url="/user/create"
-							title="Create User"
-							icon={<PersonAdd />}
-						/>
-					</VisibleMenu>
+					<MenuItemSidebar
+						url="/user/create"
+						title="Create User"
+						icon={<PersonAdd />}
+					/>
 				</MenuItemSidebar>
-			</VisibleMenu>
 
-			{/* Jurusan */}
-			<MenuItemSidebar
-				title="Jurusan"
-				icon={<School />}
-				isOpen={openMenu === "jurusan"}
-				onToggle={() => handleMenuToggle("jurusan")}>
-				<MenuItemSidebar url="/jurusans" title="Jurusan" icon={<School />} />
+				{/* Jurusan */}
 				<MenuItemSidebar
-					url="/jurusans/create"
-					title="Create Jurusan"
+					title="Jurusan"
 					icon={<School />}
-				/>
-			</MenuItemSidebar>
+					isOpen={openMenu === "jurusan"}
+					onToggle={() => handleMenuToggle("jurusan")}>
+					<MenuItemSidebar url="/jurusans" title="Jurusan" icon={<School />} />
+					<MenuItemSidebar
+						url="/jurusans/create"
+						title="Create Jurusan"
+						icon={<School />}
+					/>
+				</MenuItemSidebar>
 
-			{/* Prodi */}
-			<MenuItemSidebar
-				title="Prodi"
-				icon={<Class />}
-				isOpen={openMenu === "prodi"}
-				onToggle={() => handleMenuToggle("prodi")}>
-				<MenuItemSidebar url="/prodis" title="Prodi" icon={<Class />} />
+				{/* Prodi */}
 				<MenuItemSidebar
-					url="/prodis/create"
-					title="Create Prodi"
+					title="Prodi"
 					icon={<Class />}
-				/>
-			</MenuItemSidebar>
+					isOpen={openMenu === "prodi"}
+					onToggle={() => handleMenuToggle("prodi")}>
+					<MenuItemSidebar url="/prodis" title="Prodi" icon={<Class />} />
+					<MenuItemSidebar
+						url="/prodis/create"
+						title="Create Prodi"
+						icon={<Class />}
+					/>
+				</MenuItemSidebar>
 
-			{/* Kurikulum */}
-			<MenuItemSidebar
-				title="Kurikulum"
-				icon={<MenuBook />}
-				isOpen={openMenu === "kurikulums"}
-				onToggle={() => handleMenuToggle("kurikulums")}>
+				{/* Kurikulum */}
 				<MenuItemSidebar
-					url="/kurikulums"
 					title="Kurikulum"
 					icon={<MenuBook />}
-				/>
-				<MenuItemSidebar
-					url="/kurikulum/create"
-					title="Create Kurikulum"
-					icon={<MenuBook />}
-				/>
-			</MenuItemSidebar>
+					isOpen={openMenu === "kurikulums"}
+					onToggle={() => handleMenuToggle("kurikulums")}>
+					<MenuItemSidebar
+						url="/kurikulums"
+						title="Kurikulum"
+						icon={<MenuBook />}
+					/>
+					<MenuItemSidebar
+						url="/kurikulum/create"
+						title="Create Kurikulum"
+						icon={<MenuBook />}
+					/>
+				</MenuItemSidebar>
+			</VisibleMenu>
 
 			{/* Analisis Konsideran Page */}
 			<MenuItemSidebar
@@ -120,30 +118,26 @@ const MenuPenyusunanKurikulum = () => {
 				icon={<Analytics />}
 				isOpen={openMenu === "analisisKonsideran"}
 				onToggle={() => handleMenuToggle("analisisKonsideran")}>
-				<VisibleMenu>
-					<MenuItemSidebar
-						url="/analisis-konsideran/sksu"
-						title="SKSU"
-						icon={<Assessment />}
-					/>
-					<MenuItemSidebar
-						url="/analisis-konsideran/bench-kurikulums"
-						title="BenchKurikulums"
-						icon={<BarChart />}
-					/>
-					<VisibleMenu>
-						<MenuItemSidebar
-							url="/analisis-konsideran/ipteks"
-							title="IPTEKS"
-							icon={<Science />}
-						/>
-					</VisibleMenu>
-					<MenuItemSidebar
-						url="/analisis-konsideran/kkni"
-						title="KKNI"
-						icon={<School />}
-					/>
-				</VisibleMenu>
+				<MenuItemSidebar
+					url="/analisis-konsideran/sksu"
+					title="SKSU"
+					icon={<Assessment />}
+				/>
+				<MenuItemSidebar
+					url="/analisis-konsideran/bench-kurikulums"
+					title="BenchKurikulums"
+					icon={<BarChart />}
+				/>
+				<MenuItemSidebar
+					url="/analisis-konsideran/ipteks"
+					title="IPTEKS"
+					icon={<Science />}
+				/>
+				<MenuItemSidebar
+					url="/analisis-konsideran/kkni"
+					title="KKNI"
+					icon={<School />}
+				/>
 			</MenuItemSidebar>
 
 			{/* Model dan Konstruksi Prauji */}

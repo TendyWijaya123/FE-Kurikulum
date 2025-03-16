@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import useVmt from "../../../hooks/Vmt/useVmt";
-import { Spin } from "antd";
+import { Button, Spin } from "antd";
 import useVmtPolban from "../../../hooks/Vmt/useVmtPolban";
+import { SaveOutlined } from "@ant-design/icons";
+import VisibleMenu from "../../Menu/VisibleMenu";
 
 const VisiPolban = () => {
 	const { loading, vmtPolban, handleUpdateVmtPolban } = useVmtPolban();
@@ -48,11 +50,15 @@ const VisiPolban = () => {
 			</div>
 
 			<div className="flex mt-6">
-				<button
-					onClick={handleSaveVisiPolban}
-					className="px-6 py-3 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition duration-300">
-					Simpan Visi Polban
-				</button>
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<Button
+						type="default"
+						icon={<SaveOutlined />}
+						onClick={handleSaveVisiPolban}
+						className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
+						Simpan
+					</Button>
+				</VisibleMenu>
 			</div>
 		</div>
 	);

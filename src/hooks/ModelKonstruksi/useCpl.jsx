@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
 	deleteCpl,
 	deleteCpls,
@@ -6,16 +6,18 @@ import {
 	upsertCpl,
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
 import { getCPLTemplate, importCPL } from "../../service/Import/ImportService";
+import { ProdiContext } from "../../context/ProdiProvider";
 
 const useCpl = () => {
+	const { selectedProdiId } = useContext(ProdiContext);
 	const [loading, setLoading] = useState(false);
 	const [cplData, setCplData] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [alert, setAlert] = useState();
 
 	useEffect(() => {
-		fetchData();
-	}, []);
+		fetchData(selectedProdiId);
+	}, [selectedProdiId]);
 
 	const rowSelection = {
 		selectedRowKeys,
@@ -27,11 +29,11 @@ const useCpl = () => {
 		}),
 	};
 
-	const fetchData = async () => {
+	const fetchData = async (prodiId = null) => {
 		setLoading(true);
 		try {
-			const data = await fetchCpls();
-			setCplData(data.data);
+			const data = await fetchCpls(prodiId);
+		setCplData(data.data);
 		} catch (error) {
 			console.error(error);
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);

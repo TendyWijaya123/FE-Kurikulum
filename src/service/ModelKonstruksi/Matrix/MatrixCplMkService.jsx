@@ -10,9 +10,10 @@ export const updateMatrixCplMk = async (matrixCplMk) => {
 	}
 };
 
-export const getMatrixCplMk = async () => {
+export const getMatrixCplMk = async (prodiId = null) => {
 	try {
-		const response = await api.get("/matrix-mk-cpl");
+		const params = prodiId ? { prodiId } : {};
+		const response = await api.get("/matrix-mk-cpl", { params });
 		console.log(response.data);
 		return response.data;
 	} catch (error) {

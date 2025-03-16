@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import {
 	createMataKuliah,
@@ -20,8 +20,12 @@ import {
 	UploadOutlined,
 } from "@ant-design/icons";
 import ImportModal from "../../components/Modal/ImportModal";
+import { ProdiContext } from "../../context/ProdiProvider";
+import VisibleMenu from "../../components/Menu/VisibleMenu";
 
 const MataKuliah = () => {
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
+		useContext(ProdiContext);
 	const {
 		mataKuliahData,
 		formulasiCpaDropdown,
@@ -155,19 +159,21 @@ const MataKuliah = () => {
 			title: "Aksi",
 			key: "aksi",
 			render: (_, record, index) => (
-				<div className="flex gap-2">
-					<Button
-						type="primary"
-						icon={<EditOutlined />}
-						onClick={() => handleOnEdit(index)}
-					/>
-					<Button
-						type="primary"
-						danger
-						icon={<DeleteOutline />}
-						onClick={() => handleDelete(record.id)}
-					/>
-				</div>
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<div className="flex gap-2">
+						<Button
+							type="primary"
+							icon={<EditOutlined />}
+							onClick={() => handleOnEdit(index)}
+						/>
+						<Button
+							type="primary"
+							danger
+							icon={<DeleteOutline />}
+							onClick={() => handleDelete(record.id)}
+						/>
+					</div>
+				</VisibleMenu>
 			),
 			width: 100,
 		},
@@ -232,8 +238,21 @@ const MataKuliah = () => {
 	];
 	return (
 		<DefaultLayout title="Mata Kuliah">
+			<VisibleMenu allowedRoles={["P2MPP"]}>
+				<Select
+					placeholder="Pilih Program Studi"
+					options={prodiDropdown.map((prodi) => ({
+						label: prodi.name,
+						value: prodi.id,
+					}))}
+					defaultValue={selectedProdiId}
+					onChange={(value) => handleChangeSelectedProdiId(value)}
+					style={{ width: 250 }}
+					allowClear
+					onClear={() => handleChangeSelectedProdiId(null)}
+				/>
+			</VisibleMenu>
 			<div className="w-full bg-white p-4 rounded-lg shadow-md">
-				<h1 className="text-3xl font-bold mb-4">Mata Kuliah</h1>
 				{/* Loading Indicator */}
 				{loading ? (
 					<div className="flex justify-center items-center h-64">
@@ -242,28 +261,30 @@ const MataKuliah = () => {
 				) : (
 					<>
 						<div className="mb-4 flex flex-wrap gap-2">
-							<Button
-								type="primary"
-								icon={<DownloadOutlined />}
-								onClick={handleExportTemplateMataKuliah}>
-								Download Template
-							</Button>
+							<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+								<Button
+									type="primary"
+									icon={<DownloadOutlined />}
+									onClick={handleExportTemplateMataKuliah}>
+									Download Template
+								</Button>
 
-							<Button
-								type="default"
-								icon={<UploadOutlined />}
-								onClick={() => setIsModalImportVisible(true)}>
-								Import Mata Kuliah
-							</Button>
+								<Button
+									type="default"
+									icon={<UploadOutlined />}
+									onClick={() => setIsModalImportVisible(true)}>
+									Import Mata Kuliah
+								</Button>
 
-							<Button
-								type="primary"
-								icon={<PlusOutlined />}
-								onClick={() => {
-									setIsModalCreateVisible(true);
-								}}>
-								Tambah Mata Kuliah
-							</Button>
+								<Button
+									type="primary"
+									icon={<PlusOutlined />}
+									onClick={() => {
+										setIsModalCreateVisible(true);
+									}}>
+									Tambah Mata Kuliah
+								</Button>
+							</VisibleMenu>
 						</div>
 
 						<div className="overflow-x-auto">

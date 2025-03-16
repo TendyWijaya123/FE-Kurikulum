@@ -262,9 +262,9 @@ export const deleteMisiJurusan = async (id) => {
 
 /* -----------------------------Vmt Jurusan API----------------------------- */
 
-export const firstOrCreateVmtJurusan = async () => {
+export const firstOrCreateVmtJurusan = async (prodiId = null) => {
 	try {
-		const response = await api.post("/vmt-jurusans", {});
+		const response = await api.post("/vmt-jurusans", { prodiId });
 		return response.data;
 	} catch (error) {
 		console.error(
@@ -286,14 +286,15 @@ export const updateVmtJurusan = async (id, vmtJurusanData) => {
 };
 
 /* -----------------------------IPTEKS API----------------------------- */
-export const getIpteks = async (prodiId) => {
+export const getIpteks = async (prodiId = null) => {
 	try {
+		const params = prodiId ? { prodiId } : {};
 		const token = localStorage.getItem("authToken");
 		const response = await api.get("/ipteks", {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
-			params: { prodiId },
+			params,
 		});
 		return response.data;
 	} catch (error) {
@@ -399,10 +400,9 @@ export const importIpteks = async (file) => {
 
 /* -----------------------------Vmt Polban API----------------------------- */
 
-// Create or Get First Vmt Polban
-export const firstOrCreateVmtPolban = async () => {
+export const firstOrCreateVmtPolban = async (prodiId) => {
 	try {
-		const response = await api.post("/vmt-polban", {});
+		const response = await api.post("/vmt-polban", { prodiId });
 		return response.data;
 	} catch (error) {
 		console.error(
@@ -472,9 +472,10 @@ export const deleteMisiPolban = async (id) => {
 };
 
 /* -----------------------------Pengetahuan API----------------------------- */
-export const getPengetahuan = async () => {
+export const getPengetahuan = async (prodiId = null) => {
 	try {
-		const response = await api.get("/pengetahuan");
+		const params = prodiId ? { prodiId } : {};
+		const response = await api.get("/pengetahuan", { params });
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching Pengetahuan data:", error);

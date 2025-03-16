@@ -10,88 +10,88 @@ const api = axios.create({
 	},
 });
 
-export const getMateriPembelajarans = async (prodiId) => {
-    try {
-        const token = localStorage.getItem("authToken");
+export const getMateriPembelajarans = async (prodiId = null) => {
+	try {
+		const params = prodiId ? { prodiId } : {};
+		const token = localStorage.getItem("authToken");
 
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+		const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-        const response = await api.get(`/materi-pembelajaran`, {
-            params: { prodiId },
-            headers,
-        });
-        return response.data;
-    } catch (error) {
-        if(error.response) {
-            console.error("Error Get materi pembelajaran:", error.response.data);
+		const response = await api.get(`/materi-pembelajaran`, {
+			params,
+			headers,
+		});
+		return response.data;
+	} catch (error) {
+		if (error.response) {
+			console.error("Error Get materi pembelajaran:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
 			console.error("Error Get materi pembelajaran:", error.message);
 		}
 		throw error;
-    }
+	}
 };
 
 export const postMateriPembelajaran = async (data) => {
-    try
-    {
-        const token = localStorage.getItem("authToken");
+	try {
+		const token = localStorage.getItem("authToken");
 
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
-        const response = await api.post(`/materi-pembelajaran`, data, {headers});
+		const headers = token ? { Authorization: `Bearer ${token}` } : {};
+		const response = await api.post(`/materi-pembelajaran`, data, { headers });
 
-        return response.data;
-    } catch (error) {
-        if(error.response) {
-            console.error("Error creating materi pembelajaran:", error.response.data);
+		return response.data;
+	} catch (error) {
+		if (error.response) {
+			console.error("Error creating materi pembelajaran:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
 			console.error("Error creating materi pembelajaran:", error.message);
 		}
 		throw error;
-    }
-
-}
+	}
+};
 
 export const deleteMateriPembelajarans = async (data) => {
-    try{
-        const token = localStorage.getItem("authToken");
+	try {
+		const token = localStorage.getItem("authToken");
 
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+		const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-        const response = await api.delete(`/materi-pembelajaran`, {
-            headers,
-            data,
-        });
+		const response = await api.delete(`/materi-pembelajaran`, {
+			headers,
+			data,
+		});
 
-        return response.data;
-    }catch (error){
-        if(error.response) {
-            console.error("Error delete materi pembelajaran:", error.response.data);
+		return response.data;
+	} catch (error) {
+		if (error.response) {
+			console.error("Error delete materi pembelajaran:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
 			console.error("Error delete materi pembelajaran:", error.message);
 		}
 		throw error;
-    }
-    
-}
+	}
+};
 
 export const deleteMateriPembelajaran = async (id) => {
-    try{
-        const token = localStorage.getItem("authToken");
+	try {
+		const token = localStorage.getItem("authToken");
 
-        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+		const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
-        const response = await api.delete(`/materi-pembelajaran/${id}`, {headers});
-        return response.data;
-    }catch (error){
-        if(error.response) {
-            console.error("Error delete materi pembelajaran:", error.response.data);
+		const response = await api.delete(`/materi-pembelajaran/${id}`, {
+			headers,
+		});
+		return response.data;
+	} catch (error) {
+		if (error.response) {
+			console.error("Error delete materi pembelajaran:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
 			console.error("Error delete materi pembelajaran:", error.message);
 		}
 		throw error;
-    }
-}
+	}
+};

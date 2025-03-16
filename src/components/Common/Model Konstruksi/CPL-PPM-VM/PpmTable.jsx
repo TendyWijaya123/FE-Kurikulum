@@ -9,6 +9,7 @@ import {
 	DownloadOutlined,
 	DeleteOutlined,
 } from "@ant-design/icons";
+import VisibleMenu from "../../../Menu/VisibleMenu";
 
 const PpmTable = () => {
 	const {
@@ -62,11 +63,13 @@ const PpmTable = () => {
 			title: "Aksi",
 			key: "aksi",
 			render: (_, __, index) => (
-				<Button
-					type="primary"
-					danger
-					icon={<DeleteOutlined />}
-					onClick={() => handleDeletePpmPoint(index)}></Button>
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<Button
+						type="primary"
+						danger
+						icon={<DeleteOutlined />}
+						onClick={() => handleDeletePpmPoint(index)}></Button>
+				</VisibleMenu>
 			),
 			width: 100,
 		},
@@ -75,36 +78,38 @@ const PpmTable = () => {
 	return (
 		<div className="p-6 bg-white shadow-lg rounded-lg">
 			<div className="mb-4 flex flex-wrap gap-2">
-				<Button
-					type="primary"
-					icon={<DownloadOutlined />}
-					onClick={handleExportTemplatePpm}>
-					Download Template
-				</Button>
-				<Button
-					type="default"
-					icon={<UploadOutlined />}
-					onClick={() => setIsModalImportOpen(true)}>
-					Import PPM
-				</Button>
-				<Button
-					type="primary"
-					icon={<PlusOutlined />}
-					onClick={handleAddPpmPoint}>
-					Tambah PPM
-				</Button>
-				<Button
-					type="primary"
-					icon={<SaveOutlined />}
-					onClick={handleSavePpms}
-					style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
-					Simpan
-				</Button>
-				{selectedRowKeys.length > 0 && (
-					<Button danger type="primary" onClick={handleDestroyPpms}>
-						Hapus PPM terpilih
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<Button
+						type="primary"
+						icon={<DownloadOutlined />}
+						onClick={handleExportTemplatePpm}>
+						Download Template
 					</Button>
-				)}
+					<Button
+						type="default"
+						icon={<UploadOutlined />}
+						onClick={() => setIsModalImportOpen(true)}>
+						Import PPM
+					</Button>
+					<Button
+						type="primary"
+						icon={<PlusOutlined />}
+						onClick={handleAddPpmPoint}>
+						Tambah PPM
+					</Button>
+					<Button
+						type="primary"
+						icon={<SaveOutlined />}
+						onClick={handleSavePpms}
+						style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
+						Simpan
+					</Button>
+					{selectedRowKeys.length > 0 && (
+						<Button danger type="primary" onClick={handleDestroyPpms}>
+							Hapus PPM terpilih
+						</Button>
+					)}
+				</VisibleMenu>
 			</div>
 
 			{alert && <div className="text-red-500 mb-4">{alert}</div>}
@@ -128,12 +133,12 @@ const PpmTable = () => {
 			)}
 
 			{/* Modal Import */}
-			<ImportModal	
+			<ImportModal
 				isOpen={isModalImportOpen}
 				setIsOpen={setIsModalImportOpen}
 				handleImport={handleImportPpm}
 				title="Import CPL"
-				/>
+			/>
 		</div>
 	);
 };

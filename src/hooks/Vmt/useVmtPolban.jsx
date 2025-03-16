@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
 	firstOrCreateVmtPolban,
 	upsertMisiPolban,
@@ -7,21 +7,23 @@ import {
 	deleteTujuanPolban,
 	updateVmtPolban,
 } from "../../service/api";
+import { ProdiContext } from "../../context/ProdiProvider";
 
 const useVmtPolban = () => {
+	const { selectedProdiId } = useContext(ProdiContext);
 	const [loading, setLoading] = useState(false);
 	const [alert, setAlert] = useState(null);
 	const [vmtPolban, setVmtPolban] = useState("");
 
 	useEffect(() => {
-		fetchData();
-	}, []);
+		fetchData(selectedProdiId);
+	}, [selectedProdiId]);
 
-	const fetchData = async () => {
+	const fetchData = async (prodiId = null) => {
 		setLoading(true);
 		setAlert(null);
 		try {
-			const response = await firstOrCreateVmtPolban();
+			const response = await firstOrCreateVmtPolban(prodiId);
 			setVmtPolban(response.data);
 			setAlert({
 				type: "success",
