@@ -9,6 +9,7 @@ import {
 	DownloadOutlined,
 	DeleteOutlined,
 } from "@ant-design/icons";
+import VisibleMenu from "../../../Menu/VisibleMenu";
 
 const CplTable = () => {
 	const {
@@ -61,11 +62,13 @@ const CplTable = () => {
 			title: "Aksi",
 			key: "aksi",
 			render: (_, __, index) => (
-				<Button
-					type="primary"
-					danger
-					icon={<DeleteOutlined />}
-					onClick={() => handleDeleteCplPoint(index)}></Button>
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<Button
+						type="primary"
+						danger
+						icon={<DeleteOutlined />}
+						onClick={() => handleDeleteCplPoint(index)}></Button>
+				</VisibleMenu>
 			),
 			width: 100,
 		},
@@ -74,36 +77,38 @@ const CplTable = () => {
 	return (
 		<div className="p-6 bg-white shadow-lg rounded-lg">
 			<div className="mb-4 flex flex-wrap gap-2">
-				<Button
-					type="primary"
-					icon={<DownloadOutlined />}
-					onClick={handleExportTemplateCpl}>
-					Download Template
-				</Button>
-				<Button
-					type="default"
-					icon={<UploadOutlined />}
-					onClick={() => setIsModalImportOpen(true)}>
-					Import CPL
-				</Button>
-				<Button
-					type="primary"
-					icon={<PlusOutlined />}
-					onClick={handleAddCplPoint}>
-					Tambah CPL
-				</Button>
-				<Button
-					type="primary"
-					icon={<SaveOutlined />}
-					onClick={handleSaveCpls}
-					style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
-					Simpan
-				</Button>
-				{selectedRowKeys.length > 0 && (
-					<Button danger type="primary" onClick={handleDestroyCpls}>
-						Hapus CPL terpilih
+				<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+					<Button
+						type="primary"
+						icon={<DownloadOutlined />}
+						onClick={handleExportTemplateCpl}>
+						Download Template
 					</Button>
-				)}
+					<Button
+						type="default"
+						icon={<UploadOutlined />}
+						onClick={() => setIsModalImportOpen(true)}>
+						Import CPL
+					</Button>
+					<Button
+						type="primary"
+						icon={<PlusOutlined />}
+						onClick={handleAddCplPoint}>
+						Tambah CPL
+					</Button>
+					<Button
+						type="primary"
+						icon={<SaveOutlined />}
+						onClick={handleSaveCpls}
+						style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
+						Simpan
+					</Button>
+					{selectedRowKeys.length > 0 && (
+						<Button danger type="primary" onClick={handleDestroyCpls}>
+							Hapus CPL terpilih
+						</Button>
+					)}
+				</VisibleMenu>
 			</div>
 
 			{alert && <div className="text-red-500 mb-4">{alert}</div>}

@@ -4,12 +4,15 @@ import "./index.css";
 import App from "./App.jsx";
 import AuthProvider from "./context/AuthProvider.jsx";
 import { SelectionProvider } from "./context/SelectionContext";
+import ProdiProvider from "./context/ProdiProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
 		<SelectionProvider>
 			<AuthProvider>
-				<App />
+				<ProdiProvider>
+					<App />
+				</ProdiProvider>
 			</AuthProvider>
 		</SelectionProvider>
 	</StrictMode>

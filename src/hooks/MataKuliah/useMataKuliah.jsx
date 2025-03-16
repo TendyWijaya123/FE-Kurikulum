@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { message } from "antd"; // Import message dari antd
 import {
 	createMataKuliah,
@@ -13,8 +13,10 @@ import {
 	getMataKuliahTemplate,
 	importMataKuliah,
 } from "../../service/Import/ImportService";
+import { ProdiContext } from "../../context/ProdiProvider";
 
 const useMataKuliah = () => {
+	const { selectedProdiId } = useContext(ProdiContext);
 	const [mataKuliahData, setMataKuliahData] = useState([]);
 	const [formulasiCpaDropdown, setFormulasiCpaDropdown] = useState([]);
 	const [metodePembelajaranDropdown, setMetodePembelajaranDropdown] = useState(
@@ -40,14 +42,14 @@ const useMataKuliah = () => {
 	});
 
 	useEffect(() => {
-		fetchData();
-	}, []);
+		fetchData(selectedProdiId);
+	}, [selectedProdiId]);
 
-	const fetchData = () => {
+	const fetchData = (prodiId = null) => {
 		setLoading(true);
 
 		Promise.all([
-			fetchMataKuliah(),
+			fetchMataKuliah(prodiId),
 			fetchFormulasiCpaDropdown(),
 			fetchMetodePembelajaranDropdown(),
 			fetchBentukPembelajaranDropdown(),
@@ -59,7 +61,6 @@ const useMataKuliah = () => {
 					metodePembelajaranResponse,
 					bentukPembelajaranResponse,
 				]) => {
-					console.log(mataKuliahResponse.data);
 					setMataKuliahData(mataKuliahResponse.data);
 					setFormulasiCpaDropdown(formulasiResponse.data);
 					setMetodePembelajaranDropdown(metodePembelajaranResponse.data);

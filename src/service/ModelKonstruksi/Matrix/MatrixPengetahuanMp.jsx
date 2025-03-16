@@ -2,12 +2,12 @@ import api from "../../../utils/axiosInstance";
 
 export const updateMatrixPengetahuanMp = async (data) => {
 	try {
-        console.log(data);
+		console.log(data);
 		const response = await api.put("/matrix-p-mp", data);
 		return response.data;
 	} catch (error) {
-		if(error.response) {
-            console.error("Error Put matriks p mp:", error.response.data);
+		if (error.response) {
+			console.error("Error Put matriks p mp:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
 			console.error("Error Put matriks p mp:", error.message);
@@ -16,13 +16,14 @@ export const updateMatrixPengetahuanMp = async (data) => {
 	}
 };
 
-export const getMatrixPengetahuanMp = async (prodiId) => {
+export const getMatrixPengetahuanMp = async (prodiId = null) => {
 	try {
-		const response = await api.get("/matrix-p-mp", {params: {prodiId}});
+		const params = prodiId ? { prodiId } : {};
+		const response = await api.get("/matrix-p-mp", { params });
 		return response.data;
 	} catch (error) {
-		if(error.response) {
-            console.error("Error Get matriks p mp:", error.response.data);
+		if (error.response) {
+			console.error("Error Get matriks p mp:", error.response.data);
 		} else {
 			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
 			console.error("Error Get matriks p mp:", error.message);

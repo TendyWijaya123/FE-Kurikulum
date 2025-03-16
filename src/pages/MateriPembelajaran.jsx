@@ -1,167 +1,187 @@
 import DefaultLayout from "../layouts/DefaultLayout";
 import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin } from "antd";
-import { UndoOutlined } from "@ant-design/icons";
+import {
+	DeleteOutlined,
+	DownloadOutlined,
+	PlusOutlined,
+	SaveOutlined,
+	UndoOutlined,
+	UploadOutlined,
+} from "@ant-design/icons";
 import { useMPData } from "../hooks/useMPData";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ImportModal from "../components/Modal/ImportModal";
+import { ProdiContext } from "../context/ProdiProvider";
+import VisibleMenu from "../components/Menu/VisibleMenu";
 
-const MateriPembelajaran = ()=>{
-    const {
-        knowledgeDropdown,
-        selectedProdi,
-        prodiDropdown,
-        loading,
-        dataSource,
-        saving,
-        rowSelection,
-        selectedRowKeys,
-        handleUndo,
-        handleSave,
-        handleAddRow,
-        handleDeleteRow,
-        handleSaveData,
-        handleDeleteMateriPembelajarans,
-        handleProdiChange,
+const MateriPembelajaran = () => {
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
+		useContext(ProdiContext);
+	const {
+		knowledgeDropdown,
+		loading,
+		dataSource,
+		saving,
+		rowSelection,
+		selectedRowKeys,
+		handleUndo,
+		handleSave,
+		handleAddRow,
+		handleDeleteRow,
+		handleSaveData,
+		handleDeleteMateriPembelajarans,
+		handleProdiChange,
 		handleImportMateriPembelajaran,
 		handleExportTemplateMateriPembelajaran,
-    } = useMPData();
+	} = useMPData();
 
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
-    // Kolom tabel
-    const columns = [
-        {
-            title: 'Kode',
-            dataIndex: 'code',
-            key: 'code',
-            render: (text) => (
-                <span style={{ padding: 0 }}>{text}</span> // Hanya menampilkan teks tanpa input
-            ),
-        },
-        {
-            title: 'Deskripsi',
-            dataIndex: 'description',
-            key: 'description',
-            render: (text, record) => (
-                <Input.TextArea
-                    value={text}
-                    onChange={(e) => handleSave({ ...record, description: e.target.value })}
-                    autoSize={{ minRows: 1, maxRows: 5 }} // Menentukan jumlah baris minimal dan maksimal
-                    style={{
-                        border: 'none',
-                        outline: 'none',
-                        boxShadow: 'none',
-                        padding: 0,
-                        resize: 'none', // Mencegah pengguna meresize secara manual
-                    }}
-                />
-            ),
-        },  
-        {
-            title: 'Cognitif Proses',
-            dataIndex: 'cognitifProses',
-            key: 'cognitifProses',
-            render: (cognitifProses, record) => (
-                <Select
-                    value={cognitifProses}
-                    style={{ width: '100%' }}
-                    onChange={(value) => handleSave({ ...record, cognitifProses: value })}
-                    options={[
-                        { value: 'Remembering', label: 'Remembering' },
-                        { value: 'Understanding', label: 'Understanding' },
-                        { value: 'Applying', label: 'Applying' },
-                        { value: 'Analyzing', label: 'Analyzing' },
-                        { value: 'Evaluating', label: 'Evaluating' },
-                        { value: 'Creating', label: 'Creating' },
-                    ]}
-                />
-            ),
-        },        
-        {
-            title: 'Knowledge Dimension',
-            dataIndex: 'knowledgeDimension',
-            key: 'knowledgeDimension',
-            render: (knowledgeDimension, record) => (
-                <Select
-                    mode="multiple"
-                    value={knowledgeDimension}
-                    style={{ width: '100%' }}
-                    onChange={(value) => handleSave({ ...record, knowledgeDimension: value })}
-                    options={ knowledgeDropdown.map((knowledge) => ({
-                        label : knowledge.name,
-                        value : knowledge.code,
-                    }))}
-                />
-            ),
-        },
-        {
-            title: 'Aksi',
-            key: 'aksi',
-            render: (_, record) =>
-                <Popconfirm
-                    title="Yakin ingin menghapus baris ini?"
-                    onConfirm={() => handleDeleteRow(record.key)}
-                    okText="Ya"
-                    cancelText="Tidak"
-                >
-                    <Button type="primary" danger>
-                        Hapus
-                    </Button>
-                </Popconfirm>
-        },
-    ];
+	const columns = [
+		{
+			title: "Kode",
+			dataIndex: "code",
+			key: "code",
+			render: (text) => (
+				<span style={{ padding: 0 }}>{text}</span> // Hanya menampilkan teks tanpa input
+			),
+		},
+		{
+			title: "Deskripsi",
+			dataIndex: "description",
+			key: "description",
+			render: (text, record) => (
+				<Input.TextArea
+					value={text}
+					onChange={(e) =>
+						handleSave({ ...record, description: e.target.value })
+					}
+					autoSize={{ minRows: 1, maxRows: 5 }} // Menentukan jumlah baris minimal dan maksimal
+					style={{
+						border: "none",
+						outline: "none",
+						boxShadow: "none",
+						padding: 0,
+						resize: "none", // Mencegah pengguna meresize secara manual
+					}}
+				/>
+			),
+		},
+		{
+			title: "Cognitif Proses",
+			dataIndex: "cognitifProses",
+			key: "cognitifProses",
+			render: (cognitifProses, record) => (
+				<Select
+					value={cognitifProses}
+					style={{ width: "100%" }}
+					onChange={(value) => handleSave({ ...record, cognitifProses: value })}
+					options={[
+						{ value: "Remembering", label: "Remembering" },
+						{ value: "Understanding", label: "Understanding" },
+						{ value: "Applying", label: "Applying" },
+						{ value: "Analyzing", label: "Analyzing" },
+						{ value: "Evaluating", label: "Evaluating" },
+						{ value: "Creating", label: "Creating" },
+					]}
+				/>
+			),
+		},
+		{
+			title: "Knowledge Dimension",
+			dataIndex: "knowledgeDimension",
+			key: "knowledgeDimension",
+			render: (knowledgeDimension, record) => (
+				<Select
+					mode="multiple"
+					value={knowledgeDimension}
+					style={{ width: "100%" }}
+					onChange={(value) =>
+						handleSave({ ...record, knowledgeDimension: value })
+					}
+					options={knowledgeDropdown.map((knowledge) => ({
+						label: knowledge.name,
+						value: knowledge.code,
+					}))}
+				/>
+			),
+		},
+		{
+			title: "Aksi",
+			key: "aksi",
+			render: (_, record) => (
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<Popconfirm
+						title="Yakin ingin menghapus baris ini?"
+						onConfirm={() => handleDeleteRow(record.key)}
+						okText="Ya"
+						cancelText="Tidak">
+						<Button icon={<DeleteOutlined />} type="primary" danger></Button>
+					</Popconfirm>
+				</VisibleMenu>
+			),
+		},
+	];
 
 	return (
 		<DefaultLayout title="Materi Pembelajaran">
+			<VisibleMenu allowedRoles={["P2MPP"]}>
+				<Select
+					placeholder="Pilih Program Studi"
+					options={prodiDropdown.map((prodi) => ({
+						label: prodi.name,
+						value: prodi.id,
+					}))}
+					defaultValue={selectedProdiId}
+					onChange={(value) => handleChangeSelectedProdiId(value)}
+					style={{ width: 250 }}
+					allowClear
+					onClear={() => handleChangeSelectedProdiId(null)}
+				/>
+			</VisibleMenu>
 			<div style={{ padding: "15px", background: "#fff9", minHeight: "100%" }}>
 				<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
-					{prodiDropdown.length > 0 ? (
-						// Jika `prodiDropdown` ada isinya, tampilkan dropdown
-						<Select
-							placeholder="Pilih Program Studi"
-							options={prodiDropdown.map((prodi) => ({
-								label: prodi.name,
-								value: prodi.id,
-							}))}
-							value={selectedProdi}
-							onChange={handleProdiChange}
-							style={{ width: 200 }}
+					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+						<Button
+							onClick={handleExportTemplateMateriPembelajaran}
+							type="primary"
+							icon={<DownloadOutlined />}>
+							Download Template MP
+						</Button>
+						<Button
+							icon={<UploadOutlined />}
+							onClick={() => setIsModalImportOpen(true)}
+							type="default">
+							Import MP
+						</Button>
+						<ImportModal
+							isOpen={isModalImportOpen}
+							setIsOpen={setIsModalImportOpen}
+							handleImport={handleImportMateriPembelajaran}
+							title="Import Materi Pembelajaran"
 						/>
-					) : (
-						// Jika `prodiDropdown` kosong, tampilkan tombol
-						<>
+						<Button
+							icon={<PlusOutlined />}
+							onClick={handleAddRow}
+							type="primary">
+							Tambah MP
+						</Button>
+						<Button
+							icon={<SaveOutlined />}
+							onClick={handleSaveData}
+							type="primary"
+							style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
+							loading={saving}>
+							Simpan Data
+						</Button>
+						<Tooltip title="Undo">
 							<Button
-								onClick={handleExportTemplateMateriPembelajaran}
-								type="primary">
-								Download Template MP
-							</Button>
-							<Button
-								onClick={() => setIsModalImportOpen(true)}
-								
-								type="primary">
-								Import MP
-							</Button>
-							<ImportModal
-								isOpen={isModalImportOpen}
-								setIsOpen={setIsModalImportOpen}
-								handleImport={handleImportMateriPembelajaran}
-								title="Import Materi Pembelajaran"
+								onClick={handleUndo}
+								type="default"
+								icon={<UndoOutlined />}
 							/>
-							<Button onClick={handleAddRow} type="primary">
-								Tambah Baris
-							</Button>
-							<Button onClick={handleSaveData} type="primary" loading={saving}>
-								Simpan Data
-							</Button>
-							<Tooltip title="Undo">
-								<Button
-									onClick={handleUndo}
-									type="default"
-									icon={<UndoOutlined />}
-								/>
-							</Tooltip>
-						</>
-					)}
+						</Tooltip>
+					</VisibleMenu>
 					{selectedRowKeys.length > 0 && (
 						<Button
 							onClick={handleDeleteMateriPembelajarans}

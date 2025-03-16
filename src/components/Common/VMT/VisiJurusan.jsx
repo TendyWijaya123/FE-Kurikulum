@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import useVmt from "../../../hooks/Vmt/useVmt";
-import { Spin } from "antd";
+import { Button, Spin } from "antd";
 import useVmtJurusan from "../../../hooks/Vmt/useVmtJurusan";
+import { SaveOutlined } from "@ant-design/icons";
+import VisibleMenu from "../../Menu/VisibleMenu";
 
 const VisiJurusan = () => {
 	const { loading, alert, vmtJurusan, handleUpdateVmtJurusan } =
@@ -74,11 +76,15 @@ const VisiJurusan = () => {
 			</div>
 
 			<div className="flex mt-6">
-				<button
-					onClick={handleSaveVisiJurusan}
-					className="px-6 py-3 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition duration-300">
-					Simpan Visi Jurusan dan Keilmuan Prodi
-				</button>
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<Button
+						type="default"
+						icon={<SaveOutlined />}
+						onClick={handleSaveVisiJurusan}
+						className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
+						Simpan Visi Jurusan dan Keilmuan Prodi Simpan
+					</Button>
+				</VisibleMenu>
 			</div>
 		</div>
 	);

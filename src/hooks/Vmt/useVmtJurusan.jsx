@@ -1,25 +1,27 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
 	firstOrCreateVmtJurusan,
 	upsertMisiJurusan,
 	deleteMisiJurusan,
 	updateVmtJurusan,
 } from "../../service/api";
+import { ProdiContext } from "../../context/ProdiProvider";
 
 const useVmtJurusan = () => {
+	const { selectedProdiId } = useContext(ProdiContext);
 	const [loading, setLoading] = useState(false);
 	const [alert, setAlert] = useState(null);
 	const [vmtJurusan, setVmtJurusan] = useState("");
 
 	useEffect(() => {
-		fetchData();
-	}, []);
+		fetchData(selectedProdiId);
+	}, [selectedProdiId]);
 
-	const fetchData = async () => {
+	const fetchData = async (prodiId = null) => {
 		setLoading(true);
 		setAlert(null);
 		try {
-			const response = await firstOrCreateVmtJurusan();
+			const response = await firstOrCreateVmtJurusan(prodiId);
 			setVmtJurusan(response.data);
 			setAlert({
 				type: "success",

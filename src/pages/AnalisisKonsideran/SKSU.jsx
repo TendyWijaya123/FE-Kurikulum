@@ -1,21 +1,23 @@
 import DefaultLayout from "../../layouts/DefaultLayout";
+import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin } from "antd";
 import {
-	Table,
-	Input,
-	Button,
-	Popconfirm,
-	Select,
-	Tooltip,
-	Spin,
-} from "antd";
-import { UndoOutlined, DeleteOutlined  } from "@ant-design/icons";
+	UndoOutlined,
+	DeleteOutlined,
+	DownloadOutlined,
+	UploadOutlined,
+	PlusOutlined,
+	SaveOutlined,
+} from "@ant-design/icons";
 import { useSKSUData } from "../../hooks/AnalisisKonsideran/useSKSUData";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ImportModal from "../../components/Modal/ImportModal";
+import VisibleMenu from "../../components/Menu/VisibleMenu";
+import { ProdiContext } from "../../context/ProdiProvider";
 
 const SKSU = () => {
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
+		useContext(ProdiContext);
 	const {
-		prodiDropdown,
 		dataSource,
 		loading,
 		saving,
@@ -34,7 +36,6 @@ const SKSU = () => {
 	} = useSKSUData();
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
-	// Kolom tabel
 	const columns = [
 		{
 			title: "Profil Lulusan",
@@ -45,8 +46,8 @@ const SKSU = () => {
 			render: (text, record) => (
 				<Input.TextArea
 					value={text}
-				  autoSize={{ minRows: 1 }}
-				  onChange={(e) =>
+					autoSize={{ minRows: 1 }}
+					onChange={(e) =>
 						handleSave({ ...record, profilLulusan: e.target.value })
 					}
 					style={{
@@ -105,122 +106,132 @@ const SKSU = () => {
 			dataIndex: "kompetensiKerja",
 			key: "kompetensiKerja",
 			render: (kompetensiKerja, record) => {
-			  // Pastikan kompetensiKerja adalah string, lalu pecah berdasarkan newline
-			  const kompetensiArray =kompetensiKerja ? kompetensiKerja.split("\n") : [];
-		  
-			  // Tambahkan numbering hanya untuk tampilan
-			  const formattedText = kompetensiArray
-				.map((text, index) => `${index + 1}. ${text}`)
-				.join("\n");
+				const kompetensiArray = kompetensiKerja
+					? kompetensiKerja.split("\n")
+					: [];
 
-			// Tangani Enter untuk menambahkan baris baru dengan numbering yang sesuai
+				const formattedText = kompetensiArray
+					.map((text, index) => `${index + 1}. ${text}`)
+					.join("\n");
+
 				const handleKeyDown = (e) => {
 					if (e.key === "Enter") {
-					e.preventDefault(); // Hindari behavior default dari Enter
+						e.preventDefault();
 
-					// Tambahkan baris baru ke kompetensiArray
-					const newKompetensiArray = [...kompetensiArray, ""]; // Gunakan spasi sebagai placeholder
+						const newKompetensiArray = [...kompetensiArray, ""];
 
-					// Gabungkan kembali sebagai teks tanpa numbering
-					const newValue = newKompetensiArray.join("\n");
-			
-					handleSave({ ...record, kompetensiKerja: newValue });
+						const newValue = newKompetensiArray.join("\n");
+
+						handleSave({ ...record, kompetensiKerja: newValue });
 					}
 				};
-		  
-			  // Tangani perubahan teks
-			  const handleChange = (e) => {
-				const newValue = e.target.value
-				  .split("\n")
-				  .map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus numbering sebelum menyimpan
-				  .filter((line) => line !== "")
-				  .join("\n"); // Gabungkan kembali menjadi teks
-		  
-				handleSave({ ...record, kompetensiKerja: newValue });
-			  };
-		  
-			  return (
-				<Input.TextArea
-				  value={formattedText}
-				  onChange={handleChange}
-				  onKeyDown={handleKeyDown}
-				  autoSize={{ minRows: 3 }}
-				  style={{
-					border: "none",
-					outline: "none",
-					boxShadow: "none",
-					padding: 0,
-				  }}
-				/>
-			  );
+
+				// Tangani perubahan teks
+				const handleChange = (e) => {
+					const newValue = e.target.value
+						.split("\n")
+						.map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus numbering sebelum menyimpan
+						.filter((line) => line !== "")
+						.join("\n"); // Gabungkan kembali menjadi teks
+
+					handleSave({ ...record, kompetensiKerja: newValue });
+				};
+
+				return (
+					<Input.TextArea
+						value={formattedText}
+						onChange={handleChange}
+						onKeyDown={handleKeyDown}
+						autoSize={{ minRows: 3 }}
+						style={{
+							border: "none",
+							outline: "none",
+							boxShadow: "none",
+							padding: 0,
+						}}
+					/>
+				);
 			},
-		  },		  
+		},
 		{
 			title: "Aksi",
 			key: "aksi",
 			width: 100,
 			render: (_, record) => (
-				<Popconfirm
-					title="Yakin ingin menghapus baris ini?"
-					onConfirm={() => handleDeleteRow(record.key)}
-					okText="Ya"
-					cancelText="Tidak">
-					<Button type="primary" danger>
-						<DeleteOutlined />
-					</Button>
-				</Popconfirm>
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<Popconfirm
+						title="Yakin ingin menghapus baris ini?"
+						onConfirm={() => handleDeleteRow(record.key)}
+						okText="Ya"
+						cancelText="Tidak">
+						<Button type="primary" danger>
+							<DeleteOutlined />
+						</Button>
+					</Popconfirm>
+				</VisibleMenu>
 			),
 		},
 	];
 
 	return (
 		<DefaultLayout title="Siap Kerja Siap Usaha">
+			<VisibleMenu allowedRoles={["P2MPP"]}>
+				<Select
+					placeholder="Pilih Program Studi"
+					options={prodiDropdown.map((prodi) => ({
+						label: prodi.name,
+						value: prodi.id,
+					}))}
+					defaultValue={selectedProdiId}
+					onChange={(value) => handleChangeSelectedProdiId(value)}
+					style={{ width: 250 }}
+					allowClear
+					onClear={() => handleChangeSelectedProdiId(null)}
+				/>
+			</VisibleMenu>
 			<div style={{ padding: "15px", background: "#fff9", minHeight: "100%" }}>
 				<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
-					{prodiDropdown.length > 0 ? (
-						// Jika `prodiDropdown` ada isinya, tampilkan dropdown
-						<Select
-							placeholder="Pilih Program Studi"
-							options={prodiDropdown.map((prodi) => ({
-								label: prodi.name,
-								value: prodi.id,
-							}))}
-							value={selectedProdi}
-							onChange={handleProdiChange}
-							style={{ width: 200 }}
+					<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+						<Button
+							icon={<DownloadOutlined />}
+							onClick={handleExportTemplateSksu}
+							type="primary">
+							Download Template SKSU
+						</Button>
+						<Button
+							icon={<UploadOutlined />}
+							onClick={() => setIsModalImportOpen(true)}
+							type="default">
+							Import SKSU
+						</Button>
+						<ImportModal
+							isOpen={isModalImportOpen}
+							setIsOpen={setIsModalImportOpen}
+							handleImport={handleImportSksu}
+							title="Import Materi Pembelajaran"
 						/>
-					) : (
-						// Jika `prodiDropdown` kosong, tampilkan tombol
-						<>
-							<Button onClick={handleExportTemplateSksu} type="primary">
-								Download Template SKSU
-							</Button>
+						<Button
+							icon={<PlusOutlined />}
+							onClick={handleAddRow}
+							type="primary">
+							Tambah Baris
+						</Button>
+						<Button
+							icon={<SaveOutlined />}
+							style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
+							onClick={handleSaveData}
+							type="primary"
+							loading={saving}>
+							Simpan Data
+						</Button>
+						<Tooltip title="Undo">
 							<Button
-								onClick={() => setIsModalImportOpen(true)}
-								type="primary">
-								Import SKSU
-							</Button>
-							<ImportModal
-								isOpen={isModalImportOpen}
-								setIsOpen={setIsModalImportOpen}
-								handleImport={handleImportSksu}
-								title="Import Materi Pembelajaran"
+								onClick={handleUndo}
+								type="default"
+								icon={<UndoOutlined />}
 							/>
-							<Button onClick={handleAddRow} type="primary">
-								Tambah Baris
-							</Button>
-							<Button onClick={handleSaveData} type="primary" loading={saving}>
-								Simpan Data
-							</Button>
-							<Tooltip title="Undo">
-								<Button
-									onClick={handleUndo}
-									type="default"
-									icon={<UndoOutlined />}
-								/>
-							</Tooltip>
-						</>
-					)}
+						</Tooltip>
+					</VisibleMenu>
 					{selectedRowKeys.length > 0 && (
 						<Button
 							onClick={handleDeleteSksus}
