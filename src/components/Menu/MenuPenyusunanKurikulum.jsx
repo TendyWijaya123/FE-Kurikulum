@@ -191,6 +191,13 @@ const MenuPenyusunanKurikulum = () => {
 					title="Materi Pembelajaran"
 					icon={<ImportContacts />}
 				/>
+
+				<MenuItemSidebar
+ 					url="/mata-kuliah"
+ 					title="MataKuliah"
+ 					icon={<Assignment />}
+ 				/>
+				
 				<MenuItemSidebar
 					url="/matriks-p-mp"
 					title="Matriks P-MP"
