@@ -13,6 +13,7 @@ const ModalCreateMataKuliah = ({
 	const [newData, setNewData] = useState({
 		nama: "",
 		kode: "",
+		kategori: "",
 		tujuan: "",
 		semester: null,
 		teori_bt: 0,
@@ -109,6 +110,20 @@ const ModalCreateMataKuliah = ({
 					<Input
 						type="text"
 						onChange={(e) => setNewData({ ...newData, nama: e.target.value })}
+						className="w-full mt-2"
+					/>
+				</div>
+				<div>
+					<h3 className="text-lg font-semibold">Kategori</h3>
+					<Select
+						allowClear
+						placeholder="Pilih Kategori"
+						onChange={(value) => setNewData({ ...newData, kategori: value })}
+						options={[
+							{ value: "Institusi", label: "Institusi" },
+							{ value: "Prodi", label: "Prodi" },
+							{ value: "Nasional", label: "Nasional" },
+						]}
 						className="w-full mt-2"
 					/>
 				</div>
