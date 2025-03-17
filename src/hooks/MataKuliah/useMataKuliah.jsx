@@ -37,6 +37,7 @@ const useMataKuliah = () => {
 		nama: "",
 		kode: "",
 		tujuan: "",
+		kategori: "",
 		formulasi_cpas: [],
 		kemampuan_akhir: [],
 	});
@@ -96,6 +97,7 @@ const useMataKuliah = () => {
 			id: mataKuliah.id,
 			nama: mataKuliah.nama,
 			kode: mataKuliah.kode,
+			kategori: mataKuliah.kategori,
 			tujuan: mataKuliah.tujuan,
 			semester: mataKuliah.semester,
 			teori_bt: mataKuliah.teori_bt,
@@ -124,6 +126,7 @@ const useMataKuliah = () => {
 			const requestData = {
 				kode: newData.kode,
 				nama: newData.nama,
+				kategori: newData.kategori,
 				tujuan: newData.tujuan,
 				semester: newData.semester,
 				teori_bt: newData.teori_bt,
@@ -158,10 +161,12 @@ const useMataKuliah = () => {
 	};
 
 	const handleUpdate = async (editedData) => {
+		console.log(editedData);
 		try {
 			const requestData = {
 				kode: editedData.kode,
 				nama: editedData.nama,
+				kategori: editedData.kategori,
 				tujuan: editedData.tujuan,
 				semester: editedData.semester,
 				teori_bt: editedData.teori_bt,
@@ -181,7 +186,6 @@ const useMataKuliah = () => {
 				})),
 				formulasi_cpa_ids: editedData.formulasi_cpas,
 			};
-			console.log(requestData);
 
 			await updateMataKuliah(editedData.id, requestData);
 			setIsModalUpdateVisible(false);

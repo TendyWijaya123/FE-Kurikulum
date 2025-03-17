@@ -60,6 +60,11 @@ const MataKuliah = () => {
 			key: "nama",
 		},
 		{
+			title: "Kategori",
+			dataIndex: "kategori",
+			key: "kategori",
+		},
+		{
 			title: "Tujuan Belajar",
 			dataIndex: "tujuan",
 			key: "tujuan",
