@@ -35,6 +35,7 @@ import BukuReferensi from "../pages/BukuReferensi/BukuReferensi";
 import ReferensiMataKuliah from "../pages/ReferensiMataKuliah/ReferensiMataKuliah";
 import PenyusunanKurikulumExportPage from "../pages/PenyusunanKurikulum/PenyusunanKurikulumExport";
 import PenyusunanKurikulumExport from "../pages/PenyusunanKurikulum/PenyusunanKurikulumExport";
+import PetaKompetensi from "../pages/PetaKomptensi";
 
 export default function PenyusunanKurikulumRoutes() {
 	return (
@@ -251,6 +252,15 @@ export default function PenyusunanKurikulumRoutes() {
 				element={
 					<ProtectedRoute>
 						<MatrixCplP />
+					</ProtectedRoute>
+				}
+			/>
+
+			<Route
+				path="/peta-kompetensi"
+				element={
+					<ProtectedRoute>
+						<PetaKompetensi />
 					</ProtectedRoute>
 				}
 			/>
