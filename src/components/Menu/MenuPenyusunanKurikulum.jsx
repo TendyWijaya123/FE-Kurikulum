@@ -167,6 +167,12 @@ const MenuPenyusunanKurikulum = () => {
 					title="Matriks CPL-P"
 					icon={<TableChart />}
 				/>
+
+				<MenuItemSidebar
+					url="/peta-kompetensi"
+					title="Peta Kompetensi"
+					icon={<TableChart />}
+				/>
 			</MenuItemSidebar>
 
 			{/* Pengetahuan Page */}
@@ -185,15 +191,17 @@ const MenuPenyusunanKurikulum = () => {
 					title="Materi Pembelajaran"
 					icon={<ImportContacts />}
 				/>
+
+				<MenuItemSidebar
+ 					url="/mata-kuliah"
+ 					title="MataKuliah"
+ 					icon={<Assignment />}
+ 				/>
+				
 				<MenuItemSidebar
 					url="/matriks-p-mp"
 					title="Matriks P-MP"
 					icon={<TableChart />}
-				/>
-				<MenuItemSidebar
-					url="/mata-kuliah"
-					title="MataKuliah"
-					icon={<Assignment />}
 				/>
 				<MenuItemSidebar
 					url="/matriks-p-mp-mk"
@@ -207,6 +215,7 @@ const MenuPenyusunanKurikulum = () => {
 				title="Matriks CPL-MK"
 				icon={<TableChart />}
 			/>
+
 			<MenuItemSidebar
 				title="Dosen Pengampu"
 				icon={<Assignment />}

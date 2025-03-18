@@ -11,7 +11,6 @@ const ModalEditMataKuliah = ({
 	handleUpdate,
 }) => {
 	const [editedData, setEditedData] = useState(editData);
-
 	useEffect(() => {
 		setEditedData(editData);
 	}, [editData]);
@@ -98,6 +97,21 @@ const ModalEditMataKuliah = ({
 						onChange={(e) =>
 							setEditedData({ ...editedData, nama: e.target.value })
 						}
+						className="w-full mt-2"
+					/>
+				</div>
+				<div>
+					<h3 className="text-lg font-semibold">Kategori</h3>
+					<Select
+						value={editedData.kategori}
+						onChange={(value) =>
+							setEditedData({ ...editedData, kategori: value })
+						}
+						options={[
+							{ value: "Institusi", label: "Institusi" },
+							{ value: "Prodi", label: "Prodi" },
+							{ value: "Nasional", label: "Nasional" },
+						]}
 						className="w-full mt-2"
 					/>
 				</div>
