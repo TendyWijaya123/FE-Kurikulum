@@ -20,11 +20,29 @@ export const fetchProdi = async () => {
     }
 };
 
-export const fetchCurriculumData = async (id) => {
-    try{
-        const response = await api.get(`/dashboard/curriculum-data/${id}`);
+export const fetchCurriculumData = async () => {
+    try {
+        const response = await api.get(`/dashboard/proses-curriculum-data`);
         return response.data;
-    }catch(error){
-		throw error;
+    } catch (error) {
+        throw new Error("Error starting curriculum processing: " + error.message);
     }
 };
+
+export const getDataCurriculum = async () => {
+    try {
+        const response = await api.get(`/dashboard/get-curriculum-data`);
+        return response.data;
+    } catch (error) {
+        throw new Error("Error fetching curriculum data: " + error.message);
+    }
+};
+
+export const progresGetData = async () => {
+    try {
+        const response = await api.get(`/dashboard/progres-curriculum-data`);
+        return response.data;
+    } catch (error) {
+        throw new Error("Error fetching curriculum data: " + error.message);
+    }
+}

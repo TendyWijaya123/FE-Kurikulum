@@ -43,14 +43,14 @@ const MenuPenyusunanKurikulum = () => {
 	return (
 		<>
 			{/* Dashboard */}
+
+			<VisibleMenu allowedRoles={["P2MPP"]}>
 			<MenuItemSidebar
 				url="/dashboard"
 				title="Dashboard"
 				icon={<Dashboard />}
 				isOpen={openMenu === "dashboard"}
 				onToggle={() => handleMenuToggle("dashboard")}></MenuItemSidebar>
-
-			<VisibleMenu allowedRoles={["P2MPP"]}>
 				{/* Users */}
 				<MenuItemSidebar
 					title="Users"

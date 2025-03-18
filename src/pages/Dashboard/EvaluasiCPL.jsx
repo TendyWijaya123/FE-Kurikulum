@@ -2,27 +2,51 @@ import React, { useState }  from 'react';
 import { Card, Tabs, Progress, Typography, Table, Row, Col, Radio} from 'antd';
 import ReactApexChart from 'react-apexcharts';
 
-const cplData = [
-    { prodi: "D4 Sistem Informasi", kategori: "Benar", jumlah: 2 },
-    { prodi: "D4 Sistem Informasi", kategori: "Salah", jumlah: 4 },
-    { prodi: "D3 Teknik Elektronika", kategori: "Benar", jumlah: 4 },
-    { prodi: "D3 Teknik Elektronika", kategori: "Salah", jumlah: 2 },
-    { prodi: "D3 Teknik Telekomunikasi", kategori: "Salah", jumlah: 4 },
-    { prodi: "D3 Teknik Telekomunikasi", kategori: "Benar", jumlah: 6 },
-  ];
-  
-const { Text, Title } = Typography;
-  // Mengelompokkan data berdasarkan prodi
-const prodiList = [...new Set(cplData.map((item) => item.prodi))];
 
-const benarData = prodiList.map(
-(prodi) => cplData.find((d) => d.prodi === prodi && d.kategori === "Benar")?.jumlah || 0
-);
-const salahData = prodiList.map(
-(prodi) => cplData.find((d) => d.prodi === prodi && d.kategori === "Salah")?.jumlah || 0
-);
+const EvaluasiCPL = ({data, prodiData}) => {
+    const cplData = prodiData.map((prodi, index) => {
+        const hasil = [];
+        const prodiName = prodi.name;
+        const i = index + 1;
+    
+        if (!data[i] || !data[i][prodiName]) {
+            return []; 
+        }
+    
+        if (data[i][prodiName]?.cpls) {
+            const cpls = data[i][prodiName].cpls;
+    
+            const jumlahBenar = cpls.filter(
+                (cpl) => cpl.issues === "CPL sesuai dengan standar."
+            ).length;
+            const jumlahSalah = cpls.length - jumlahBenar;
+    
+            if (jumlahBenar > 0) {
+                hasil.push({ prodi: prodiName, kategori: "Benar", jumlah: jumlahBenar });
+            }
+            if (jumlahSalah > 0) {
+                hasil.push({ prodi: prodiName, kategori: "Salah", jumlah: jumlahSalah });
+            }
+        }
+    
+        return hasil;
+    })
+    .flat() // Menghilangkan array bersarang
+    .filter(Boolean); // Menghapus nilai `null` atau array kosong    
+    
+    console.log(cplData);
+    
+    const { Text, Title } = Typography;
+    // Mengelompokkan data berdasarkan prodi
+    const prodiList = [...new Set(cplData.map((item) => item.prodi))];
+    
+    const benarData = prodiList.map(
+        (prodi) => cplData.find((d) => d.prodi === prodi && d.kategori === "Benar")?.jumlah || 0
+    );
+    const salahData = prodiList.map(
+        (prodi) => cplData.find((d) => d.prodi === prodi && d.kategori === "Salah")?.jumlah || 0
+    );
 
-const EvaluasiCPL = () => {
     const chartData = {
         series: [
           {

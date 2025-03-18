@@ -1,33 +1,45 @@
-import React, { useState }  from 'react';
-import { Card, Tabs, Progress, Typography, Table, Row, Col, Radio} from 'antd';
+import React, { useState, useMemo  }  from 'react';
+import { Card, Spin, Progress, Typography, Table, Alert, Row, Col, Radio } from 'antd';
 import DefaultLayout from "../../layouts/DefaultLayout";
-import { DollarCircleOutlined, UserOutlined, HeartOutlined, ShoppingOutlined } from "@ant-design/icons";
+import { BookOutlined, UserOutlined, HeartOutlined, ShoppingOutlined } from "@ant-design/icons";
 import DashboardComponent from './DashboardComponent';
+import { useDashboardData } from '../../hooks/Dashboard/useDashboardData';
 
 const { Text, Title } = Typography;
 const { Meta } = Card;
 
-const stats = [
-  { title: "Today's Sales", value: "$53,000", percent: "+30%", icon: <DollarCircleOutlined />, color: "#1890ff", percentColor: "green" },
-  { title: "Today's Users", value: "3,200", percent: "+20%", icon: <UserOutlined />, color: "#1890ff", percentColor: "green" },
-  { title: "New Clients", value: "+1,200", percent: "-20%", icon: <HeartOutlined />, color: "#1890ff", percentColor: "red" }
-];
-
-const PPMTab = () => <Card title="PPM Information">Detail PPM di sini</Card>;
-const PTab = () => <Card title="P Information">Detail P di sini</Card>;
-const VisiTab = () => <Card title="Visi Program">Detail visi di sini</Card>;
-const MPTab = () => <Card title="MP Information">Detail MP di sini</Card>;
-
 const Dashboard = () => {
+  const {
+    loading,
+    curriculumData,
+    isProcessing,
+    progress,
+    filteredProdi,
+    jurusans,
+    prodis,
+    jurusanId,
+    selectedProdi,
+    setJurusanId,
+    handleJurusanChange,
+  } = useDashboardData();
+
   const [selectedTab, setSelectedTab] = useState("1");
   
-  const tabItems = [
-    { key: "1", label: "CPL", content: <DashboardComponent /> },
-    { key: "2", label: "PPM", content: <PPMTab /> },
-    { key: "3", label: "P", content: <PTab /> },
-    { key: "4", label: "Visi", content: <VisiTab /> },
-    { key: "5", label: "MP", content: <MPTab /> },
+  const stats = [
+    { title: "Total Jurusan", value: jurusans.length, icon: <UserOutlined />, color: "#1890ff" },
+    { title: "Total Prodi", value: prodis.length, icon: <BookOutlined />, color: "#52c41a" }
   ];
+  
+  
+  const tabItems = useMemo(() => [
+    ...(curriculumData && Object.keys(curriculumData).length > 0
+      ? [{ key: "1", label: "CPL", content: <DashboardComponent prodi={filteredProdi} dataChart={curriculumData} title="Progres CPL" dataKey="cpls" /> }]
+      : []),
+    { key: "2", label: "PPM", content: <DashboardComponent prodi={filteredProdi} dataChart={curriculumData} title="Progres PPM" dataKey="ppms" /> },
+    { key: "3", label: "P", content: <DashboardComponent prodi={filteredProdi} dataChart={curriculumData} title="Progres CPL" dataKey="cpls" /> },
+    { key: "4", label: "Visi", content: <DashboardComponent prodi={filteredProdi} dataChart={curriculumData} title="Progres CPL" dataKey="cpls" /> },
+    { key: "5", label: "MP", content: <DashboardComponent prodi={filteredProdi} dataChart={curriculumData} title="Progres CPL" dataKey="cpls" /> },
+  ], [curriculumData, filteredProdi]);
 
   return (
     <>
@@ -71,23 +83,32 @@ const Dashboard = () => {
       </style>
       
       <DefaultLayout title="Dashboard Kurikulum">
-        {/* Statistik Cards */}
+        {isProcessing && (
+          <div style={{ marginBottom: 20 }}>
+            <Alert message="Pemrosesan data sedang berjalan..." type="info" showIcon />
+            <Progress percent={progress} status={progress === 100 ? "success" : "active"} />
+          </div>
+        )}
+
+        {loading ? (
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
+            <Spin size='large'  />
+          </div>
+        ) : (
+          <>
         <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
           {stats.map((stat, index) => (
             <Col xs={25} sm={12} md={12} lg={6} key={index}>
               <Card hoverable className="stat-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                {/* Wrapper teks & ikon */}
                 <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                  {/* Kiri: Teks */}
                   <div>
                     <Text type="secondary">{stat.title}</Text>
                     <Title level={3} style={{ margin: 0 }}>
-                      {stat.value}{" "}
+                      {stat.value} {" "}
                       <Text style={{ color: stat.percentColor, fontSize: 16 }}>{stat.percent}</Text>
                     </Title>
                   </div>
   
-                  {/* Kanan: Icon */}
                   <div
                     style={{
                       width: 50,
@@ -99,7 +120,7 @@ const Dashboard = () => {
                       alignItems: "center",
                       color: "white",
                       fontSize: 24,
-                      marginLeft: 35
+                      marginLeft: 60
                     }}
                   >
                     {stat.icon}
@@ -110,11 +131,10 @@ const Dashboard = () => {
           ))}
         </Row>
   
-        {/* Tabs Container */}
         <div className="dashboard-tabs">
           <div className="tab-container">
-            <Title level={4} style={{ margin: 0 }}>
-              Pilih Menu:
+            <Title level={4} style={{ marginLeft: 20 }}>
+                {tabItems.find((tab) => tab.key === selectedTab)?.label || "Pilih Menu"}
             </Title>
             <Radio.Group value={selectedTab} onChange={(e) => setSelectedTab(e.target.value)}>
               {tabItems.map((tab) => (
@@ -125,11 +145,12 @@ const Dashboard = () => {
             </Radio.Group>
           </div>
   
-          {/* Render Content Sesuai Pilihan */}
           <div style={{ marginTop: 20, padding: 15 }}>
             {tabItems.find((tab) => tab.key === selectedTab)?.content}
           </div>
         </div>
+        </>
+        )}
       </DefaultLayout>
     </>
   );  
