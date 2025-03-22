@@ -33,7 +33,6 @@ export const useDashboardData = () => {
     const checkProgress = async () => {
         try {
             const data = await progresGetData();
-            console.log("Progress:", data.progress);
             setProgress(data.progress);
 
             if (data.progress >= 100) {
@@ -68,7 +67,6 @@ export const useDashboardData = () => {
                 setLoading(true);
             }
             const data = await getDataCurriculum();
-            console.log("Fetched curriculum data:", data);
             setCurriculumData(data && Object.keys(data).length > 0 ? data : []);
         } catch (error) {
             console.error("Error fetching curriculum data:", error);

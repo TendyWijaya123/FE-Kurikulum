@@ -22,7 +22,7 @@ const EvaluasiCPL = ({data, prodiData}) => {
             const jumlahSalah = cpls.length - jumlahBenar;
     
             if (jumlahBenar > 0) {
-                hasil.push({ prodi: prodiName, kategori: "Benar", jumlah: jumlahBenar });
+                hasil.push({ prodi: prodiName, kategori: "Sesuai", jumlah: jumlahBenar });
             }
             if (jumlahSalah > 0) {
                 hasil.push({ prodi: prodiName, kategori: "Salah", jumlah: jumlahSalah });
@@ -31,17 +31,15 @@ const EvaluasiCPL = ({data, prodiData}) => {
     
         return hasil;
     })
-    .flat() // Menghilangkan array bersarang
-    .filter(Boolean); // Menghapus nilai `null` atau array kosong    
-    
-    console.log(cplData);
+    .flat()
+    .filter(Boolean); 
     
     const { Text, Title } = Typography;
     // Mengelompokkan data berdasarkan prodi
     const prodiList = [...new Set(cplData.map((item) => item.prodi))];
     
     const benarData = prodiList.map(
-        (prodi) => cplData.find((d) => d.prodi === prodi && d.kategori === "Benar")?.jumlah || 0
+        (prodi) => cplData.find((d) => d.prodi === prodi && d.kategori === "Sesuai")?.jumlah || 0
     );
     const salahData = prodiList.map(
         (prodi) => cplData.find((d) => d.prodi === prodi && d.kategori === "Salah")?.jumlah || 0
@@ -50,7 +48,7 @@ const EvaluasiCPL = ({data, prodiData}) => {
     const chartData = {
         series: [
           {
-            name: "Benar",
+            name: "Sesuai",
             data: benarData,
             color: "#007bff", // Biru untuk benar
           },
@@ -75,13 +73,15 @@ const EvaluasiCPL = ({data, prodiData}) => {
           xaxis: {
             categories: prodiList,
             labels: { style: { fontSize: "12px" } },
+            tickAmount: prodiList.length > 5 ? 5 : prodiList.length,
           },
           yaxis: {
+            min : 0,
             title: { text: "Jumlah" },
           },
           tooltip: {
             y: {
-              formatter: (val) => `${val} jawaban`,
+              formatter: (val) => `${val} CPL`,
             },
           },
           legend: {

@@ -45,12 +45,12 @@ const MenuPenyusunanKurikulum = () => {
 			{/* Dashboard */}
 
 			<VisibleMenu allowedRoles={["P2MPP"]}>
-			<MenuItemSidebar
-				url="/dashboard"
-				title="Dashboard"
-				icon={<Dashboard />}
-				isOpen={openMenu === "dashboard"}
-				onToggle={() => handleMenuToggle("dashboard")}></MenuItemSidebar>
+				<MenuItemSidebar
+					url="/dashboard"
+					title="Dashboard"
+					icon={<Dashboard />}
+					isOpen={openMenu === "dashboard"}
+					onToggle={() => handleMenuToggle("dashboard")}></MenuItemSidebar>
 				{/* Users */}
 				<MenuItemSidebar
 					title="Users"
@@ -113,6 +113,14 @@ const MenuPenyusunanKurikulum = () => {
 			</VisibleMenu>
 
 			{/* Analisis Konsideran Page */}
+			<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+				<MenuItemSidebar
+						url="/dashboard-penyusun-kurikulum"
+						title="Dashboard"
+						icon={<Dashboard />}
+						isOpen={openMenu === "dashboard"}
+						onToggle={() => handleMenuToggle("dashboard")}></MenuItemSidebar>
+			</VisibleMenu>
 			<MenuItemSidebar
 				title="Analisis Konsideran"
 				icon={<Analytics />}

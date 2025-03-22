@@ -1,9 +1,9 @@
 import React, { useState, useMemo  }  from 'react';
 import { Card, Spin, Progress, Typography, Table, Alert, Row, Col, Radio } from 'antd';
-import DefaultLayout from "../../layouts/DefaultLayout";
+import DefaultLayout from "../../../layouts/DefaultLayout";
 import { BookOutlined, UserOutlined, HeartOutlined, ShoppingOutlined } from "@ant-design/icons";
-import DashboardComponent from './DashboardComponent';
-import { useDashboardData } from '../../hooks/Dashboard/useDashboardData';
+import { useDashboardData } from '../../../hooks/Dashboard/useDashboardData';
+import CplContentDashboard from '../CplContent/CplContentDashboard';
 
 const { Text, Title } = Typography;
 const { Meta } = Card;
@@ -33,12 +33,12 @@ const Dashboard = () => {
   
   const tabItems = useMemo(() => [
     ...(curriculumData && Object.keys(curriculumData).length > 0
-      ? [{ key: "1", label: "CPL", content: <DashboardComponent prodi={filteredProdi} dataChart={curriculumData} title="Progres CPL" dataKey="cpls" /> }]
+      ? [
+          { key: "1", label: "CPL", content: <CplContentDashboard prodi={filteredProdi} dataChart={curriculumData} title="Progres CPL" dataKey="cpls" /> },
+          { key: "2", label: "PPM", content: <CplContentDashboard prodi={filteredProdi} dataChart={curriculumData} title="Progres PPM" dataKey="ppms" /> },
+          { key: "3", label: "Mata Kuliah", content: <CplContentDashboard prodi={filteredProdi} dataChart={curriculumData} title="Progres Mata Kuliah" dataKey="cpl" /> },
+      ]
       : []),
-    { key: "2", label: "PPM", content: <DashboardComponent prodi={filteredProdi} dataChart={curriculumData} title="Progres PPM" dataKey="ppms" /> },
-    { key: "3", label: "P", content: <DashboardComponent prodi={filteredProdi} dataChart={curriculumData} title="Progres CPL" dataKey="cpls" /> },
-    { key: "4", label: "Visi", content: <DashboardComponent prodi={filteredProdi} dataChart={curriculumData} title="Progres CPL" dataKey="cpls" /> },
-    { key: "5", label: "MP", content: <DashboardComponent prodi={filteredProdi} dataChart={curriculumData} title="Progres CPL" dataKey="cpls" /> },
   ], [curriculumData, filteredProdi]);
 
   return (

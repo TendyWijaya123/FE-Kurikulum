@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Dashboard from "../pages/Dashboard/Dashboard";
+import Dashboard from "../pages/Dashboard/DashboardP2MPP/Dashboard";
 import Login from "../pages/Login";
 import ProtectedRoute from "../ProtectedRoute";
 import Unauthorized from "../pages/Unauthorized";
@@ -36,6 +36,7 @@ import ReferensiMataKuliah from "../pages/ReferensiMataKuliah/ReferensiMataKulia
 import PenyusunanKurikulumExportPage from "../pages/PenyusunanKurikulum/PenyusunanKurikulumExport";
 import PenyusunanKurikulumExport from "../pages/PenyusunanKurikulum/PenyusunanKurikulumExport";
 import PetaKompetensi from "../pages/PetaKomptensi";
+import DashboardPenyusunanKurikulum from "../pages/Dashboard/DashboardPenyusunanKurikulum";
 
 export default function PenyusunanKurikulumRoutes() {
 	return (
@@ -44,7 +45,6 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route path="/login" element={<Login />} />
 			<Route path="/unauthorized" element={<Unauthorized />} />
 			<Route path="/temporary-unavailable" element={<TemporaryUnavailable />} />
-			<Route path="/coba" element={<Dashboard />} />
 			{/* User Pages */}
 			<Route
 				path="/users"
@@ -167,15 +167,14 @@ export default function PenyusunanKurikulumRoutes() {
 				}
 			/>
 
-			<Route
-				path="/dashboard-detail"
+<			Route
+				path="/dashboard-penyusun-kurikulum"
 				element={
 					<ProtectedRoute>
-						<DashboardDetail />
+						<DashboardPenyusunanKurikulum />
 					</ProtectedRoute>
 				}
 			/>
-
 
 			<Route
 				path="/analisis-konsideran/sksu"
