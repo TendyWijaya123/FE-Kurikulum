@@ -36,6 +36,7 @@ import ReferensiMataKuliah from "../pages/ReferensiMataKuliah/ReferensiMataKulia
 import PenyusunanKurikulumExportPage from "../pages/PenyusunanKurikulum/PenyusunanKurikulumExport";
 import PenyusunanKurikulumExport from "../pages/PenyusunanKurikulum/PenyusunanKurikulumExport";
 import PetaKompetensi from "../pages/PetaKomptensi";
+import JejaringMK from "../pages/JejaringMK/JejaringMK";
 
 export default function PenyusunanKurikulumRoutes() {
 	return (
@@ -243,6 +244,15 @@ export default function PenyusunanKurikulumRoutes() {
 				element={
 					<ProtectedRoute>
 						<MataKuliah />
+					</ProtectedRoute>
+				}
+			/>
+
+			<Route
+				path="/jejaring-matakuliah"
+				element={
+					<ProtectedRoute>
+						<JejaringMK />
 					</ProtectedRoute>
 				}
 			/>
