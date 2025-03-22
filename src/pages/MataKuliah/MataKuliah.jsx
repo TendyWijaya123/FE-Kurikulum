@@ -261,7 +261,7 @@ const MataKuliah = () => {
 				{/* Loading Indicator */}
 				{loading ? (
 					<div className="flex justify-center items-center h-64">
-						<Spin size="large" /> {/* Show loading spinner */}
+						<Spin size="large" />
 					</div>
 				) : (
 					<>

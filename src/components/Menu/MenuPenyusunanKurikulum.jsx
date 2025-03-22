@@ -20,6 +20,7 @@ import {
 import MenuItemSidebar from "./MenuItemSidebar";
 import VisibleMenu from "./VisibleMenu";
 import React, { useState, useEffect } from "react";
+import { DotChartOutlined } from "@ant-design/icons";
 const MenuPenyusunanKurikulum = () => {
 	const [openMenu, setOpenMenu] = useState(null);
 
@@ -201,11 +202,11 @@ const MenuPenyusunanKurikulum = () => {
 				/>
 
 				<MenuItemSidebar
- 					url="/mata-kuliah"
- 					title="MataKuliah"
- 					icon={<Assignment />}
- 				/>
-				
+					url="/mata-kuliah"
+					title="MataKuliah"
+					icon={<Assignment />}
+				/>
+
 				<MenuItemSidebar
 					url="/matriks-p-mp"
 					title="Matriks P-MP"
@@ -215,6 +216,12 @@ const MenuPenyusunanKurikulum = () => {
 					url="/matriks-p-mp-mk"
 					title="Matriks P-MP-MK"
 					icon={<TableChart />}
+				/>
+
+				<MenuItemSidebar
+					url="/jejaring-matakuliah"
+					title="Jejaring Mata Kuliah"
+					icon={<DotChartOutlined />}
 				/>
 			</MenuItemSidebar>
 

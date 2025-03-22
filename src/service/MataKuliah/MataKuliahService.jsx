@@ -12,6 +12,18 @@ export const fetchMataKuliah = async (prodiId = null) => {
 	}
 };
 
+
+
+export const getMataKuliahDropdown = async () => {
+	try {
+		const response = await api.get("/mata-kuliah/dropdown-by-kurikulum");
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching Mata Kuliah:", error);
+		throw error;
+	}
+};
+
 export const fetchMataKuliahByJurusan = async () => {
 	try {
 		const response = await api.get("/mata-kuliah/show-jurusan");
