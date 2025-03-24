@@ -34,3 +34,17 @@ export const updateJejaringMataKuliah = async (id, jejaringData) => {
 		throw error;
 	}
 };
+
+export const uploadJejaringMataKuliahDiagram = async (gambarData) => {
+	try {
+		const response = await api.post(`jejaring-matakuliah/upload`, gambarData, {
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		});
+
+		return response.data;
+	} catch (error) {
+		throw error;
+	}
+};

@@ -7,10 +7,6 @@ const CustomNode = ({ data }) => {
 	const incomingEdges = edges.filter((edge) => edge.target === nodeId);
 	const outgoingEdges = edges.filter((edge) => edge.source === nodeId);
 
-	console.log("edges:", edges);
-	console.log("incomingEdges:", incomingEdges);
-	console.log("outgoingEdges:", outgoingEdges);
-
 	const getCategoryColor = (kategori) => {
 		switch (kategori) {
 			case "Nasional":
@@ -33,7 +29,7 @@ const CustomNode = ({ data }) => {
 	};
 
 	return (
-		<div className="relative w-40 shadow-md rounded-md bg-white border-2 border-stone-400">
+		<div className="relative w-44 shadow-md rounded-md bg-white border-2 border-stone-400">
 			{/* Handle untuk incoming edges (Target) */}
 			{incomingEdges.map((edge, index) => (
 				<Handle
@@ -48,11 +44,10 @@ const CustomNode = ({ data }) => {
 				/>
 			))}
 
-			{/* Node Body */}
 			<div
 				className={`${getCategoryColor(
 					data?.kategori
-				)} text-center font-semibold py-2 rounded-t-md`}>
+				)} text-center font-semibold py-2 rounded-t-md text-xl`}>
 				{data?.label || "Mata Kuliah"}
 			</div>
 
