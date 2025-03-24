@@ -4,6 +4,8 @@ import { ReactFlow, Background, Controls, ReactFlowProvider } from "reactflow";
 import "reactflow/dist/style.css";
 import CustomNode from "./CustomNode";
 import SmartStepEdge from "./SmartStepEdge";
+import DownloadButton from "./DownloadButton";
+import SaveButton from "./SaveButton";
 
 const getRandomColor = () => {
 	const letters = "0123456789ABCDEF";
@@ -30,10 +32,10 @@ const generateNodes = (mataKuliahData) => {
 			id: semesterId,
 			type: "group",
 			data: { label: `Semester ${semester}` },
-			position: { x: 0, y: semesterNumber * 250 },
+			position: { x: 0, y: semesterNumber * 300 },
 			style: {
-				width: maxMKPerSemester * 200 + 200,
-				height: 200,
+				width: maxMKPerSemester * 240 + 300,
+				height: 250,
 				zIndex: -1,
 			},
 		});
@@ -45,7 +47,7 @@ const generateNodes = (mataKuliahData) => {
 				id: nodeId,
 				type: "custom",
 				data: { label: mk.nama, kategori: mk.kategori, sks: mk.sks },
-				position: { x: index * 200 + 200, y: semesterNumber * 250 + 50 },
+				position: { x: index * 240 + 200, y: semesterNumber * 300 + 50 },
 			});
 		});
 	});
@@ -79,7 +81,7 @@ const JejaringMKDiagram = () => {
 		custom: CustomNode,
 		group: ({ data }) => (
 			<div className="w-full h-full flex items-center border border-gray-400 bg-white">
-				<h2 className="h-full text-lg font-bold bg-yellow-300 border-r border-gray-400 flex items-center leading-none">
+				<h2 className=" h-full text-lg font-bold bg-yellow-300 border-r border-gray-400 flex items-center leading-none">
 					{data.label}
 				</h2>
 				<div className="flex-1"></div>
@@ -109,9 +111,12 @@ const JejaringMKDiagram = () => {
 					defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
 					minZoom={0.5}
 					maxZoom={2}
-					fitView>
+					fitView
+					style={{ backgroundColor: "lightgray" }}>
 					<Background />
 					<Controls />
+					<DownloadButton />
+					<SaveButton />
 				</ReactFlow>
 			</ReactFlowProvider>
 		</div>
