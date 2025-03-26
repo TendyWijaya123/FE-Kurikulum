@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Button, Popconfirm, Input } from "antd";
+import { Table, Button, Popconfirm, Input, Form } from "antd";
 import {
 	DeleteOutlined,
 	PlusOutlined,
@@ -21,6 +21,7 @@ const IlmuPengetahuanTable = () => {
 		saving,
 		selectedRowKeys,
 		rowSelection,
+		errors,
 		handleSave,
 		handleDelete,
 		handleCreate,
@@ -36,37 +37,54 @@ const IlmuPengetahuanTable = () => {
 			dataIndex: "deskripsi",
 			key: "deskripsi",
 			width: "70%",
-			render: (text, record) => (
-				<Input.TextArea
-					value={text}
-					onChange={(e) => handleSave({ ...record, deskripsi: e.target.value })}
-					autoSize={{ minRows: 3 }}
-				/>
-			),
+			render: (text, record, index) => {
+				const errorMsg = errors?.[`${index}.deskripsi`]?.[0];
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input.TextArea
+							value={text}
+							onChange={(e) => handleSave(index, "deskripsi", e.target.value)}
+							autoSize={{ minRows: 3 }}
+						/>
+					</Form.Item>
+				);
+			},
 		},
 		{
 			title: "Link",
 			dataIndex: "link_sumber",
 			key: "link_sumber",
 			width: "25%",
-			render: (text, record) => (
-				<Input
-					value={text}
-					onChange={(e) =>
-						handleSave({ ...record, link_sumber: e.target.value })
-					}
-				/>
-			),
+			render: (text, record, index) => {
+				const errorMsg = errors?.[`${index}.link_sumber`]?.[0];
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input
+							value={text}
+							onChange={(e) => handleSave(index, "link_sumber", e.target.value)}
+						/>
+					</Form.Item>
+				);
+			},
 		},
+
 		{
 			title: "Aksi",
 			key: "action",
 			width: "5%",
-			render: (_, record) => (
+			render: (_, record, index) => (
 				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 					<Popconfirm
 						title="Yakin ingin menghapus?"
-						onConfirm={() => handleDelete(record)}
+						onConfirm={() => handleDelete(index)}
 						okText="Ya"
 						cancelText="Tidak">
 						<Button type="primary" danger icon={<DeleteOutlined />} />
@@ -129,7 +147,7 @@ const IlmuPengetahuanTable = () => {
 			<Table
 				rowSelection={rowSelection}
 				columns={columns}
-				dataSource={data.map((item) => ({ ...item, key: item.id }))}
+				dataSource={data.map((item, index) => ({ ...item, key: index }))}
 				pagination={{ pageSize: 5 }}
 				bordered
 				loading={loading}

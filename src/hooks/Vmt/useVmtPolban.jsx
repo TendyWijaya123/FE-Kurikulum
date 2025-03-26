@@ -8,12 +8,14 @@ import {
 	updateVmtPolban,
 } from "../../service/api";
 import { ProdiContext } from "../../context/ProdiProvider";
+import { message } from "antd";
 
 const useVmtPolban = () => {
 	const { selectedProdiId } = useContext(ProdiContext);
 	const [loading, setLoading] = useState(false);
 	const [alert, setAlert] = useState(null);
 	const [vmtPolban, setVmtPolban] = useState("");
+	const [errors, setErrors] = useState(null);
 
 	useEffect(() => {
 		fetchData(selectedProdiId);
@@ -37,20 +39,36 @@ const useVmtPolban = () => {
 	};
 
 	const handleUpsertMisiPolbans = async (misiPolbansData) => {
+		setErrors(null);
 		try {
 			await upsertMisiPolban({ misi_polbans: misiPolbansData });
 			await fetchData();
+			message.success("Berhasil  menyimpan misi polban");
 		} catch (error) {
-			setAlert({ type: "error", message: "Gagal menyimpan Misi Polban" });
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan misi polban.",
+					}
+			);
+			message.error("Gagal menyimpan Misi Polban");
 		}
 	};
 
 	const handleUpsertTujuanPolbans = async (tujuanPolbansData) => {
+		setErrors(null);
 		try {
 			await upsertTujuanPolban({ tujuan_polbans: tujuanPolbansData });
 			await fetchData();
+			message.success("Berhasil  Menyimpan Tujuan Polban");
 		} catch (error) {
-			setAlert({ type: "error", message: "Gagal menyimpan Tujuan Polban" });
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan tujuan polban.",
+					}
+			);
+			message.error("Gagal menyimpan Tujuan Polban ");
 		}
 	};
 
@@ -73,11 +91,19 @@ const useVmtPolban = () => {
 	};
 
 	const handleUpdateVmtPolban = async (id, data) => {
+		setErrors(null);
 		try {
 			await updateVmtPolban(id, data);
 			await fetchData();
+			message.success("Berhasil menyimpan visi polban");
 		} catch (error) {
-			setAlert({ type: "error", message: "Gagal mengupdate VMT Polban" });
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan Visi Polban.",
+					}
+			);
+			message.error("Gagal menyimpan visi polban");
 		}
 	};
 
@@ -85,6 +111,7 @@ const useVmtPolban = () => {
 		loading,
 		alert,
 		vmtPolban,
+		errors,
 		handleUpsertMisiPolbans,
 		handleUpsertTujuanPolbans,
 		handleDeleteMisiPolban,

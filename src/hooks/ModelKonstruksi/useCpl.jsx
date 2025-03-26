@@ -7,6 +7,7 @@ import {
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
 import { getCPLTemplate, importCPL } from "../../service/Import/ImportService";
 import { ProdiContext } from "../../context/ProdiProvider";
+import { message } from "antd";
 
 const useCpl = () => {
 	const { selectedProdiId } = useContext(ProdiContext);
@@ -14,6 +15,7 @@ const useCpl = () => {
 	const [cplData, setCplData] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [alert, setAlert] = useState();
+	const [error, setError] = useState(null);
 
 	useEffect(() => {
 		fetchData(selectedProdiId);
@@ -25,7 +27,7 @@ const useCpl = () => {
 			setSelectedRowKeys(selectedKeys);
 		},
 		getCheckboxProps: (record) => ({
-			disabled: !record.id,
+			disabled: record.index,
 		}),
 	};
 
@@ -33,7 +35,7 @@ const useCpl = () => {
 		setLoading(true);
 		try {
 			const data = await fetchCpls(prodiId);
-		setCplData(data.data);
+			setCplData(data.data);
 		} catch (error) {
 			console.error(error);
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
@@ -43,12 +45,20 @@ const useCpl = () => {
 	};
 
 	const handleSaveCpls = async () => {
+		setError(null);
 		setLoading(true);
 		try {
 			await upsertCpl({ cpls: cplData });
 			fetchData();
+			message.success("Berhasil Menyimpan CPL");
 		} catch (error) {
-			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+			setError(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan CPL.",
+					}
+			);
+			message.error("Gagal menyimpan CPL");
 		} finally {
 			setLoading(false);
 		}
@@ -120,24 +130,30 @@ const useCpl = () => {
 	};
 
 	const handleDestroyCpls = async () => {
-		console.log("Data yang dikirim:", { cpls_id: selectedRowKeys });
-
 		if (!Array.isArray(selectedRowKeys) || selectedRowKeys.length === 0) {
-			console.error(
-				"Error: cpls_id harus berupa array dengan setidaknya satu elemen."
-			);
+			console.error("Error: Tidak ada data yang dipilih untuk dihapus.");
 			return;
 		}
 
+		setLoading(true);
 		try {
-			await deleteCpls({ cpls_id: selectedRowKeys });
-			await fetchData();
+			const itemsToDelete = selectedRowKeys.map((key) => cplData[key]);
+			const validIds = itemsToDelete.map((item) => item.id).filter(Boolean); // Ambil ID yang valid saja
+
+			if (validIds.length > 0) {
+				await deleteCpls({ cpls_id: validIds });
+			}
+
+			fetchData();
 			setSelectedRowKeys([]);
 		} catch (error) {
 			console.error(
-				"Error deleting PPM:",
+				"Error deleting CPL:",
 				error.response?.data || error.message
 			);
+			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -155,6 +171,7 @@ const useCpl = () => {
 		handleDestroyCpls,
 		rowSelection,
 		selectedRowKeys,
+		error,
 	};
 };
 

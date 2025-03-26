@@ -22,6 +22,7 @@ export const useKKNIData = () => {
 	const [kkni, setKkni] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const { user } = useContext(AuthContext);
+	const [errors, setErrors] = useState(null);
 	const [dataSource, setDataSource] = useState([]);
 	const [saving, setSaving] = useState(false);
 	const [undoStack, setUndoStack] = useState([]);
@@ -225,6 +226,7 @@ export const useKKNIData = () => {
 	// Save data to server
 	const handleSaveData = async () => {
 		setSaving(true);
+		setErrors(null);
 		try {
 			const data = {
 				dataSource: dataSource,
@@ -235,8 +237,13 @@ export const useKKNIData = () => {
 			message.success("Data berhasil disimpan!");
 			await fetchKkni();
 		} catch (error) {
-			message.error("Gagal menyimpan data!");
-			console.error("Error saving kkni:", error);
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan CPL.",
+					}
+			);
+			message.error("Gagal menyimpan CPL");
 		} finally {
 			setSaving(false);
 		}
@@ -383,6 +390,7 @@ export const useKKNIData = () => {
 		selectedPengetahuan,
 		dataSaranCpl,
 		isAutoCpl,
+		errors,
 		addToDataSource,
 		handleautocpl,
 		handleUndo,

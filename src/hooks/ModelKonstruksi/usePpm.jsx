@@ -7,6 +7,7 @@ import {
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
 import { getPPMTemplate, importPpm } from "../../service/Import/ImportService";
 import { ProdiContext } from "../../context/ProdiProvider";
+import { message } from "antd";
 
 const usePpm = () => {
 	const { selectedProdiId } = useContext(ProdiContext);
@@ -14,6 +15,7 @@ const usePpm = () => {
 	const [ppmData, setPpmData] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [alert, setAlert] = useState();
+	const [errors, setErrors] = useState(null);
 
 	useEffect(() => {
 		fetchData(selectedProdiId);
@@ -25,23 +27,26 @@ const usePpm = () => {
 			setSelectedRowKeys(selectedKeys);
 		},
 		getCheckboxProps: (record) => ({
-			disabled: !record.id,
+			disabled: record.index,
 		}),
 	};
 
 	const handleDestroyPpms = async () => {
-		console.log("Data yang dikirim:", { ppms_id: selectedRowKeys });
-
 		if (!Array.isArray(selectedRowKeys) || selectedRowKeys.length === 0) {
-			console.error(
-				"Error: ppms_id harus berupa array dengan setidaknya satu elemen."
-			);
+			console.error("Error: Tidak ada item yang dipilih.");
 			return;
 		}
 
 		try {
-			await deletePpms({ ppms_id: selectedRowKeys });
-			await fetchData();
+			const idsToDelete = selectedRowKeys
+				.map((key) => ppmData[key]?.id)
+				.filter(Boolean);
+
+			if (idsToDelete.length > 0) {
+				await deletePpms({ ppms_id: idsToDelete });
+			}
+
+			fetchData();
 			setSelectedRowKeys([]);
 		} catch (error) {
 			console.error(
@@ -66,11 +71,19 @@ const usePpm = () => {
 
 	const handleSavePpms = async () => {
 		setLoading(true);
+		setErrors(null);
 		try {
 			await upsertPpm({ ppms: ppmData });
 			fetchData();
+			message.success("Berhasil Menyimpan PPM");
 		} catch (error) {
-			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan CPL.",
+					}
+			);
+			message.error("Gagal menyimpan PPM");
 		} finally {
 			setLoading(false);
 		}
@@ -155,6 +168,7 @@ const usePpm = () => {
 		rowSelection,
 		selectedRowKeys,
 		handleDestroyPpms,
+		errors,
 	};
 };
 

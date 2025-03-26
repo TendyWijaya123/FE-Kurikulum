@@ -26,12 +26,12 @@ const useMataKuliah = () => {
 		[]
 	);
 	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState(null);
 	const [alert, setAlert] = useState(null);
 	const [editedData, setEditedData] = useState({});
 	const [isModalImportVisible, setIsModalImportVisible] = useState(false);
 	const [isModalCreateVisible, setIsModalCreateVisible] = useState(false);
 	const [isModalUpdateVisible, setIsModalUpdateVisible] = useState(false);
+	const [errors, setErrors] = useState(null);
 
 	const [newData, setNewData] = useState({
 		nama: "",
@@ -70,7 +70,6 @@ const useMataKuliah = () => {
 			)
 			.catch((error) => {
 				console.error("Error fetching data:", error);
-				setError(error);
 				setAlert(error.message || "There was an error fetching the data.");
 				message.error(error.message || "Failed to load data.");
 			})
@@ -81,6 +80,9 @@ const useMataKuliah = () => {
 
 	const handleModalCreateClose = () => {
 		setIsModalCreateVisible(false);
+		setNewData({});
+		setEditedData({});
+		setErrors(null);
 	};
 
 	const handleModalUpdateClose = () => {
@@ -122,6 +124,7 @@ const useMataKuliah = () => {
 	};
 
 	const handleCreateSave = async (newData) => {
+		setErrors(null);
 		try {
 			const requestData = {
 				kode: newData.kode,
@@ -146,22 +149,23 @@ const useMataKuliah = () => {
 				})),
 				formulasi_cpa_ids: newData.formulasi_cpas,
 			};
-			console.log(requestData);
 			await createMataKuliah(requestData);
 			setIsModalCreateVisible(false);
 			fetchData();
-			message.success("Mata Kuliah created successfully!"); // Show success message
+			message.success("Mata Kuliah created successfully!");
 		} catch (error) {
-			console.error("Error Creating Mata Kuliah:", error);
-			setAlert(error.message || "Failed to create Mata Kuliah.");
-			message.error(
-				error.response?.data?.message || "Failed to create Mata Kuliah."
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan MataKuliah",
+					}
 			);
+			message.error("Gagal menyimpan Mata kuliah");
 		}
 	};
 
 	const handleUpdate = async (editedData) => {
-		console.log(editedData);
+		setErrors(null);
 		try {
 			const requestData = {
 				kode: editedData.kode,
@@ -192,11 +196,13 @@ const useMataKuliah = () => {
 			fetchData();
 			message.success("Mata Kuliah updated successfully!");
 		} catch (error) {
-			console.error("Error updating Mata Kuliah:", error);
-			setAlert(error.message || "Failed to update Mata Kuliah.");
-			message.error(
-				error.response?.data?.message || "Failed to update Mata Kuliah."
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan MataKuliah",
+					}
 			);
+			message.error("Gagal menyimpan Mata kuliah");
 		}
 	};
 
@@ -237,12 +243,12 @@ const useMataKuliah = () => {
 		metodePembelajaranDropdown,
 		bentukPembelajaranDropdown,
 		loading,
-		error,
 		alert,
 		editedData,
 		isModalCreateVisible,
 		isModalUpdateVisible,
 		isModalImportVisible,
+		errors,
 		setIsModalImportVisible,
 		handleModalCreateClose,
 		handleModalUpdateClose,
