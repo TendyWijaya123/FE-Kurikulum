@@ -27,6 +27,7 @@ export const useBCData = () => {
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
+	const [errors, setErrors] = useState(null);
 
 	const fetchBenchKurikulums = async (prodiId = null) => {
 		setLoading(true);
@@ -175,14 +176,20 @@ export const useBCData = () => {
 
 	// Save data to server
 	const handleSaveData = async () => {
+		setErrors(null);
 		setSaving(true);
 		try {
 			await postBenchKurikulms(dataSource);
-			message.success("Data berhasil disimpan!");
 			await fetchBenchKurikulums();
+			message.success("Berhasil Menyimpan bench kurikulum");
 		} catch (error) {
-			message.error("Gagal menyimpan data!");
-			console.error("Error saving bench kurikulums:", error);
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan CPL.",
+					}
+			);
+			message.error("Gagal menyimpan bench kurikulum");
 		} finally {
 			setSaving(false);
 		}
@@ -232,6 +239,7 @@ export const useBCData = () => {
 		undoStack,
 		rowSelection,
 		selectedRowKeys,
+		errors,
 		handleUndo,
 		handleSave,
 		handleAddRow,

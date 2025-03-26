@@ -39,7 +39,6 @@ export const createIlmuPengetahuan = async (data) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error creating/updating Ilmu Pengetahuan:", error);
 		throw error;
 	}
 };
@@ -54,7 +53,6 @@ export const deleteIlmuPengetahuan = async (id) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error deleting Ilmu Pengetahuan:", error);
 		throw error;
 	}
 };
@@ -118,7 +116,6 @@ export const getTeknologi = async (prodiId = null) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching teknologi data:", error);
 		throw error;
 	}
 };
@@ -134,7 +131,6 @@ export const createTeknologi = async (data) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error creating/updating teknologi:", error);
 		throw error;
 	}
 };
@@ -149,7 +145,6 @@ export const deleteTeknologi = async (id) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error deleting teknologi:", error);
 		throw error;
 	}
 };
@@ -199,7 +194,6 @@ export const getSeni = async (prodiId = null) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching seni data:", error);
 		throw error;
 	}
 };
@@ -215,7 +209,6 @@ export const createSeni = async (data) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error creating/updating seni:", error);
 		throw error;
 	}
 };

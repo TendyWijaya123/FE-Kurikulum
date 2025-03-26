@@ -26,6 +26,7 @@ export const useSKSUData = () => {
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
+	const [errors, setErrors] = useState(null);
 
 	const fetchSKSU = async (prodiId = null) => {
 		setLoading(true);
@@ -174,13 +175,19 @@ export const useSKSUData = () => {
 	// Save data to server
 	const handleSaveData = async () => {
 		setSaving(true);
+		setErrors(null);
 		try {
 			await postSksu(dataSource);
-			message.success("Data berhasil disimpan!");
+			message.success("Berhasil Menyimpan SKSU");
 			await fetchSKSU();
 		} catch (error) {
-			message.error("Gagal menyimpan data!");
-			console.error("Error saving SKSU:", error);
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan SKSU.",
+					}
+			);
+			message.error("Gagal menyimpan SKSU");
 		} finally {
 			setSaving(false);
 		}
@@ -230,6 +237,7 @@ export const useSKSUData = () => {
 		undoStack,
 		rowSelection,
 		selectedRowKeys,
+		errors,
 		handleUndo,
 		handleSave,
 		handleAddRow,

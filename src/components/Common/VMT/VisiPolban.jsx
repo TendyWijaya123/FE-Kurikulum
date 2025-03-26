@@ -1,65 +1,53 @@
 import { useState, useEffect } from "react";
-import useVmt from "../../../hooks/Vmt/useVmt";
-import { Button, Spin } from "antd";
 import useVmtPolban from "../../../hooks/Vmt/useVmtPolban";
+import { Button, Spin, Form, Input } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 import VisibleMenu from "../../Menu/VisibleMenu";
 
 const VisiPolban = () => {
-	const { loading, vmtPolban, handleUpdateVmtPolban } = useVmtPolban();
+	const { loading, vmtPolban, handleUpdateVmtPolban, errors } = useVmtPolban();
+	const [form] = Form.useForm();
 
-	const [visiPolbanInput, setVisiPolbanInput] = useState({
-		visi_polban: vmtPolban?.visi_polban || "",
-	});
-
-	const handleChangeVisiPolban = (e) => {
-		const { name, value } = e.target;
-		setVisiPolbanInput((prevState) => ({
-			...prevState,
-			[name]: value,
-		}));
-	};
-
-	const handleSaveVisiPolban = async () => {
-		await handleUpdateVmtPolban(vmtPolban.id, visiPolbanInput);
-	};
-
+	// Set initial state dari API
 	useEffect(() => {
-		setVisiPolbanInput({
+		form.setFieldsValue({
 			visi_polban: vmtPolban?.visi_polban || "",
 		});
-	}, [vmtPolban]);
+	}, [vmtPolban, form]);
+
+	const handleSaveVisiPolban = async () => {
+		try {
+			const values = await form.validateFields();
+			await handleUpdateVmtPolban(vmtPolban.id, values);
+		} catch (error) {
+			console.log("Validasi gagal:", error);
+		}
+	};
 
 	return (
 		<div className="w-full bg-white p-6 rounded-lg shadow-lg mb-4">
-			<div className="space-y-4">
-				{loading ? (
-					<Spin />
-				) : (
-					<div className="flex items-center space-x-4 p-4 border rounded-lg shadow-sm bg-gray-50">
-						<input
-							type="text"
-							name="visi_polban"
-							value={visiPolbanInput.visi_polban}
-							onChange={handleChangeVisiPolban}
-							className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-							placeholder="Masukkan Visi Polban"
-						/>
-					</div>
-				)}
-			</div>
+			<Form form={form} layout="vertical">
+				<Form.Item
+					name="visi_polban"
+					validateStatus={errors?.visi_polban ? "error" : ""}
+					help={errors?.visi_polban?.[0]}>
+					<Input placeholder="Masukkan Visi Polban" />
+				</Form.Item>
 
-			<div className="flex mt-6">
-				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-					<Button
-						type="default"
-						icon={<SaveOutlined />}
-						onClick={handleSaveVisiPolban}
-						className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
-						Simpan
-					</Button>
-				</VisibleMenu>
-			</div>
+				{loading ? <Spin /> : null}
+
+				<div className="flex mt-6">
+					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+						<Button
+							type="primary"
+							icon={<SaveOutlined />}
+							onClick={handleSaveVisiPolban}
+							className="h-10 px-6 bg-green-500">
+							Simpan
+						</Button>
+					</VisibleMenu>
+				</div>
+			</Form>
 		</div>
 	);
 };

@@ -1,91 +1,73 @@
-import { useState, useEffect } from "react";
-import useVmt from "../../../hooks/Vmt/useVmt";
-import { Button, Spin } from "antd";
-import useVmtJurusan from "../../../hooks/Vmt/useVmtJurusan";
+import { useEffect } from "react";
+import { Form, Input, Button, Spin } from "antd";
 import { SaveOutlined } from "@ant-design/icons";
 import VisibleMenu from "../../Menu/VisibleMenu";
+import useVmtJurusan from "../../../hooks/Vmt/useVmtJurusan";
 
 const VisiJurusan = () => {
-	const { loading, alert, vmtJurusan, handleUpdateVmtJurusan } =
+	const { loading, vmtJurusan, handleUpdateVmtJurusan, errors } =
 		useVmtJurusan();
+	const [form] = Form.useForm();
 
-	// State untuk visi_jurusan dan visi_keilmuan_prodi
-	const [visiJurusanInput, setVisiJurusanInput] = useState({
-		visi_jurusan: vmtJurusan?.visi_jurusan || "",
-		visi_keilmuan_prodi: vmtJurusan?.visi_keilmuan_prodi || "",
-	});
-
-	const handleChangeVisiJurusan = (e) => {
-		const { name, value } = e.target;
-		setVisiJurusanInput((prevState) => ({
-			...prevState,
-			[name]: value,
-		}));
-	};
-
-	const handleSaveVisiJurusan = async () => {
-		await handleUpdateVmtJurusan(vmtJurusan.id, visiJurusanInput);
-	};
-
+	// Set nilai awal dari API
 	useEffect(() => {
-		setVisiJurusanInput({
+		form.setFieldsValue({
 			visi_jurusan: vmtJurusan?.visi_jurusan || "",
 			visi_keilmuan_prodi: vmtJurusan?.visi_keilmuan_prodi || "",
 		});
-	}, [vmtJurusan]);
+	}, [vmtJurusan, form]);
+
+	// Handle submit form
+	const handleSaveVisiJurusan = async () => {
+		try {
+			const values = await form.validateFields();
+			await handleUpdateVmtJurusan(vmtJurusan.id, values);
+		} catch (error) {
+			console.log("Validasi gagal:", error);
+		}
+	};
 
 	return (
 		<div className="w-full bg-white p-6 rounded-lg shadow-lg mb-4">
-			<div className="space-y-4">
-				{/* Input untuk Visi Jurusan */}
-				<h2 className="text-3xl font-semibold text-center mb-6 text-gray-800">
-					Visi Jurusan
-				</h2>
-				{loading ? (
-					<Spin />
-				) : (
-					<div className="flex items-center space-x-4 p-4  rounded-lg ">
-						<input
-							type="text"
-							name="visi_jurusan"
-							value={visiJurusanInput.visi_jurusan}
-							onChange={handleChangeVisiJurusan}
-							className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-							placeholder="Masukkan Visi Jurusan"
-						/>
-					</div>
-				)}
-				{/* Input untuk Visi Keilmuan Prodi */}
-				<h2 className="text-3xl font-semibold text-center mb-6 text-gray-800">
-					Visi Keilmuan Prodi
-				</h2>
-				{loading ? (
-					<Spin />
-				) : (
-					<div className="flex items-center space-x-4 p-4  rounded-lg ">
-						<input
-							type="text"
-							name="visi_keilmuan_prodi"
-							value={visiJurusanInput.visi_keilmuan_prodi}
-							onChange={handleChangeVisiJurusan}
-							className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-							placeholder="Masukkan Visi Keilmuan Prodi"
-						/>
-					</div>
-				)}
-			</div>
+			<h2 className="text-2xl font-semibold text-center mb-6 text-gray-800">
+				Visi Jurusan & Visi Keilmuan Prodi
+			</h2>
 
-			<div className="flex mt-6">
-				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-					<Button
-						type="default"
-						icon={<SaveOutlined />}
-						onClick={handleSaveVisiJurusan}
-						className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
-						Simpan Visi Jurusan dan Keilmuan Prodi Simpan
-					</Button>
-				</VisibleMenu>
-			</div>
+			<Form form={form} layout="vertical">
+				{/* Input Visi Jurusan */}
+				<Form.Item
+					label="Visi Jurusan"
+					name="visi_jurusan"
+					validateStatus={errors?.visi_jurusan ? "error" : ""}
+					help={errors?.visi_jurusan?.[0]}>
+					<Input placeholder="Masukkan Visi Jurusan" />
+				</Form.Item>
+
+				{/* Input Visi Keilmuan Prodi */}
+				<Form.Item
+					label="Visi Keilmuan Prodi"
+					name="visi_keilmuan_prodi"
+					validateStatus={errors?.visi_keilmuan_prodi ? "error" : ""}
+					help={errors?.visi_keilmuan_prodi?.[0]}>
+					<Input placeholder="Masukkan Visi Keilmuan Prodi" />
+				</Form.Item>
+
+				{/* Loading Indicator */}
+				{loading ? <Spin /> : null}
+
+				{/* Tombol Simpan */}
+				<div className="flex mt-6">
+					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+						<Button
+							type="primary"
+							icon={<SaveOutlined />}
+							onClick={handleSaveVisiJurusan}
+							className="h-10 px-6 bg-green-500">
+							Simpan
+						</Button>
+					</VisibleMenu>
+				</div>
+			</Form>
 		</div>
 	);
 };

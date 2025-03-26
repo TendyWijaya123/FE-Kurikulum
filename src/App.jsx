@@ -5,8 +5,10 @@ import PengisianRpsRoutes from "./routes/PengisianRpsRoutes";
 function App() {
 	return (
 		<Router>
-			<PenyusunanKurikulumRoutes />
-			<PengisianRpsRoutes />
+			<Routes>
+				{PenyusunanKurikulumRoutes()}
+				{PengisianRpsRoutes()}
+			</Routes>
 		</Router>
 	);
 }

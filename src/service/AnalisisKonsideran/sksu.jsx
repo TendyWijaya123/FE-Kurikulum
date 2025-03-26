@@ -34,17 +34,10 @@ export const postSksu = async (data) => {
 		const token = localStorage.getItem("authToken");
 
 		const headers = token ? { Authorization: `Bearer ${token}` } : {};
-		console.log(data);
 		const response = await api.post(`/sksu`, data, { headers });
 
 		return response.data;
 	} catch (error) {
-		if (error.response) {
-			console.error("Error creating sksu:", error.response.data);
-		} else {
-			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
-			console.error("Error creating sksu:", error.message);
-		}
 		throw error;
 	}
 };

@@ -64,7 +64,7 @@ const MatrixCplMkTable = () => {
 							{mataKuliahs.map((mataKuliah) => (
 								<tr key={mataKuliah.id} className="hover:bg-gray-50">
 									<td className="px-4 py-2 text-gray-700 sticky left-0 bg-white border border-gray-200 z-10">
-										{mataKuliah.kode}
+										{mataKuliah.nama}
 									</td>
 									{cpls.map((cpl) => {
 										// Mendapatkan kategori yang dipilih untuk MK pada CPL tertentu

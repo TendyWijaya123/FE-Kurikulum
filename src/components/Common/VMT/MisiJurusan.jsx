@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
+import { Button, Spin, Form, Input } from "antd";
+import { PlusOutlined, SaveOutlined } from "@ant-design/icons";
 import DeleteButton from "../../Button/DeleteButton";
-import { Button, Spin } from "antd";
-import useVmtJurusan from "../../../hooks/Vmt/useVmtJurusan";
-import { SaveOutlined } from "@mui/icons-material";
-import { PlusOutlined } from "@ant-design/icons";
 import VisibleMenu from "../../Menu/VisibleMenu";
+import useVmtJurusan from "../../../hooks/Vmt/useVmtJurusan";
 
 const MisiJurusan = () => {
 	const {
@@ -12,15 +11,18 @@ const MisiJurusan = () => {
 		handleDeleteMisiJurusan,
 		handleUpsertMisiJurusans,
 		loading,
+		errors,
 	} = useVmtJurusan();
 
+	const [form] = Form.useForm();
 	const [misiJurusan, setMisiJurusan] = useState([]);
 
 	useEffect(() => {
 		if (vmtJurusan?.misi_jurusans) {
 			setMisiJurusan(vmtJurusan.misi_jurusans);
+			form.setFieldsValue({ misi_jurusans: vmtJurusan.misi_jurusans });
 		}
-	}, [vmtJurusan]);
+	}, [vmtJurusan, form]);
 
 	const handleAddPoint = () => {
 		setMisiJurusan([
@@ -54,60 +56,75 @@ const MisiJurusan = () => {
 		}
 	};
 
+	const handleSave = async () => {
+		try {
+			await form.validateFields();
+			await handleUpsertMisiJurusans(misiJurusan);
+		} catch (error) {
+			console.log("Validasi gagal:", error);
+		}
+	};
+
 	return (
 		<div className="w-full bg-white p-6 rounded-lg shadow-lg">
 			{loading ? (
 				<Spin />
 			) : (
-				<div className="space-y-4">
-					{misiJurusan.map((item, index) => (
-						<div
-							key={index}
-							className="flex items-center space-x-4 p-4 rounded-lg shadow-sm ">
-							<input
-								type="text"
-								value={item.misi_jurusan}
-								onChange={(e) => handleChangePoint(index, e)}
-								className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-								placeholder="Masukkan Misi Jurusan"
-							/>
-							<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-								<DeleteButton
-									onDelete={() => handleDeletePoint(index)}
-									className="text-red-500 hover:text-red-700 transition-colors duration-200">
-									Hapus
-								</DeleteButton>
-							</VisibleMenu>
-						</div>
-					))}
-				</div>
+				<Form form={form} layout="vertical">
+					{misiJurusan.map((item, index) => {
+						const errorMsg =
+							errors?.[`misi_jurusans.${index}.misi_jurusan`]?.[0];
+
+						return (
+							<div
+								key={index}
+								className="flex items-center space-x-4 p-4 rounded-lg shadow-sm">
+								<Form.Item
+									name={["misi_jurusans", index, "misi_jurusan"]}
+									validateStatus={errorMsg ? "error" : ""}
+									help={errorMsg}
+									className="w-full">
+									<Input
+										placeholder="Masukkan Misi Jurusan"
+										value={item.misi_jurusan}
+										onChange={(e) => handleChangePoint(index, e)}
+									/>
+								</Form.Item>
+
+								<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+									<DeleteButton
+										onDelete={() => handleDeletePoint(index)}
+										className="text-red-500 hover:text-red-700 transition-colors duration-200">
+										Hapus
+									</DeleteButton>
+								</VisibleMenu>
+							</div>
+						);
+					})}
+
+					<div className="flex gap-2 mt-6">
+						<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+							<Button
+								type="primary"
+								icon={<PlusOutlined />}
+								onClick={handleAddPoint}
+								className="h-10 px-6">
+								Tambah Point
+							</Button>
+						</VisibleMenu>
+
+						<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+							<Button
+								type="default"
+								icon={<SaveOutlined />}
+								onClick={handleSave}
+								className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
+								Simpan
+							</Button>
+						</VisibleMenu>
+					</div>
+				</Form>
 			)}
-
-			<div className="flex gap-2 ">
-				<div className="flex justify-center mt-6">
-					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-						<Button
-							type="primary"
-							icon={<PlusOutlined />}
-							onClick={handleAddPoint}
-							className="h-10 px-6">
-							Tambah Point
-						</Button>
-					</VisibleMenu>
-				</div>
-
-				<div className="mt-6 text-center">
-					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-						<Button
-							type="default"
-							icon={<SaveOutlined />}
-							onClick={() => handleUpsertMisiJurusans(misiJurusan)}
-							className="h-10 px-6 bg-green-500 text-white hover:bg-green-600">
-							Simpan
-						</Button>
-					</VisibleMenu>
-				</div>
-			</div>
 		</div>
 	);
 };

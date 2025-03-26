@@ -1,6 +1,15 @@
 import React, { useContext, useState } from "react";
 import DefaultLayout from "../../../layouts/DefaultLayout";
-import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin } from "antd";
+import {
+	Table,
+	Input,
+	Button,
+	Popconfirm,
+	Select,
+	Tooltip,
+	Spin,
+	Form,
+} from "antd";
 import {
 	UndoOutlined,
 	EyeOutlined,
@@ -35,6 +44,7 @@ const KKNI = () => {
 		selectedKemampuanKerja,
 		selectedPengetahuan,
 		kkni,
+		errors,
 		addToDataSource,
 		handleautocpl,
 		handleUndo,
@@ -80,23 +90,33 @@ const KKNI = () => {
 			title: "Description",
 			dataIndex: "description",
 			key: "description",
-			render: (text, record) => (
-				<Input.TextArea
-					value={text}
-					onChange={(e) =>
-						handleSave({ ...record, description: e.target.value })
-					}
-					autoSize={{ minRows: 1, maxRows: 5 }} // Menentukan jumlah baris minimal dan maksimal
-					style={{
-						border: "none",
-						outline: "none",
-						boxShadow: "none",
-						padding: 0,
-						resize: "none", // Mencegah pengguna meresize secara manual
-					}}
-				/>
-			),
+			render: (text, record, index) => {
+				const errorMsg = errors?.[`dataSource.${index}.description`]?.[0];
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input.TextArea
+							value={text}
+							onChange={(e) =>
+								handleSave({ ...record, description: e.target.value })
+							}
+							autoSize={{ minRows: 1, maxRows: 5 }} // Menentukan jumlah baris minimal dan maksimal
+							style={{
+								border: "none",
+								outline: "none",
+								boxShadow: "none",
+								padding: 0,
+								resize: "none", // Mencegah pengguna meresize secara manual
+							}}
+						/>
+					</Form.Item>
+				);
+			},
 		},
+
 		{
 			title: "Aksi",
 			key: "aksi",
