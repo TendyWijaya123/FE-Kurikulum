@@ -19,12 +19,8 @@ const VisiJurusan = () => {
 
 	// Handle submit form
 	const handleSaveVisiJurusan = async () => {
-		try {
-			const values = await form.validateFields();
-			await handleUpdateVmtJurusan(vmtJurusan.id, values);
-		} catch (error) {
-			console.log("Validasi gagal:", error);
-		}
+		const values = await form.validateFields();
+		await handleUpdateVmtJurusan(vmtJurusan.id, values);
 	};
 
 	return (

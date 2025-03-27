@@ -121,7 +121,6 @@ export const deleteProdi = async (id) => {
 export const getProdiDropdown = async () => {
 	try {
 		const response = await api.get("/prodi/dropdown");
-		console.log(response.data);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching Prodi dropdown:", error);
@@ -132,7 +131,6 @@ export const getProdiDropdown = async () => {
 export const getProdiKurikulumDropdown = async () => {
 	try {
 		const response = await api.get("/prodi/dropdown-prodi-kurikulum");
-		console.log(response.data);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching Prodi dropdown:", error);

@@ -18,7 +18,6 @@ const useCreateProdi = () => {
 			try {
 				const jurusanResponse = await getJurusanDropdown();
 				setJurusanList(jurusanResponse.data);
-				console.log(jurusanResponse.data);
 			} catch (error) {
 				setAlert({
 					message: error.response?.data?.message || "Failed to fetch data.",
@@ -48,7 +47,6 @@ const useCreateProdi = () => {
 				message: response.data.message || "Prodi created successfully!",
 				severity: "success",
 			});
-			console.log("Prodi created successfully:", response);
 		} catch (error) {
 			setAlert({
 				message: error.response?.data?.message || "Failed to create Prodi.",

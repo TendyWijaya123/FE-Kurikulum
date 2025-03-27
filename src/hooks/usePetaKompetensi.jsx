@@ -43,20 +43,13 @@ export const usePetaKompetensi = () => {
 			const formData = new FormData();
 			formData.append("gambar", file);
 
-			// Log formData for debugging
-			console.log("Form data created, attempting upload...");
-
 			const response = await uploadPetaKompetensi(formData);
-			console.log("Upload response:", response);
 
 			if (response.success) {
 				message.success("Gambar berhasil diunggah");
 				fetchPetaData();
 			}
 		} catch (error) {
-			console.error("Upload error:", error);
-
-			// More detailed error message
 			if (
 				error.response &&
 				error.response.data &&
@@ -73,9 +66,8 @@ export const usePetaKompetensi = () => {
 		}
 	};
 
-	// Delete image
 	const handleDelete = async (id) => {
-		setDeleting(id); // Track which item is being deleted
+		setDeleting(id); 
 		try {
 			const response = await deletePetaKompetensi(id);
 			if (response.success) {

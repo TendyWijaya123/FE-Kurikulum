@@ -29,7 +29,6 @@ export const useMatriksCplIeaData = () => {
 
 				setIea(data.ieas);
 				setCpl(data.cpls);
-				console.log(data.cpls);
 				setMatrix(data.matrix);
 			} catch (error) {
 				console.error("Error fetching dataIea or dataCpl:", error);

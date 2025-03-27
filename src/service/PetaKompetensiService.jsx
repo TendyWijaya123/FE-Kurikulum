@@ -12,12 +12,6 @@ export const getPetaKompetensi = async () => {
 
 export const uploadPetaKompetensi = async (formData) => {
 	try {
-		// Tambahkan logging untuk melihat konten formData
-		console.log("FormData contents:");
-		for (let pair of formData.entries()) {
-			console.log(pair[0] + ": " + pair[1]);
-		}
-
 		const response = await api.post("/peta-kompetensi", formData, {
 			headers: {
 				"Content-Type": "multipart/form-data",

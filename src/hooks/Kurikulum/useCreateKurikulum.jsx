@@ -40,7 +40,6 @@ const useCreateKurikulum = () => {
 		try {
 			const response = await createKurikulum(formData);
 			setAlert({ message: "User created successfully!", severity: "success" });
-			console.log("User created successfully:", response);
 		} catch (error) {
 			setAlert({
 				message: error.response?.data?.message || "Failed to create Prodi.",

@@ -18,7 +18,6 @@ const useMataKuliahPengampu = () => {
 		try {
 			const data = await getMataKuliahByDosenPengampu();
 			setMataKuliahPengampuData(data);
-			console.log(data);
 		} catch (err) {
 			setError(err);
 			message.error("Gagal mengambil data");

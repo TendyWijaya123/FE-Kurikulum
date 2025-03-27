@@ -16,12 +16,8 @@ const VisiPolban = () => {
 	}, [vmtPolban, form]);
 
 	const handleSaveVisiPolban = async () => {
-		try {
-			const values = await form.validateFields();
-			await handleUpdateVmtPolban(vmtPolban.id, values);
-		} catch (error) {
-			console.log("Validasi gagal:", error);
-		}
+		const values = await form.validateFields();
+		await handleUpdateVmtPolban(vmtPolban.id, values);
 	};
 
 	return (
