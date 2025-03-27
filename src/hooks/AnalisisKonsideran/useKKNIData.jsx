@@ -175,13 +175,11 @@ export const useKKNIData = () => {
 			return;
 		}
 
-		// Jika data memiliki `_id`, hapus dari server terlebih dahulu
+		
 		if (deleteData?._id !== null) {
 			try {
-				await deleteKkni(deleteData._id); // Tunggu hingga penghapusan selesai
-				console.log(
-					`Item dengan ID ${deleteData._id} berhasil dihapus dari server.`
-				);
+				await deleteKkni(deleteData._id); 
+		
 			} catch (error) {
 				console.error(
 					`Gagal menghapus item dengan ID ${deleteData._id}:`,

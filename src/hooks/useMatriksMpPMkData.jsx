@@ -86,7 +86,6 @@ export const useMatriksMpPMkData = () => {
 		selectedValue,
 		relationId
 	) => {
-		console.log(selectedValue);
 		const updatedMatrix = [...matrix];
 		if (updatedMatrix[rowIndex][colIndex].enabled) {
 			const selectedMataKuliah = mks.filter((mk) =>

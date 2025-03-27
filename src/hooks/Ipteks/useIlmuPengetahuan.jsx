@@ -105,7 +105,6 @@ export const useIlmuPengetahuan = () => {
 				.map((index) => data[index]?.id)
 				.filter((id) => id && !id.toString().startsWith("new-"));
 
-			console.log(idsToDelete);
 			if (idsToDelete.length > 0) {
 				await Promise.all(idsToDelete.map((id) => deleteIlmuPengetahuan(id)));
 

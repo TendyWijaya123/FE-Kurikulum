@@ -157,10 +157,8 @@ export const useBCData = () => {
 
 		if (deleteData?._id !== null) {
 			try {
-				await deleteBK(deleteData._id); // Menunggu hingga penghapusan selesai
-				console.log(
-					`Item dengan ID ${deleteData._id} berhasil dihapus dari server.`
-				);
+				await deleteBK(deleteData._id); 
+	
 			} catch (error) {
 				console.error(
 					`Gagal menghapus item dengan ID ${deleteData._id}:`,

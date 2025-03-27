@@ -55,7 +55,6 @@ export const useDashboardData = () => {
         setLoading(true);
         try {
             const data = await fetchCurriculumData(value);
-            console.log('Curriculum response:', data);
             if (data) {
                 setCurriculumData(data);
             } else {

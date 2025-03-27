@@ -198,7 +198,6 @@ export const importMateriPembelajaran = async (file) => {
 	const formData = new FormData();
 	formData.append("file", file);
 
-	console.log("File yang akan diupload:", file);
 
 	try {
 		const response = await api.post("/materi-pembelajaran/import", formData, {
@@ -207,7 +206,6 @@ export const importMateriPembelajaran = async (file) => {
 			},
 		});
 
-		console.log("Response dari server:", response.data);
 
 		await new Promise((resolve) => setTimeout(resolve, 1000));
 

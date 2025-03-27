@@ -62,14 +62,12 @@ export const useSKSUData = () => {
 		}
 	}, [sksu]);
 
-	// Handle prodi change
 	const handleProdiChange = async (value) => {
 		setSelectedProdi(value);
 		setLoading(true);
 		try {
-			const data = await getSksu(value); // Ambil data berdasarkan prodiId
+			const data = await getSksu(value); 
 			setSksu(data);
-			console.log(sksu);
 		} catch (error) {
 			console.error("Error fetching SKSU for selected prodi:", error);
 		} finally {
@@ -146,7 +144,7 @@ export const useSKSUData = () => {
 			kualifikasi: "",
 			kategori: "",
 			kompetensiKerja: "",
-			prodiId: selectedProdi || user.prodiId, // Gunakan prodi terpilih
+			prodiId: selectedProdi || user.prodiId, 
 		};
 
 		setDataSource([...dataSource, newRow]);

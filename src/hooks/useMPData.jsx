@@ -28,7 +28,6 @@ export const useMPData = () => {
 	const [knowledgeDropdown, setKnowledgeDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
 
-	// Fetch data
 	const fetchMateriPembelajaran = async (prodiId = null) => {
 		setLoading(true);
 		try {
@@ -79,12 +78,10 @@ export const useMPData = () => {
 		}
 	};
 
-	// Save undo state
 	const saveToUndoStack = (data) => {
 		setUndoStack((prevStack) => [...prevStack, data]);
 	};
 
-	// Handle Undo
 	const handleUndo = () => {
 		if (undoStack.length > 0) {
 			const previousState = undoStack[undoStack.length - 1];
@@ -93,7 +90,6 @@ export const useMPData = () => {
 		}
 	};
 
-	// Handle save
 	const handleSave = (row) => {
 		saveToUndoStack([...dataSource]);
 		const newData = [...dataSource];
@@ -104,12 +100,9 @@ export const useMPData = () => {
 		}
 	};
 
-	// Add row
 	const handleAddRow = () => {
-		// Simpan kondisi sebelum perubahan untuk undo
 		saveToUndoStack([...dataSource]);
 
-		// Tambahkan baris baru
 		const newRow = {
 			key: "",
 			_id: null,
@@ -120,33 +113,25 @@ export const useMPData = () => {
 			prodiId: selectedProdi || user.prodiId,
 		};
 
-		// Gabungkan data baru ke dalam dataSource
 		const updatedDataSource = [...dataSource, newRow];
 
-		// Perbarui urutan key dan code berdasarkan posisi baru
 		updatedDataSource.forEach((item, index) => {
 			item.key = "MP-" + (index + 1); // Key baru: kkni1, kkni2, dst.
 			item.code = "MP-" + (index + 1); // Code baru: CPL1, CPL2, dst.
 		});
 
-		// Simpan kembali dataSource
 		setDataSource(updatedDataSource);
 	};
 
-	// Delete row
 	const handleDeleteRow = async (key) => {
 		saveToUndoStack([...dataSource]);
 
-		// Temukan data yang akan dihapus
 		const deleteData = dataSource.find((item) => item.key === key);
 
-		// Jika data memiliki `_id`, hapus dari server terlebih dahulu
 		if (deleteData?._id !== null) {
 			try {
 				await deleteMateriPembelajaran(deleteData._id); // Tunggu hingga penghapusan selesai
-				console.log(
-					`Item dengan ID ${deleteData._id} berhasil dihapus dari server.`
-				);
+				
 			} catch (error) {
 				console.error(
 					`Gagal menghapus item dengan ID ${deleteData._id}:`,
@@ -210,7 +195,6 @@ export const useMPData = () => {
 	const handleDeleteMateriPembelajarans = async () => {
 		setLoading(true);
 		try {
-			// Pisahkan data yang akan dihapus dan yang akan disimpan
 			const { toDelete, toKeep } = dataSource.reduce(
 				(acc, item) => {
 					if (selectedRowKeys.includes(item.key)) {

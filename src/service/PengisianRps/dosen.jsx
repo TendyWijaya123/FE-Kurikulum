@@ -12,7 +12,6 @@ export const getDosen = async () => {
 
 export const addDosen = async (data) => {
 	try {
-        console.log(data);
 		const response = await api.post("/dosen", data);
 		return response.data;
 	} catch (error) {
@@ -23,7 +22,6 @@ export const addDosen = async (data) => {
 
 export const updateDosen = async (id, data) => {
 	try {
-        console.log(data);
 		const payload = { id, ...data };
 		const response = await api.put("/dosen", payload);
 		return response.data;

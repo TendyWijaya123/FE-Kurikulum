@@ -48,7 +48,6 @@ export const createMataKuliah = async (mataKuliahData) => {
 
 export const updateMataKuliah = async (id, mataKuliahData) => {
 	try {
-		console.log("matakuliah data", mataKuliahData);
 		const response = await api.put(`/mata-kuliah/${id}`, mataKuliahData);
 		return response.data;
 	} catch (error) {

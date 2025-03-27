@@ -3,12 +3,10 @@ import api from "../../utils/axiosInstance";
 /* --------------------------------CPL API-------------------------------------------- */
 export const getDosenHasMatkul = async (prodiId) => {
 	try {
-        console.log(prodiId);
 		const response = await api.get("/dosen-has-matkul", {
             params: {id : prodiId },
         });
 
-        console.log(response.data);
         
 		return response.data;
 	} catch (error) {

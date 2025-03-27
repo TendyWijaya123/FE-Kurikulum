@@ -57,12 +57,8 @@ const MisiJurusan = () => {
 	};
 
 	const handleSave = async () => {
-		try {
-			await form.validateFields();
-			await handleUpsertMisiJurusans(misiJurusan);
-		} catch (error) {
-			console.log("Validasi gagal:", error);
-		}
+		await form.validateFields();
+		await handleUpsertMisiJurusans(misiJurusan);
 	};
 
 	return (

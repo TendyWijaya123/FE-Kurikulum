@@ -56,13 +56,11 @@ const useEditUser = (userId) => {
 		try {
 			const response = await updateUser(userId, formData);
 			setAlert({ message: "User updated successfully!", severity: "success" });
-			console.log("User updated successfully:", response);
 		} catch (error) {
-			// Handle error, checking for validation errors
 			if (error.response && error.response.data && error.response.data.errors) {
 				const errorMessage = error.response.data.errors.email
-					? error.response.data.errors.email[0] // Show email error message if it exists
-					: "Failed to update user."; // Default message for other errors
+					? error.response.data.errors.email[0] 
+					: "Failed to update user."; 
 				setAlert({ message: errorMessage, severity: "error" });
 			} else {
 				setAlert({ message: "Failed to update user.", severity: "error" });

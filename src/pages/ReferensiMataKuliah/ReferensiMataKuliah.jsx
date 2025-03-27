@@ -46,7 +46,6 @@ const ReferensiMataKuliah = () => {
 		if (!selectedMataKuliah) return;
 		const selectedValues = selectedBukuReferensi[selectedMataKuliah.id];
 
-		console.log(selectedValues);
 		try {
 			await assignReferensiKeMataKuliah(
 				selectedMataKuliah.id,

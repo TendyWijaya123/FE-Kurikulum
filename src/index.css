@@ -17,3 +17,10 @@ body {
 #root > div {
 	min-height: 100%; /* Memastikan div di dalam #root mengisi layar penuh */
 }
+
+
+@media (forced-colors: active) {
+  * {
+    forced-color-adjust: none;
+  }
+}

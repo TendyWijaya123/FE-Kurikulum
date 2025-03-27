@@ -96,7 +96,6 @@ export const  useDosenHasMatkuluData = () => {
                     dosen_id: item.dosen_id,
                 }));
     
-            console.log("Data yang dikirim:", formattedData);
     
             if (formattedData.length === 0) {
                 message.warning("Tidak ada data yang valid untuk disimpan.");
