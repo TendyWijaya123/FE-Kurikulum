@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Table, Input, Button, Spin, Modal, message, Form } from "antd";
+import {
+	Table,
+	Input,
+	Button,
+	Spin,
+	Modal,
+	message,
+	Form,
+	Popconfirm,
+} from "antd";
 import usePeranIndustri from "../../../../hooks/ModelKonstruksi/usePeranIndustri";
 import ImportModal from "../../../Modal/ImportModal";
 import {
@@ -90,20 +99,13 @@ const PeranIndustriTable = () => {
 			key: "aksi",
 			render: (_, __, index) => (
 				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-					<Button
-						type="primary"
-						danger
-						icon={<DeleteOutlined />}
-						onClick={() =>
-							Modal.confirm({
-								title: "Konfirmasi Hapus",
-								content: "Apakah Anda yakin ingin menghapus item ini?",
-								okText: "Hapus",
-								okType: "danger",
-								cancelText: "Batal",
-								onOk: () => handleDeletePeranIndustriPoint(index),
-							})
-						}></Button>
+					<Popconfirm
+						title="Yakin ingin menghapus?"
+						onConfirm={() => handleDeletePeranIndustriPoint(index)}
+						okText="Ya"
+						cancelText="Tidak">
+						<Button type="primary" danger icon={<DeleteOutlined />}></Button>
+					</Popconfirm>
 				</VisibleMenu>
 			),
 			width: 100,

@@ -1,96 +1,98 @@
 import React from "react";
-import { Alert } from "@mui/material"; 
+import { Form, Input, Select, Button, Alert, Card } from "antd";
 import useCreateUser from "../../../hooks/Users/useCreateUser";
+
+const { Option } = Select;
 
 const CreateUserForm = () => {
 	const {
 		loading,
 		prodiList,
 		alert,
+		errors,
 		formData,
+		roleList,
 		handleChangeForm,
 		handleSubmit,
 	} = useCreateUser();
 
 	return (
-		<div className="w-full ml-3 bg-white p-6 rounded-lg shadow-lg">
-			<h2 className="text-2xl font-semibold text-start mb-4">
-				Create New User
-			</h2>
-
+		<Card title="Create New User" className="w-full shadow-lg">
 			{/* Display Alert if available */}
 			{alert && (
-				<Alert severity={alert.severity} className="mb-4">
-					{alert.message}
-				</Alert>
+				<Alert
+					message={alert.message}
+					type={alert.severity}
+					showIcon
+					className="mb-4"
+				/>
 			)}
 
-			<form onSubmit={handleSubmit}>
-				<div className="mb-4">
-					<label
-						htmlFor="name"
-						className="block text-sm font-medium text-gray-700">
-						Name
-					</label>
-					<input
-						id="name"
-						type="text"
-						name="name"
-						value={formData.name}
-						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-						required
-					/>
-				</div>
+			<Form layout="vertical" onFinish={handleSubmit} initialValues={formData}>
+				<Form.Item
+					label="Name"
+					name="name"
+					rules={[{ required: true, message: "Please enter your name" }]}>
+					<Input name="name" onChange={handleChangeForm} />
+				</Form.Item>
 
-				<div className="mb-4">
-					<label
-						htmlFor="email"
-						className="block text-sm font-medium text-gray-700">
-						Email
-					</label>
-					<input
-						id="email"
-						type="email"
-						name="email"
-						value={formData.email}
-						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-						required
-					/>
-				</div>
+				<Form.Item
+					validateStatus={errors?.email ? "error" : ""}
+					help={errors?.email || ""}
+					label="Email"
+					name="email"
+					rules={[
+						{
+							required: true,
+							type: "email",
+							message: "Please enter a valid email",
+						},
+					]}>
+					<Input name="email" onChange={handleChangeForm} />
+				</Form.Item>
 
-				<div className="mb-4">
-					<label
-						htmlFor="prodi_id"
-						className="block text-sm font-medium text-gray-700">
-						Prodi
-					</label>
-					<select
-						id="prodi_id"
+				<Form.Item
+					label="Prodi"
+					name="prodi_id"
+					rules={[{ required: true, message: "Please select a Prodi" }]}>
+					<Select
 						name="prodi_id"
-						value={formData.prodi_id}
-						onChange={handleChangeForm}
-						className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-						<option value="">Select Prodi</option>
+						onChange={(value) =>
+							handleChangeForm({ target: { name: "prodi_id", value } })
+						}>
+						<Option value="">Select Prodi</Option>
 						{prodiList.map((prodi) => (
-							<option key={prodi.id} value={prodi.id}>
+							<Option key={prodi.id} value={prodi.id}>
 								{prodi.name}
-							</option>
+							</Option>
 						))}
-					</select>
-				</div>
+					</Select>
+				</Form.Item>
 
-				<div className="flex items-center justify-center mt-6">
-					<button
-						type="submit"
-						className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-						disabled={loading}>
+				<Form.Item
+					label="Role"
+					name="role"
+					rules={[{ required: true, message: "Please select a role" }]}>
+					<Select
+						name="role"
+						onChange={(value) =>
+							handleChangeForm({ target: { name: "role", value } })
+						}>
+						{roleList.map((role) => (
+							<Option key={role} value={role}>
+								{role}
+							</Option>
+						))}
+					</Select>
+				</Form.Item>
+
+				<Form.Item>
+					<Button type="primary" htmlType="submit" block loading={loading}>
 						{loading ? "Creating..." : "Create User"}
-					</button>
-				</div>
-			</form>
-		</div>
+					</Button>
+				</Form.Item>
+			</Form>
+		</Card>
 	);
 };
 

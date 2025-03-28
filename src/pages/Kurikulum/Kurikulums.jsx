@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import DefaultLayout from "../../layouts/DefaultLayout";
-import { Table, Pagination, Skeleton, Select, Alert, Button } from "antd";
+import {
+	Table,
+	Pagination,
+	Skeleton,
+	Select,
+	Alert,
+	Button,
+	Switch,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import { getKurikulums, updateKurikulum } from "../../service/api";
 
@@ -110,16 +118,19 @@ const Kurikulums = () => {
 			dataIndex: "is_active",
 			render: (text, record) =>
 				editingKurikulum?.id === record.id ? (
-					<Select
-						value={editingKurikulum.is_active}
-						onChange={(value) => handleInputChange("is_active", value)}>
-						<Option value={true}>Aktif</Option>
-						<Option value={false}>Tidak Aktif</Option>
-					</Select>
-				) : text ? (
-					"Aktif"
+					<Switch
+						checked={editingKurikulum?.is_active}
+						onChange={(checked) => handleInputChange("is_active", checked)}
+						checkedChildren="Aktif"
+						unCheckedChildren="Tidak Aktif"
+					/>
 				) : (
-					"Tidak Aktif"
+					<Switch
+						checked={record.is_active}
+						checkedChildren="Aktif"
+						unCheckedChildren="Tidak Aktif"
+						disabled
+					/>
 				),
 		},
 		{

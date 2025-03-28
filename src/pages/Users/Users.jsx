@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { deleteUser, getUsers } from "../../service/api";
-import { Table, Pagination, message, Button, Spin } from "antd";
+import { Table, Pagination, message, Button, Spin, Popconfirm } from "antd";
 import { useNavigate } from "react-router-dom";
 import DeleteButton from "../../components/Button/DeleteButton";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const Users = () => {
 	const [users, setUsers] = useState([]);
@@ -66,13 +67,16 @@ const Users = () => {
 				<div>
 					<Button
 						type="primary"
+						icon={<EditOutlined />}
 						onClick={() => handleEditClick(record.id)}
-						className="mr-2">
-						Edit
-					</Button>
-					<DeleteButton onDelete={() => handleDeleteClick(record.id)}>
-						Delete
-					</DeleteButton>
+						className="mr-2"></Button>
+					<Popconfirm
+						title="Yakin ingin menghapus?"
+						onConfirm={() => handleDeleteClick(record.id)}
+						okText="Ya"
+						cancelText="Tidak">
+						<Button type="primary" danger icon={<DeleteOutlined />}></Button>
+					</Popconfirm>
 				</div>
 			),
 		},
