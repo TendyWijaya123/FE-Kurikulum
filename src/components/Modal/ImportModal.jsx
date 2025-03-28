@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Button, Modal, Upload, message } from "antd";
 import { UpdateOutlined } from "@mui/icons-material";
-import { importCPL } from "../../service/Import/ImportService";
 
 const ImportModal = ({ isOpen, setIsOpen, handleImport, title }) => {
 	const [fileList, setFileList] = useState([]);
+	const [importing, setImporting] = useState(false);
 
 	const handleChange = ({ fileList }) => setFileList(fileList);
 
@@ -15,12 +15,16 @@ const ImportModal = ({ isOpen, setIsOpen, handleImport, title }) => {
 		}
 
 		const file = fileList[0].originFileObj;
+		setImporting(true);
+
 		try {
 			await handleImport(file);
 			setIsOpen(false);
 			setFileList([]);
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
+		} finally {
+			setImporting(false);
 		}
 	};
 
@@ -29,13 +33,16 @@ const ImportModal = ({ isOpen, setIsOpen, handleImport, title }) => {
 			open={isOpen}
 			onCancel={() => setIsOpen(false)}
 			onOk={handleSubmit}
-			title={title}>
+			title={title}
+			confirmLoading={importing}
+		>
 			<Upload
 				accept=".xlsx, .csv"
 				maxCount={1}
 				fileList={fileList}
 				beforeUpload={() => false}
-				onChange={handleChange}>
+				onChange={handleChange}
+			>
 				<Button icon={<UpdateOutlined />}>Masukkan file</Button>
 			</Upload>
 		</Modal>
