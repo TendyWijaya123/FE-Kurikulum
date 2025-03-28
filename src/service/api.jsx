@@ -13,6 +13,15 @@ export const getUsers = async (page) => {
 	}
 };
 
+export const getUserRoles = async () => {
+	try {
+		const response = await api.get(`/users/roles-dropdown`);
+		return response.data;
+	} catch (error) {
+		throw error;
+	}
+};
+
 export const getUserById = async (id) => {
 	try {
 		const response = await api.get(`/users/${id}`);

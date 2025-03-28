@@ -8,7 +8,16 @@ import {
 	fetchMetodePembelajaranDropdown,
 	updateMataKuliah,
 } from "../../service/MataKuliah/MataKuliahService";
-import { Select, Button, Input, Modal, Spin, Table, Tag } from "antd"; // Import Spin from Ant Design
+import {
+	Select,
+	Button,
+	Input,
+	Modal,
+	Spin,
+	Table,
+	Tag,
+	Popconfirm,
+} from "antd"; // Import Spin from Ant Design
 import ModalCreateMataKuliah from "../../components/Common/MataKuliah/ModalCreateMataKuliah";
 import ModalEditMataKuliah from "../../components/Common/MataKuliah/ModalEditMataKuliah";
 import useMataKuliah from "../../hooks/MataKuliah/useMataKuliah";
@@ -201,12 +210,14 @@ const MataKuliah = () => {
 							icon={<EditOutlined />}
 							onClick={() => handleOnEdit(index)}
 						/>
-						<Button
-							type="primary"
-							danger
-							icon={<DeleteOutline />}
-							onClick={() => handleDelete(record.id)}
-						/>
+
+						<Popconfirm
+							title="Yakin ingin menghapus?"
+							onConfirm={() => handleDelete(record.id)}
+							okText="Ya"
+							cancelText="Tidak">
+							<Button type="primary" danger icon={<DeleteOutline />} />
+						</Popconfirm>
 					</div>
 				</VisibleMenu>
 			),

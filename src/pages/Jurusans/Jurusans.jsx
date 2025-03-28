@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { getJurusans } from "../../service/api";
-import { Table, Pagination, message, Skeleton } from "antd";
+import { Table, Pagination, message, Skeleton, Tag } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const Jurusans = () => {
@@ -44,6 +44,9 @@ const Jurusans = () => {
 			title: "Kategori",
 			dataIndex: "kategori",
 			key: "kategori",
+			render: (kategori) => (
+				<Tag color={kategori === "Rekayasa" ? "blue" : "green"}>{kategori}</Tag>
+			),
 		},
 	];
 

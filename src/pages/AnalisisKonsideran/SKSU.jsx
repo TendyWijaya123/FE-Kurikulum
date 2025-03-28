@@ -324,7 +324,6 @@ const SKSU = () => {
 							dataSource={dataSource}
 							rowSelection={rowSelection}
 							columns={columns}
-							pagination={{ pageSize: 5 }}
 							bordered
 						/>
 					</div>

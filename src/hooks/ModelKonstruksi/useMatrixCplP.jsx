@@ -4,6 +4,7 @@ import {
 	updateMatrixCplP,
 } from "../../service/ModelKonstruksi/Matrix/MatrixCplPService";
 import { ProdiContext } from "../../context/ProdiProvider";
+import { message } from "antd";
 
 const useMatrixCplP = () => {
 	const { selectedProdiId } = useContext(ProdiContext);
@@ -53,6 +54,7 @@ const useMatrixCplP = () => {
 		try {
 			await updateMatrixCplP({ matrix: matrixData });
 			fetchMatrixData();
+			message.success("Matriks berhasil diupdate");
 		} catch (err) {
 			setError(err);
 		}

@@ -1,5 +1,14 @@
 import React, { useState } from "react";
-import { Table, Input, Button, Spin, Modal, message, Form } from "antd";
+import {
+	Table,
+	Input,
+	Button,
+	Spin,
+	Modal,
+	message,
+	Form,
+	Popconfirm,
+} from "antd";
 import useCpl from "../../../../hooks/ModelKonstruksi/useCpl";
 import ImportModal from "../../../Modal/ImportModal";
 import {
@@ -71,11 +80,13 @@ const CplTable = () => {
 			key: "aksi",
 			render: (_, __, index) => (
 				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-					<Button
-						type="primary"
-						danger
-						icon={<DeleteOutlined />}
-						onClick={() => handleDeleteCplPoint(index)}></Button>
+					<Popconfirm
+						title="Yakin ingin menghapus?"
+						onConfirm={() => handleDeleteCplPoint(index)}
+						okText="Ya"
+						cancelText="Tidak">
+						<Button type="primary" danger icon={<DeleteOutlined />}></Button>
+					</Popconfirm>
 				</VisibleMenu>
 			),
 			width: 100,

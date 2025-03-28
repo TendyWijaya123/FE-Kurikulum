@@ -1,13 +1,16 @@
-import React, { useEffect } from "react";
-import { Alert } from "@mui/material"; // Import Alert component from MUI
+import React from "react";
+import { Form, Input, Select, Button, Spin, Alert } from "antd";
 import useEditUser from "../../../hooks/Users/useEditUser";
-import { Spin } from "antd";
+
+const { Option } = Select;
 
 const EditUserForm = ({ userId }) => {
 	const {
 		loading,
+		roleList,
 		prodiList,
 		alert,
+		errors,
 		formData,
 		handleChangeForm,
 		handleSubmit,
@@ -15,101 +18,100 @@ const EditUserForm = ({ userId }) => {
 
 	return (
 		<div className="w-full ml-3 bg-white p-6 rounded-lg shadow-lg">
-			<h2 className="text-4xl font-semibold  mb-4">Edit User</h2>
+			<h2 className="text-2xl font-semibold mb-4">Edit User</h2>
 
 			{/* Display Alert if available */}
 			{alert && (
-				<Alert severity={alert.severity} className="mb-4">
-					{alert.message}
-				</Alert>
+				<Alert message={alert.message} type={alert.severity} className="mb-4" />
 			)}
 
 			{loading ? (
-				<Spin />
+				<div className="flex justify-center">
+					<Spin size="large" />
+				</div>
 			) : (
-				<form onSubmit={handleSubmit}>
-					<div className="mb-4">
-						<label
-							htmlFor="name"
-							className="block text-sm font-medium text-gray-700">
-							Name
-						</label>
-						<input
-							id="name"
-							type="text"
+				<Form
+					layout="vertical"
+					onFinish={handleSubmit}
+					initialValues={formData}>
+					<Form.Item
+						label="Name"
+						name="name"
+						rules={[{ required: true, message: "Name is required!" }]}>
+						<Input
 							name="name"
-							value={formData.name}
+							placeholder="Enter name"
 							onChange={handleChangeForm}
-							className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-							required
 						/>
-					</div>
+					</Form.Item>
 
-					<div className="mb-4">
-						<label
-							htmlFor="email"
-							className="block text-sm font-medium text-gray-700">
-							Email
-						</label>
-						<input
-							id="email"
-							type="email"
+					<Form.Item
+						validateStatus={errors?.email ? "error" : ""}
+						help={errors?.email || ""}
+						label="Email"
+						name="email"
+						rules={[
+							{ required: true, message: "Email is required!" },
+							{ type: "email", message: "Invalid email format!" },
+						]}>
+						<Input
 							name="email"
-							value={formData.email}
+							type="email"
+							placeholder="Enter email"
 							onChange={handleChangeForm}
-							className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-							required
 						/>
-					</div>
+					</Form.Item>
 
-					{/* Password input is optional for editing */}
-					<div className="mb-4">
-						<label
-							htmlFor="password"
-							className="block text-sm font-medium text-gray-700">
-							Password (Leave blank to keep current)
-						</label>
-						<input
-							id="password"
-							type="password"
-							name="password"
-							value={formData.password}
-							onChange={handleChangeForm}
-							className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+					<Form.Item
+						label="Password (Leave blank to keep current)"
+						name="password">
+						<Input.Password
+							placeholder="Enter new password"
+							onChange={(e) => handleChangeForm(e)}
 						/>
-					</div>
+					</Form.Item>
 
-					<div className="mb-4">
-						<label
-							htmlFor="prodi_id"
-							className="block text-sm font-medium text-gray-700">
-							Prodi
-						</label>
-						<select
-							id="prodi_id"
-							name="prodi_id"
-							value={formData.prodi_id}
-							onChange={handleChangeForm}
-							className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-							required>
-							<option value="">Select Prodi</option>
+					<Form.Item
+						label="Prodi"
+						name="prodi_id"
+						rules={[{ required: true, message: "Please select a Prodi!" }]}>
+						<Select
+							placeholder="Select Prodi"
+							onChange={(value) =>
+								handleChangeForm({ target: { name: "prodi_id", value } })
+							}>
 							{prodiList.map((prodi) => (
-								<option key={prodi.id} value={prodi.id}>
+								<Option key={prodi.id} value={prodi.id}>
 									{prodi.name}
-								</option>
+								</Option>
 							))}
-						</select>
-					</div>
+						</Select>
+					</Form.Item>
 
-					<div className="flex items-center justify-center mt-6">
-						<button
-							type="submit"
-							className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-							disabled={loading}>
-							{loading ? "Updating..." : "Update User"}
-						</button>
-					</div>
-				</form>
+					<Form.Item
+						label="Role"
+						name="role"
+						rules={[{ required: true, message: "Please select a role" }]}>
+						<Select
+							name="role
+							"
+							onChange={(value) =>
+								handleChangeForm({ target: { name: "role", value } })
+							}>
+							{roleList.map((role) => (
+								<Option key={role} value={role}>
+									{role}
+								</Option>
+							))}
+						</Select>
+					</Form.Item>
+
+					<Form.Item>
+						<Button type="primary" htmlType="submit" block loading={loading}>
+							Update User
+						</Button>
+					</Form.Item>
+				</Form>
 			)}
 		</div>
 	);

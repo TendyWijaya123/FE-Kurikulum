@@ -66,7 +66,7 @@ export const useSKSUData = () => {
 		setSelectedProdi(value);
 		setLoading(true);
 		try {
-			const data = await getSksu(value); 
+			const data = await getSksu(value);
 			setSksu(data);
 		} catch (error) {
 			console.error("Error fetching SKSU for selected prodi:", error);
@@ -144,7 +144,7 @@ export const useSKSUData = () => {
 			kualifikasi: "",
 			kategori: "",
 			kompetensiKerja: "",
-			prodiId: selectedProdi || user.prodiId, 
+			prodiId: selectedProdi || user.prodiId,
 		};
 
 		setDataSource([...dataSource, newRow]);
@@ -159,6 +159,7 @@ export const useSKSUData = () => {
 		if (deleteData?._id !== null) {
 			try {
 				await deleteSksu(deleteData._id);
+				await fetchSKSU();
 			} catch (error) {
 				console.error("Error deleting SKSU:", error);
 				return;
@@ -167,7 +168,7 @@ export const useSKSUData = () => {
 
 		const newData = dataSource.filter((item) => item.key !== key);
 		setDataSource(newData);
-		await fetchSKSU();
+		return;
 	};
 
 	// Save data to server
