@@ -26,6 +26,7 @@ export const useSKSUData = () => {
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
+	const [errors, setErrors] = useState(null);
 
 	const fetchSKSU = async (prodiId = null) => {
 		setLoading(true);
@@ -61,14 +62,12 @@ export const useSKSUData = () => {
 		}
 	}, [sksu]);
 
-	// Handle prodi change
 	const handleProdiChange = async (value) => {
 		setSelectedProdi(value);
 		setLoading(true);
 		try {
-			const data = await getSksu(value); // Ambil data berdasarkan prodiId
+			const data = await getSksu(value); 
 			setSksu(data);
-			console.log(sksu);
 		} catch (error) {
 			console.error("Error fetching SKSU for selected prodi:", error);
 		} finally {
@@ -145,7 +144,7 @@ export const useSKSUData = () => {
 			kualifikasi: "",
 			kategori: "",
 			kompetensiKerja: "",
-			prodiId: selectedProdi || user.prodiId, // Gunakan prodi terpilih
+			prodiId: selectedProdi || user.prodiId, 
 		};
 
 		setDataSource([...dataSource, newRow]);
@@ -174,13 +173,19 @@ export const useSKSUData = () => {
 	// Save data to server
 	const handleSaveData = async () => {
 		setSaving(true);
+		setErrors(null);
 		try {
 			await postSksu(dataSource);
-			message.success("Data berhasil disimpan!");
+			message.success("Berhasil Menyimpan SKSU");
 			await fetchSKSU();
 		} catch (error) {
-			message.error("Gagal menyimpan data!");
-			console.error("Error saving SKSU:", error);
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan SKSU.",
+					}
+			);
+			message.error("Gagal menyimpan SKSU");
 		} finally {
 			setSaving(false);
 		}
@@ -230,6 +235,7 @@ export const useSKSUData = () => {
 		undoStack,
 		rowSelection,
 		selectedRowKeys,
+		errors,
 		handleUndo,
 		handleSave,
 		handleAddRow,

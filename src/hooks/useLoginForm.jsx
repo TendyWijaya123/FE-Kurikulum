@@ -20,7 +20,6 @@ export const useLoginForm = () => {
 		setLoading(true);
 
 		try {
-			console.log({ email, password });
 			await login(email, password);
 			setIsLoggedIn(true);
 		} catch (error) {
@@ -42,11 +41,9 @@ export const useLoginForm = () => {
 	};
 
 	const handleSubmitRps = async (e) => {
-		console.log(e)
 		setLoading(true);
 
 		try {
-			console.log({ email, password });
 			await loginRps(email, password);
 			navigate("/dashboard");
 		} catch (error) {
@@ -72,6 +69,6 @@ export const useLoginForm = () => {
 		loading,
 		handleChangePassword,
 		handleChangeEmail,
-		handleSubmitRps
+		handleSubmitRps,
 	};
 };

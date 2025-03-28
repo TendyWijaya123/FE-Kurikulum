@@ -8,7 +8,7 @@ import Rps from "../pages/DosenPages/RPS/Rps";
 
 export default function PengisianRpsRoutes() {
 	return (
-		<Routes>
+		<>
 			<Route
 				path="/buku-referensi"
 				element={
@@ -44,6 +44,6 @@ export default function PengisianRpsRoutes() {
 					</ProtectedRoute>
 				}
 			/>
-		</Routes>
+		</>
 	);
 }

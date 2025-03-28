@@ -12,8 +12,6 @@ export const fetchMataKuliah = async (prodiId = null) => {
 	}
 };
 
-
-
 export const getMataKuliahDropdown = async () => {
 	try {
 		const response = await api.get("/mata-kuliah/dropdown-by-kurikulum");
@@ -44,18 +42,15 @@ export const createMataKuliah = async (mataKuliahData) => {
 		const response = await api.post("/mata-kuliah", mataKuliahData);
 		return response.data;
 	} catch (error) {
-		console.error("Error creating Mata Kuliah:", error);
 		throw error;
 	}
 };
 
 export const updateMataKuliah = async (id, mataKuliahData) => {
 	try {
-		console.log("matakuliah data", mataKuliahData);
 		const response = await api.put(`/mata-kuliah/${id}`, mataKuliahData);
 		return response.data;
 	} catch (error) {
-		console.error("Error updating Mata Kuliah:", error);
 		throw error;
 	}
 };

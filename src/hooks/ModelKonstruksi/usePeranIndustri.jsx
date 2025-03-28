@@ -10,12 +10,13 @@ import {
 	importPeranIndustri,
 } from "../../service/Import/ImportService";
 import { ProdiContext } from "../../context/ProdiProvider";
+import { message } from "antd";
 
 const usePeranIndustri = () => {
 	const { selectedProdiId } = useContext(ProdiContext);
 	const [peranIndustriData, setPeranIndustriData] = useState([]);
 	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
+	const [errors, setErrors] = useState(null);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const [alert, setAlert] = useState(null);
 
@@ -25,7 +26,7 @@ const usePeranIndustri = () => {
 			setSelectedRowKeys(selectedKeys);
 		},
 		getCheckboxProps: (record) => ({
-			disabled: !record.id,
+			disabled: record.index,
 		}),
 	};
 
@@ -34,8 +35,7 @@ const usePeranIndustri = () => {
 		try {
 			const response = await fetchPeranIndustri(prodiId);
 			setPeranIndustriData(response.data);
-		} catch (err) {
-			setError(err);
+		} catch (error) {
 		} finally {
 			setLoading(false);
 		}
@@ -46,13 +46,20 @@ const usePeranIndustri = () => {
 	}, [selectedProdiId]);
 
 	const handleSavePeranIndustri = async () => {
+		setErrors(null);
 		setLoading(true);
 		try {
-			console.log(peranIndustriData);
 			await upsertPeranIndustri({ peran_industri: peranIndustriData });
 			fetchData();
+			message.success("Berhasil Menyimpan Peran Industri");
 		} catch (error) {
-			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan CPL.",
+					}
+			);
+			message.error("Gagal menyimpan Peran Industri");
 		} finally {
 			setLoading(false);
 		}
@@ -91,23 +98,35 @@ const usePeranIndustri = () => {
 	};
 
 	const handleDestroyPeranIndustris = async () => {
-		console.log(selectedRowKeys);
-		if (!Array.isArray(selectedRowKeys) || selectedRowKeys.length === 0) {
-			console.error(
-				"Error: peran Industri  harus berupa array dengan setidaknya satu elemen."
-			);
+		if (!selectedRowKeys.length) {
+			setAlert("Pilih minimal satu peran industri untuk dihapus.");
 			return;
 		}
 
+		// Ambil ID dari selectedRowKeys (yang merupakan index dalam peranIndustriData)
+		const idsToDelete = selectedRowKeys
+			.map((index) => peranIndustriData[index]?.id)
+			.filter((id) => id); // Hanya ambil ID yang valid (bukan undefined/null)
+
+		if (!idsToDelete.length) {
+			setAlert("Tidak ada ID valid untuk dihapus.");
+			return;
+		}
+
+		setLoading(true);
 		try {
-			await deletePeranIndustris({ peran_industris_id: selectedRowKeys });
-			await fetchData();
-			setSelectedRowKeys([]);
-		} catch (error) {
-			console.error(
-				"Error deleting PPM:",
-				error.response?.data || error.message
+			await deletePeranIndustris({ peran_industris_id: idsToDelete });
+
+			// Hapus dari state setelah berhasil
+			setPeranIndustriData((prevData) =>
+				prevData.filter((_, index) => !selectedRowKeys.includes(index))
 			);
+
+			setSelectedRowKeys([]); // Reset pilihan
+		} catch (error) {
+			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -149,7 +168,7 @@ const usePeranIndustri = () => {
 	return {
 		peranIndustriData,
 		loading,
-		error,
+		errors,
 		handleSavePeranIndustri,
 		handleExportTemplatePeranIndustri,
 		handleImportPeranIndustri,

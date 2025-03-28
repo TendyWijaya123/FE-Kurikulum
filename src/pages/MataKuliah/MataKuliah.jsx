@@ -8,7 +8,7 @@ import {
 	fetchMetodePembelajaranDropdown,
 	updateMataKuliah,
 } from "../../service/MataKuliah/MataKuliahService";
-import { Select, Button, Input, Modal, Spin, Table } from "antd"; // Import Spin from Ant Design
+import { Select, Button, Input, Modal, Spin, Table, Tag } from "antd"; // Import Spin from Ant Design
 import ModalCreateMataKuliah from "../../components/Common/MataKuliah/ModalCreateMataKuliah";
 import ModalEditMataKuliah from "../../components/Common/MataKuliah/ModalEditMataKuliah";
 import useMataKuliah from "../../hooks/MataKuliah/useMataKuliah";
@@ -32,6 +32,7 @@ const MataKuliah = () => {
 		metodePembelajaranDropdown,
 		bentukPembelajaranDropdown,
 		loading,
+		errors,
 		editedData,
 		isModalCreateVisible,
 		isModalUpdateVisible,
@@ -53,53 +54,82 @@ const MataKuliah = () => {
 			title: "Kode",
 			dataIndex: "kode",
 			key: "kode",
+			width: 80,
 		},
 		{
 			title: "Nama Mata Kuliah",
 			dataIndex: "nama",
 			key: "nama",
+			width: 200,
 		},
 		{
 			title: "Kategori",
 			dataIndex: "kategori",
 			key: "kategori",
+			width: 120,
+			render: (text) => {
+				const categoryColors = {
+					Institusi: "blue",
+					Prodi: "green",
+					Nasional: "gold",
+				};
+
+				return text ? (
+					<Tag
+						color={categoryColors[text] || "default"}
+						className="px-2 py-1 rounded-md">
+						{text}
+					</Tag>
+				) : (
+					<Tag color="red" className="px-2 py-1 rounded-md">
+						Belum Diisi
+					</Tag>
+				);
+			},
 		},
+
 		{
 			title: "Tujuan Belajar",
 			dataIndex: "tujuan",
 			key: "tujuan",
+			width: 400, // Lebar lebih besar
+			render: (text) =>
+				text ? (
+					text
+				) : (
+					<Tag color="red" className="px-2 py-1 rounded-md">
+						Belum Diisi
+					</Tag>
+				),
 		},
 		{
 			title: "Semester",
 			dataIndex: "semester",
 			key: "semester",
+			width: 100,
+			render: (text) =>
+				text ? (
+					text
+				) : (
+					<Tag color="red" className="px-2 py-1 rounded-md">
+						Belum Diisi
+					</Tag>
+				),
 		},
 		{
-			title: "Beban Belajar(Menit/Minggu)",
+			title: "Beban Belajar (Menit/Minggu)",
 			children: [
 				{
 					title: "Teori",
 					children: [
-						{
-							title: "BT",
-							dataIndex: "teori_bt",
-							key: "teori_bt",
-						},
-						{
-							title: "PT",
-							dataIndex: "teori_pt",
-							key: "teori_pt",
-						},
-						{
-							title: "M",
-							dataIndex: "teori_m",
-							key: "teori_m",
-						},
+						{ title: "BT", dataIndex: "teori_bt", key: "teori_bt", width: 60 },
+						{ title: "PT", dataIndex: "teori_pt", key: "teori_pt", width: 60 },
+						{ title: "M", dataIndex: "teori_m", key: "teori_m", width: 60 },
 						{
 							title: "Total",
-							render: (_, record, index) => {
-								return record.teori_pt + record.teori_bt + record.teori_m;
-							},
+							width: 80,
+							render: (_, record) =>
+								record.teori_pt + record.teori_bt + record.teori_m,
 						},
 					],
 				},
@@ -110,22 +140,20 @@ const MataKuliah = () => {
 							title: "BT",
 							dataIndex: "praktek_bt",
 							key: "praktek_bt",
+							width: 60,
 						},
 						{
 							title: "PT",
 							dataIndex: "praktek_pt",
 							key: "praktek_pt",
+							width: 60,
 						},
-						{
-							title: "M",
-							dataIndex: "praktek_m",
-							key: "praktek_m",
-						},
+						{ title: "M", dataIndex: "praktek_m", key: "praktek_m", width: 60 },
 						{
 							title: "Total",
-							render: (_, record, index) => {
-								return record.praktek_pt + record.praktek_bt + record.praktek_m;
-							},
+							width: 80,
+							render: (_, record) =>
+								record.praktek_pt + record.praktek_bt + record.praktek_m,
 						},
 					],
 				},
@@ -134,7 +162,8 @@ const MataKuliah = () => {
 		{
 			title: "Formulasi C, P, A",
 			key: "formulasi cpa",
-			render: (_, record, index) => (
+			width: 200,
+			render: (_, record) => (
 				<div className="flex gap-2">
 					<Select
 						mode="multiple"
@@ -153,16 +182,17 @@ const MataKuliah = () => {
 			title: "SKS",
 			dataIndex: "sks",
 			key: "sks",
+			width: 60,
 		},
 		{
 			title: "Total Beban Belajar",
-			render: (_, record, index) => {
-				return record.sks * 45;
-			},
+			width: 150,
+			render: (_, record) => record.sks * 45,
 		},
 		{
 			title: "Aksi",
 			key: "aksi",
+			width: 100,
 			render: (_, record, index) => (
 				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 					<div className="flex gap-2">
@@ -180,7 +210,6 @@ const MataKuliah = () => {
 					</div>
 				</VisibleMenu>
 			),
-			width: 100,
 		},
 	];
 
@@ -265,11 +294,12 @@ const MataKuliah = () => {
 					</div>
 				) : (
 					<>
-						<div className="mb-4 flex flex-wrap gap-2">
+						<div className="mb-4 grid grid-cols-2 gap-2 md:flex md:flex-wrap">
 							<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 								<Button
 									type="primary"
 									icon={<DownloadOutlined />}
+									className="text-sm p-2 w-full md:w-auto"
 									onClick={handleExportTemplateMataKuliah}>
 									Download Template
 								</Button>
@@ -277,6 +307,7 @@ const MataKuliah = () => {
 								<Button
 									type="default"
 									icon={<UploadOutlined />}
+									className="text-sm p-2 w-full md:w-auto"
 									onClick={() => setIsModalImportVisible(true)}>
 									Import Mata Kuliah
 								</Button>
@@ -284,6 +315,7 @@ const MataKuliah = () => {
 								<Button
 									type="primary"
 									icon={<PlusOutlined />}
+									className="text-sm p-2 w-full md:w-auto"
 									onClick={() => {
 										setIsModalCreateVisible(true);
 									}}>
@@ -295,6 +327,7 @@ const MataKuliah = () => {
 						<div className="overflow-x-auto">
 							<Table
 								columns={columns}
+								scroll={{ y: 500 }}
 								dataSource={mataKuliahData}
 								rowKey="id"
 								pagination={false}
@@ -338,6 +371,7 @@ const MataKuliah = () => {
 				metodePembelajaranDropdown={metodePembelajaranDropdown}
 				bentukPembelajaranDropdown={bentukPembelajaranDropdown}
 				handleUpdate={handleUpdate}
+				errors={errors}
 			/>
 			<ModalCreateMataKuliah
 				isOpen={isModalCreateVisible}
@@ -346,6 +380,7 @@ const MataKuliah = () => {
 				metodePembelajaranDropdown={metodePembelajaranDropdown}
 				bentukPembelajaranDropdown={bentukPembelajaranDropdown}
 				onSave={handleCreateSave}
+				errors={errors}
 			/>
 
 			<ImportModal

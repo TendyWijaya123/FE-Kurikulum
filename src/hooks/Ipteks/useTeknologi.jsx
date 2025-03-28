@@ -17,6 +17,7 @@ export const useTeknologi = () => {
 	const [saving, setSaving] = useState(false);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const { user } = useContext(AuthContext);
+	const [errors, setErrors] = useState(null);
 
 	const rowSelection = {
 		selectedRowKeys,
@@ -40,67 +41,83 @@ export const useTeknologi = () => {
 		}
 	};
 
-	const handleSave = (updatedRecord) => {
-		const newData = data.map((item) =>
-			item.id === updatedRecord.id ? updatedRecord : item
-		);
-		setData(newData);
+	const handleSave = (index, field, value) => {
+		setData((prevData) => {
+			const updatedData = [...prevData];
+			updatedData[index] = {
+				...updatedData[index],
+				[field]: value,
+			};
+			return updatedData;
+		});
 	};
 
 	const handleSaveData = async () => {
 		setSaving(true);
+		setErrors(null);
+
 		try {
 			await createTeknologi(data);
-			message.success("Data berhasil disimpan");
+			message.success("Ilmu  pengetahuan berhasi disimpan");
 			await fetchData();
 		} catch (error) {
-			message.error(
-				"Gagal menyimpan data: " +
-					(error.response?.data?.message || error.message)
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan teknologi.",
+					}
 			);
+			message.error("Gagal menyimpan teknologi");
 		} finally {
 			setSaving(false);
 		}
 	};
 
 	const handleCreate = () => {
-		const newId = `new-${Date.now()}`;
 		const newData = {
-			id: newId,
+			id: null,
 			deskripsi: "",
 			link_sumber: "",
-			key: newId,
 		};
 		setData([...data, newData]);
-		return newId;
 	};
 
-	const handleDelete = async (record) => {
+	const handleDelete = async (index) => {
 		try {
-			if (record.id.toString().startsWith("new-")) {
-				setData(data.filter((item) => item.id !== record.id));
-			} else {
-				await deleteTeknologi(record.id);
-				await fetchData();
+			const updatedData = [...data];
+			const itemToDelete = updatedData[index];
+
+			if (itemToDelete?.id) {
+				await deleteTeknologi(itemToDelete.id);
+				message.success("Data berhasil dihapus");
 			}
-			message.success("Data berhasil dihapus");
+
+			updatedData.splice(index, 1);
+			setData(updatedData);
 		} catch (error) {
 			message.error("Gagal menghapus data");
 		}
 	};
 
-	const handleMultiDelete = async (ids) => {
+	const handleMultiDelete = async () => {
 		try {
-			for (const id of ids) {
-				if (!id.toString().startsWith("new-")) {
-					await deleteTeknologi(id);
-				}
+			const idsToDelete = selectedRowKeys
+				.map((index) => data[index]?.id) // Ambil ID berdasarkan index
+				.filter((id) => id && !id.toString().startsWith("new-")); // Pastikan ID valid
+
+			if (idsToDelete.length > 0) {
+				await Promise.all(idsToDelete.map((id) => deleteTeknologi(id)));
+
+				// Ambil data terbaru
+				await fetchData();
 			}
-			await fetchData();
-			setSelectedRowKeys([]);
-			message.success(`${ids.length} data berhasil dihapus`);
+
+			message.success(`${selectedRowKeys.length} data berhasil dihapus`);
 		} catch (error) {
 			message.error("Gagal menghapus data");
+		} finally {
+			// Reset selectedRowKeys setelah selesai
+			setSelectedRowKeys([]);
 		}
 	};
 
@@ -157,6 +174,7 @@ export const useTeknologi = () => {
 		saving,
 		selectedRowKeys,
 		rowSelection,
+		errors,
 		handleSave,
 		handleDelete,
 		handleCreate,

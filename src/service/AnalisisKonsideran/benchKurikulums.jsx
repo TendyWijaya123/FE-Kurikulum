@@ -23,12 +23,6 @@ export const getBenchKurikulums = async (prodiId = null) => {
 		});
 		return response.data;
 	} catch (error) {
-		if (error.response) {
-			console.error("Error Get bench kurikulum:", error.response.data);
-		} else {
-			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
-			console.error("Error Get bench kurikulum:", error.message);
-		}
 		throw error;
 	}
 };
@@ -42,12 +36,6 @@ export const postBenchKurikulms = async (data) => {
 
 		return response.data;
 	} catch (error) {
-		if (error.response) {
-			console.error("Error creating bench kurikulums:", error.response.data);
-		} else {
-			// Jika error tidak berasal dari server (misalnya, masalah jaringan)
-			console.error("Error creating bench kurikulums:", error.message);
-		}
 		throw error;
 	}
 };

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Input, Button, Spin, Modal, message } from "antd";
+import { Table, Input, Button, Spin, Modal, message, Form } from "antd";
 import usePeranIndustri from "../../../../hooks/ModelKonstruksi/usePeranIndustri";
 import ImportModal from "../../../Modal/ImportModal";
 import {
@@ -25,6 +25,7 @@ const PeranIndustriTable = () => {
 		handleDestroyPeranIndustris,
 		selectedRowKeys,
 		rowSelection,
+		errors,
 	} = usePeranIndustri();
 
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
@@ -41,13 +42,22 @@ const PeranIndustriTable = () => {
 			title: "Jabatan",
 			dataIndex: "jabatan",
 			key: "jabatan",
-			render: (_, record, index) => (
-				<Input
-					name="jabatan"
-					value={record.jabatan || ""}
-					onChange={(e) => handlePeranIndustriChange(index, e)}
-				/>
-			),
+			render: (_, record, index) => {
+				const errorMsg = errors?.[`peran_industri.${index}.jabatan`]?.[0];
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input
+							name="jabatan"
+							value={record.jabatan || ""}
+							onChange={(e) => handlePeranIndustriChange(index, e)}
+						/>
+					</Form.Item>
+				);
+			},
 			filterDropdown: true,
 			filterSearch: true,
 			width: "20%",
@@ -56,14 +66,23 @@ const PeranIndustriTable = () => {
 			title: "Deskripsi",
 			dataIndex: "deskripsi",
 			key: "deskripsi",
-			render: (_, record, index) => (
-				<Input.TextArea
-					name="deskripsi"
-					value={record.deskripsi || ""}
-					onChange={(e) => handlePeranIndustriChange(index, e)}
-					autoSize={{ minRows: 1, maxRows: 5 }}
-				/>
-			),
+			render: (_, record, index) => {
+				const errorMsg = errors?.[`peran_industri.${index}.deskripsi`]?.[0];
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input.TextArea
+							name="deskripsi"
+							value={record.deskripsi || ""}
+							onChange={(e) => handlePeranIndustriChange(index, e)}
+							autoSize={{ minRows: 1, maxRows: 5 }}
+						/>
+					</Form.Item>
+				);
+			},
 			width: "75%",
 		},
 		{
@@ -138,7 +157,7 @@ const PeranIndustriTable = () => {
 						columns={columns}
 						dataSource={peranIndustriData.map((item, index) => ({
 							...item,
-							key: item.id,
+							key: index,
 						}))}
 						rowSelection={rowSelection}
 						pagination={false}

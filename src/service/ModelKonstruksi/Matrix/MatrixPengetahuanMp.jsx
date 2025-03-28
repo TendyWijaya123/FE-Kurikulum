@@ -2,7 +2,6 @@ import api from "../../../utils/axiosInstance";
 
 export const updateMatrixPengetahuanMp = async (data) => {
 	try {
-		console.log(data);
 		const response = await api.put("/matrix-p-mp", data);
 		return response.data;
 	} catch (error) {

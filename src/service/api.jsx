@@ -121,7 +121,6 @@ export const deleteProdi = async (id) => {
 export const getProdiDropdown = async () => {
 	try {
 		const response = await api.get("/prodi/dropdown");
-		console.log(response.data);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching Prodi dropdown:", error);
@@ -132,7 +131,6 @@ export const getProdiDropdown = async () => {
 export const getProdiKurikulumDropdown = async () => {
 	try {
 		const response = await api.get("/prodi/dropdown-prodi-kurikulum");
-		console.log(response.data);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching Prodi dropdown:", error);
@@ -244,7 +242,6 @@ export const upsertMisiJurusan = async (misiJurusanData) => {
 		const response = await api.post("/misi-jurusan/upsert", misiJurusanData);
 		return response.data;
 	} catch (error) {
-		console.error("Error upserting Misi Jurusan:", error);
 		throw error;
 	}
 };
@@ -255,7 +252,6 @@ export const deleteMisiJurusan = async (id) => {
 		const response = await api.delete(`/misi-jurusan/delete/${id}`);
 		return response.data;
 	} catch (error) {
-		console.error("Error deleting Misi Jurusan:", error);
 		throw error;
 	}
 };
@@ -267,10 +263,6 @@ export const firstOrCreateVmtJurusan = async (prodiId = null) => {
 		const response = await api.post("/vmt-jurusans", { prodiId });
 		return response.data;
 	} catch (error) {
-		console.error(
-			"Error creating Vmt Jurusan:",
-			error.response?.data || error.message
-		);
 		throw error;
 	}
 };
@@ -280,7 +272,6 @@ export const updateVmtJurusan = async (id, vmtJurusanData) => {
 		const response = await api.put(`/vmt-jurusan/${id}`, vmtJurusanData);
 		return response.data;
 	} catch (error) {
-		console.error("Error updating Vmt Jurusan:", error);
 		throw error;
 	}
 };
@@ -298,7 +289,6 @@ export const getIpteks = async (prodiId = null) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching IPTEKS data:", error);
 		throw error;
 	}
 };
@@ -314,7 +304,6 @@ export const createIpteks = async (data) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error creating/updating IPTEKS:", error);
 		throw error;
 	}
 };
@@ -330,9 +319,6 @@ export const updateIpteks = async (id, data) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error updating IPTEKS:", error);
-		throw error;
-		console.error("Error creating/updating IPTEKS:", error);
 		throw error;
 	}
 };
@@ -419,31 +405,26 @@ export const updateVmtPolban = async (id, vmtPolbanData) => {
 		const response = await api.put(`/vmt-polban/${id}`, vmtPolbanData);
 		return response.data;
 	} catch (error) {
-		console.error("Error updating Vmt Polban:", error);
 		throw error;
 	}
 };
 
 /* -----------------------------Tujuan Polban API----------------------------- */
 
-// Upsert Tujuan Polban
 export const upsertTujuanPolban = async (tujuanPolbanData) => {
 	try {
 		const response = await api.post("/tujuan-polban/upsert", tujuanPolbanData);
 		return response.data;
 	} catch (error) {
-		console.error("Error upserting Tujuan Polban:", error);
 		throw error;
 	}
 };
 
-// Delete Tujuan Polban
 export const deleteTujuanPolban = async (id) => {
 	try {
 		const response = await api.delete(`/tujuan-polban/delete/${id}`);
 		return response.data;
 	} catch (error) {
-		console.error("Error deleting Tujuan Polban:", error);
 		throw error;
 	}
 };
@@ -456,7 +437,6 @@ export const upsertMisiPolban = async (misiPolbanData) => {
 		const response = await api.post("/misi-polban/upsert", misiPolbanData);
 		return response.data;
 	} catch (error) {
-		console.error("Error upserting Misi Polban:", error);
 		throw error;
 	}
 };
@@ -466,7 +446,6 @@ export const deleteMisiPolban = async (id) => {
 		const response = await api.delete(`/misi-polban/delete/${id}`);
 		return response.data;
 	} catch (error) {
-		console.error("Error deleting Misi Polban:", error);
 		throw error;
 	}
 };
@@ -478,7 +457,6 @@ export const getPengetahuan = async (prodiId = null) => {
 		const response = await api.get("/pengetahuan", { params });
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching Pengetahuan data:", error);
 		throw error;
 	}
 };
@@ -488,7 +466,6 @@ export const upsertPengetahuan = async (data) => {
 		const response = await api.post("/pengetahuan/upsert", data);
 		return response.data;
 	} catch (error) {
-		console.error("Error upserting Pengetahuan:", error);
 		throw error.response?.data || error;
 	}
 };

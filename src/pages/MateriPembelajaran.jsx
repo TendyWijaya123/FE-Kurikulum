@@ -1,5 +1,14 @@
 import DefaultLayout from "../layouts/DefaultLayout";
-import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin } from "antd";
+import {
+	Table,
+	Input,
+	Button,
+	Popconfirm,
+	Select,
+	Tooltip,
+	Spin,
+	Tag,
+} from "antd";
 import {
 	DeleteOutlined,
 	DownloadOutlined,
@@ -71,21 +80,53 @@ const MateriPembelajaran = () => {
 			title: "Cognitif Proses",
 			dataIndex: "cognitifProses",
 			key: "cognitifProses",
-			render: (cognitifProses, record) => (
-				<Select
-					value={cognitifProses}
-					style={{ width: "100%" }}
-					onChange={(value) => handleSave({ ...record, cognitifProses: value })}
-					options={[
-						{ value: "Remembering", label: "Remembering" },
-						{ value: "Understanding", label: "Understanding" },
-						{ value: "Applying", label: "Applying" },
-						{ value: "Analyzing", label: "Analyzing" },
-						{ value: "Evaluating", label: "Evaluating" },
-						{ value: "Creating", label: "Creating" },
-					]}
-				/>
-			),
+			render: (cognitifProses, record) => {
+				// Warna berdasarkan proses kognitif
+				const cognitiveColors = {
+					Remembering: "blue",
+					Understanding: "green",
+					Applying: "orange",
+					Analyzing: "red",
+					Evaluating: "purple",
+					Creating: "magenta",
+				};
+
+				return (
+					<Select
+						value={cognitifProses}
+						style={{ width: "100%" }}
+						onChange={(value) =>
+							handleSave({ ...record, cognitifProses: value })
+						}
+						options={[
+							{
+								value: "Remembering",
+								label: <Tag color="blue">Remembering</Tag>,
+							},
+							{
+								value: "Understanding",
+								label: <Tag color="green">Understanding</Tag>,
+							},
+							{
+								value: "Applying",
+								label: <Tag color="orange">Applying</Tag>,
+							},
+							{
+								value: "Analyzing",
+								label: <Tag color="red">Analyzing</Tag>,
+							},
+							{
+								value: "Evaluating",
+								label: <Tag color="purple">Evaluating</Tag>,
+							},
+							{
+								value: "Creating",
+								label: <Tag color="magenta">Creating</Tag>,
+							},
+						]}
+					/>
+				);
+			},
 		},
 		{
 			title: "Knowledge Dimension",

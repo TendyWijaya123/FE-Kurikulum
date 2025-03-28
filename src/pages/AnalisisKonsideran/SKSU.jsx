@@ -1,5 +1,15 @@
 import DefaultLayout from "../../layouts/DefaultLayout";
-import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin } from "antd";
+import {
+	Table,
+	Input,
+	Button,
+	Popconfirm,
+	Select,
+	Tooltip,
+	Spin,
+	Form,
+	Tag,
+} from "antd";
 import {
 	UndoOutlined,
 	DeleteOutlined,
@@ -24,6 +34,7 @@ const SKSU = () => {
 		rowSelection,
 		selectedRowKeys,
 		selectedProdi,
+		errors,
 		handleUndo,
 		handleSave,
 		handleAddRow,
@@ -43,41 +54,59 @@ const SKSU = () => {
 			key: "profilLulusan",
 			sorter: (a, b) => a.profilLulusan.localeCompare(b.profilLulusan),
 			width: 200,
-			render: (text, record) => (
-				<Input.TextArea
-					value={text}
-					autoSize={{ minRows: 1 }}
-					onChange={(e) =>
-						handleSave({ ...record, profilLulusan: e.target.value })
-					}
-					style={{
-						border: "none",
-						outline: "none",
-						boxShadow: "none",
-						padding: 0,
-					}}
-				/>
-			),
+			render: (_, record, index) => {
+				const errorMsg = errors?.[`${index}.profilLulusan`]?.[0];
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input.TextArea
+							value={record.profilLulusan}
+							autoSize={{ minRows: 1 }}
+							onChange={(e) =>
+								handleSave({ ...record, profilLulusan: e.target.value })
+							}
+							style={{
+								border: "none",
+								outline: "none",
+								boxShadow: "none",
+								padding: 0,
+							}}
+						/>
+					</Form.Item>
+				);
+			},
 		},
 		{
 			title: "Kualifikasi",
 			dataIndex: "kualifikasi",
 			key: "kualifikasi",
 			width: 150,
-			render: (text, record) => (
-				<Input
-					value={text}
-					onChange={(e) =>
-						handleSave({ ...record, kualifikasi: e.target.value })
-					}
-					style={{
-						border: "none",
-						outline: "none",
-						boxShadow: "none",
-						padding: 0,
-					}}
-				/>
-			),
+			render: (_, record, index) => {
+				const errorMsg = errors?.[`${index}.kualifikasi`]?.[0];
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input
+							value={record.kualifikasi}
+							onChange={(e) =>
+								handleSave({ ...record, kualifikasi: e.target.value })
+							}
+							style={{
+								border: "none",
+								outline: "none",
+								boxShadow: "none",
+								padding: 0,
+							}}
+						/>
+					</Form.Item>
+				);
+			},
 		},
 		{
 			title: "Kategori",
@@ -89,70 +118,95 @@ const SKSU = () => {
 			],
 			onFilter: (value, record) => record.kategori === value,
 			width: 150,
-			render: (kategori, record) => (
-				<Select
-					value={kategori}
-					style={{ width: "100%" }}
-					onChange={(value) => handleSave({ ...record, kategori: value })}
-					options={[
-						{ value: "Siap Kerja", label: "Siap Kerja" },
-						{ value: "Siap Usaha", label: "Siap Usaha" },
-					]}
-				/>
-			),
+			render: (_, record, index) => {
+				const errorMsg = errors?.[`${index}.kategori`]?.[0];
+
+				// Warna berdasarkan kategori
+				const kategoriColor = {
+					"Siap Kerja": "green",
+					"Siap Usaha": "blue",
+				};
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Select
+							value={record.kategori}
+							style={{ width: "100%" }}
+							onChange={(value) => handleSave({ ...record, kategori: value })}
+							options={[
+								{
+									value: "Siap Kerja",
+									label: <Tag color="green">Siap Kerja</Tag>,
+								},
+								{
+									value: "Siap Usaha",
+									label: <Tag color="blue">Siap Usaha</Tag>,
+								},
+							]}
+						/>
+					</Form.Item>
+				);
+			},
 		},
 		{
 			title: "Kompetensi Kerja",
 			dataIndex: "kompetensiKerja",
 			key: "kompetensiKerja",
-			render: (kompetensiKerja, record) => {
-				const kompetensiArray = kompetensiKerja
-					? kompetensiKerja.split("\n")
+			render: (_, record, index) => {
+				const kompetensiArray = record.kompetensiKerja
+					? record.kompetensiKerja.split("\n")
 					: [];
 
 				const formattedText = kompetensiArray
-					.map((text, index) => `${index + 1}. ${text}`)
+					.map((text, i) => `${i + 1}. ${text}`)
 					.join("\n");
 
 				const handleKeyDown = (e) => {
 					if (e.key === "Enter") {
 						e.preventDefault();
-
 						const newKompetensiArray = [...kompetensiArray, ""];
-
 						const newValue = newKompetensiArray.join("\n");
-
 						handleSave({ ...record, kompetensiKerja: newValue });
 					}
 				};
 
-				// Tangani perubahan teks
 				const handleChange = (e) => {
 					const newValue = e.target.value
 						.split("\n")
 						.map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus numbering sebelum menyimpan
 						.filter((line) => line !== "")
-						.join("\n"); // Gabungkan kembali menjadi teks
+						.join("\n");
 
 					handleSave({ ...record, kompetensiKerja: newValue });
 				};
 
+				const errorMsg = errors?.[`${index}.kompetensiKerja`]?.[0];
+
 				return (
-					<Input.TextArea
-						value={formattedText}
-						onChange={handleChange}
-						onKeyDown={handleKeyDown}
-						autoSize={{ minRows: 3 }}
-						style={{
-							border: "none",
-							outline: "none",
-							boxShadow: "none",
-							padding: 0,
-						}}
-					/>
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input.TextArea
+							value={formattedText}
+							onChange={handleChange}
+							onKeyDown={handleKeyDown}
+							autoSize={{ minRows: 3 }}
+							style={{
+								border: "none",
+								outline: "none",
+								boxShadow: "none",
+								padding: 0,
+							}}
+						/>
+					</Form.Item>
 				);
 			},
 		},
+
 		{
 			title: "Aksi",
 			key: "aksi",
@@ -189,60 +243,72 @@ const SKSU = () => {
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
 			</VisibleMenu>
-			<div style={{ padding: "15px", background: "#fff9", minHeight: "100%" }}>
-				<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
+			<div className="p-5 min-h-full bg-white overflow-x-auto">
+				<div className="mb-4 grid grid-cols-2 gap-2 md:flex md:flex-wrap">
 					<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
 						<Button
 							icon={<DownloadOutlined />}
 							onClick={handleExportTemplateSksu}
-							type="primary">
+							type="primary"
+							className="text-sm p-2 w-full md:w-auto">
 							Download Template SKSU
 						</Button>
+
 						<Button
 							icon={<UploadOutlined />}
 							onClick={() => setIsModalImportOpen(true)}
-							type="default">
+							type="default"
+							className="text-sm p-2 w-full md:w-auto">
 							Import SKSU
 						</Button>
+
 						<ImportModal
 							isOpen={isModalImportOpen}
 							setIsOpen={setIsModalImportOpen}
 							handleImport={handleImportSksu}
 							title="Import Materi Pembelajaran"
 						/>
+
 						<Button
 							icon={<PlusOutlined />}
 							onClick={handleAddRow}
-							type="primary">
+							type="primary"
+							className="text-sm p-2 w-full md:w-auto">
 							Tambah Baris
 						</Button>
+
 						<Button
 							icon={<SaveOutlined />}
 							style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
 							onClick={handleSaveData}
 							type="primary"
-							loading={saving}>
+							loading={saving}
+							className="text-sm p-2 w-full md:w-auto">
 							Simpan Data
 						</Button>
+
 						<Tooltip title="Undo">
 							<Button
 								onClick={handleUndo}
 								type="default"
 								icon={<UndoOutlined />}
+								className="text-sm p-2 w-full md:w-auto"
 							/>
 						</Tooltip>
 					</VisibleMenu>
+
 					{selectedRowKeys.length > 0 && (
 						<Button
 							onClick={handleDeleteSksus}
 							type="primary"
 							danger
-							style={{ marginBottom: "16px" }}
-							loading={loading}>
+							loading={loading}
+							className="text-sm p-2 w-full md:w-auto">
 							Hapus SKSU Terpilih
 						</Button>
 					)}
 				</div>
+
 				{loading ? (
 					<div
 						style={{
@@ -253,13 +319,15 @@ const SKSU = () => {
 						<Spin size="large" />
 					</div>
 				) : (
-					<Table
-						dataSource={dataSource}
-						rowSelection={rowSelection}
-						columns={columns}
-						pagination={{ pageSize: 5 }}
-						bordered
-					/>
+					<div className="w-full overflow-x-auto">
+						<Table
+							dataSource={dataSource}
+							rowSelection={rowSelection}
+							columns={columns}
+							pagination={{ pageSize: 5 }}
+							bordered
+						/>
+					</div>
 				)}
 			</div>
 		</DefaultLayout>

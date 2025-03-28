@@ -21,6 +21,7 @@ import MenuItemSidebar from "./MenuItemSidebar";
 import VisibleMenu from "./VisibleMenu";
 import React, { useState, useEffect } from "react";
 import { DotChartOutlined } from "@ant-design/icons";
+import { MenuItem } from "@mui/material";
 const MenuPenyusunanKurikulum = () => {
 	const [openMenu, setOpenMenu] = useState(null);
 
@@ -149,12 +150,12 @@ const MenuPenyusunanKurikulum = () => {
 				/>
 			</MenuItemSidebar>
 
-			{/* Model dan Konstruksi Prauji */}
+			{/* Model dan Desain */}
 			<MenuItemSidebar
-				title="Model Konstruksi"
+				title="Model dan Desain"
 				icon={<AccountTree />}
-				isOpen={openMenu === "modelKonstruksi"}
-				onToggle={() => handleMenuToggle("modelKonstruksi")}>
+				isOpen={openMenu === "modelDesain"}
+				onToggle={() => handleMenuToggle("modelDesain")}>
 				<MenuItemSidebar url="/vmt" title="VMT" icon={<AccountTree />} />
 				<MenuItemSidebar
 					url="/cpl-ppm-vm"
@@ -171,34 +172,44 @@ const MenuPenyusunanKurikulum = () => {
 					title="Matriks CPL IEA"
 					icon={<TableChart />}
 				/>
-				<MenuItemSidebar
-					url="/matrix-cpl-p"
-					title="Matriks CPL-P"
-					icon={<TableChart />}
-				/>
-
-				<MenuItemSidebar
-					url="/peta-kompetensi"
-					title="Peta Kompetensi"
-					icon={<TableChart />}
-				/>
 			</MenuItemSidebar>
 
-			{/* Pengetahuan Page */}
 			<MenuItemSidebar
-				title="Matriks P-MP-MK"
+				title="Konstruksi dan Pra Uji"
 				icon={<TableChart />}
-				isOpen={openMenu === "Matriks P-MP-MK"}
-				onToggle={() => handleMenuToggle("Matriks P-MP-MK")}>
+				isOpen={openMenu === "konstruksiPrauji"}
+				onToggle={() => handleMenuToggle("konstruksiPrauji")}>
 				<MenuItemSidebar
 					url="/pengetahuan"
 					title="Pengetahuan"
 					icon={<MenuBook />}
 				/>
 				<MenuItemSidebar
+					url="/matrix-cpl-p"
+					title="Matriks CPL-P"
+					icon={<TableChart />}
+				/>
+				<MenuItemSidebar
+					url="/peta-kompetensi"
+					title="Peta Kompetensi"
+					icon={<TableChart />}
+				/>
+				<MenuItemSidebar
 					url="/mp"
 					title="Materi Pembelajaran"
 					icon={<ImportContacts />}
+				/>
+
+				<MenuItemSidebar
+					url="/matriks-p-mp"
+					title="Matriks P-MP"
+					icon={<TableChart />}
+				/>
+
+				<MenuItemSidebar
+					url="/matriks-p-mp-mk"
+					title="Matriks P-MP-MK"
+					icon={<TableChart />}
 				/>
 
 				<MenuItemSidebar
@@ -208,28 +219,17 @@ const MenuPenyusunanKurikulum = () => {
 				/>
 
 				<MenuItemSidebar
-					url="/matriks-p-mp"
-					title="Matriks P-MP"
-					icon={<TableChart />}
-				/>
-				<MenuItemSidebar
-					url="/matriks-p-mp-mk"
-					title="Matriks P-MP-MK"
-					icon={<TableChart />}
-				/>
-
-				<MenuItemSidebar
 					url="/jejaring-matakuliah"
 					title="Jejaring Mata Kuliah"
 					icon={<DotChartOutlined />}
 				/>
-			</MenuItemSidebar>
 
-			<MenuItemSidebar
-				url="/matrix-cpl-mk"
-				title="Matriks CPL-MK"
-				icon={<TableChart />}
-			/>
+				<MenuItemSidebar
+					url="/matrix-cpl-mk"
+					title="Matriks CPL-MK"
+					icon={<TableChart />}
+				/>
+			</MenuItemSidebar>
 
 			<MenuItemSidebar
 				title="Dosen Pengampu"

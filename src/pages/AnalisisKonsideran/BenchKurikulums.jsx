@@ -8,6 +8,8 @@ import {
 	Select,
 	Tooltip,
 	Spin,
+	Form,
+	Tag,
 } from "antd";
 import {
 	UndoOutlined,
@@ -32,6 +34,7 @@ const BenchKurikulums = () => {
 		saving,
 		rowSelection,
 		selectedRowKeys,
+		errors,
 		handleUndo,
 		handleSave,
 		handleAddRow,
@@ -42,7 +45,6 @@ const BenchKurikulums = () => {
 		handleImportBenchKurikulum,
 		handleExportTemplateBenchKurikulum,
 	} = useBCData();
-
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
 	const colums = [
@@ -51,21 +53,30 @@ const BenchKurikulums = () => {
 			dataIndex: "programStudi",
 			key: "programStudi",
 			width: 200,
-			render: (text, record) => (
-				<Input.TextArea
-					value={text}
-					autoSize={{ minRows: 1 }}
-					onChange={(e) =>
-						handleSave({ ...record, programStudi: e.target.value })
-					}
-					style={{
-						border: "none",
-						outline: "none",
-						boxShadow: "none",
-						padding: 0,
-					}}
-				/>
-			),
+			render: (_, record, index) => {
+				const errorMsg = errors?.[`${index}.programStudi`]?.[0];
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input.TextArea
+							value={record.programStudi}
+							autoSize={{ minRows: 1 }}
+							onChange={(e) =>
+								handleSave({ ...record, programStudi: e.target.value })
+							}
+							style={{
+								border: "none",
+								outline: "none",
+								boxShadow: "none",
+								padding: 0,
+							}}
+						/>
+					</Form.Item>
+				);
+			},
 		},
 		{
 			title: "Kategori",
@@ -77,70 +88,89 @@ const BenchKurikulums = () => {
 			],
 			onFilter: (value, record) => record.kategori === value,
 			width: 150,
-			render: (kategori, record) => (
-				<Select
-					value={kategori}
-					style={{ width: "100%" }}
-					onChange={(value) => handleSave({ ...record, kategori: value })}
-					options={[
-						{ value: "Dalam Negeri", label: "Dalam Negeri" },
-						{ value: "Luar Negeri", label: "Luar Negeri" },
-					]}
-				/>
-			),
+			render: (_, record, index) => {
+				const errorMsg = errors?.[`${index}.kategori`]?.[0];
+
+				// Warna berdasarkan kategori
+				const kategoriColor = {
+					"Dalam Negeri": "green",
+					"Luar Negeri": "blue",
+				};
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Select
+							value={record.kategori}
+							style={{ width: "100%" }}
+							onChange={(value) => handleSave({ ...record, kategori: value })}
+							options={[
+								{
+									value: "Dalam Negeri",
+									label: <Tag color="green">Dalam Negeri</Tag>,
+								},
+								{
+									value: "Luar Negeri",
+									label: <Tag color="blue">Luar Negeri</Tag>,
+								},
+							]}
+						/>
+					</Form.Item>
+				);
+			},
 		},
 		{
 			title: "Daftar CPL",
 			dataIndex: "cpl",
 			key: "cpl",
-			render: (cpl, record) => {
-				// Pastikan kompetensiKerja adalah string, lalu pecah berdasarkan newline
-				const cplArray = cpl ? cpl.split("\n") : [];
+			render: (_, record, index) => {
+				const errorMsg = errors?.[`${index}.cpl`]?.[0];
 
-				// Tambahkan numbering hanya untuk tampilan
+				const cplArray = record.cpl ? record.cpl.split("\n") : [];
+
 				const formattedText = cplArray
-					.map((text, index) => `${index + 1}. ${text}`)
+					.map((text, i) => `${i + 1}. ${text}`)
 					.join("\n");
 
-				// Tangani Enter untuk menambahkan baris baru dengan numbering yang sesuai
 				const handleKeyDown = (e) => {
 					if (e.key === "Enter") {
-						e.preventDefault(); // Hindari behavior default dari Enter
-
-						// Tambahkan baris baru ke kompetensiArray
-						const newCplArray = [...cplArray, ""]; // Gunakan spasi sebagai placeholder
-
-						// Gabungkan kembali sebagai teks tanpa numbering
+						e.preventDefault();
+						const newCplArray = [...cplArray, ""];
 						const newValue = newCplArray.join("\n");
-
 						handleSave({ ...record, cpl: newValue });
 					}
 				};
 
-				// Tangani perubahan teks
 				const handleChange = (e) => {
 					const newValue = e.target.value
 						.split("\n")
-						.map((line) => line.replace(/^\d+\.\s*/, "")) // Hapus numbering sebelum menyimpan
+						.map((line) => line.replace(/^\d+\.\s*/, ""))
 						.filter((line) => line !== "")
-						.join("\n"); // Gabungkan kembali menjadi teks
+						.join("\n");
 
 					handleSave({ ...record, cpl: newValue });
 				};
 
 				return (
-					<Input.TextArea
-						value={formattedText}
-						onChange={handleChange}
-						onKeyDown={handleKeyDown}
-						autoSize={{ minRows: 1 }}
-						style={{
-							border: "none",
-							outline: "none",
-							boxShadow: "none",
-							padding: 0,
-						}}
-					/>
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input.TextArea
+							value={formattedText}
+							onChange={handleChange}
+							onKeyDown={handleKeyDown}
+							autoSize={{ minRows: 1 }}
+							style={{
+								border: "none",
+								outline: "none",
+								boxShadow: "none",
+								padding: 0,
+							}}
+						/>
+					</Form.Item>
 				);
 			},
 		},

@@ -41,7 +41,7 @@ import JejaringMK from "../pages/JejaringMK/JejaringMK";
 
 export default function PenyusunanKurikulumRoutes() {
 	return (
-		<Routes>
+		<>
 			<Route path="/" element={<Login />} />
 			<Route path="/login" element={<Login />} />
 			<Route path="/unauthorized" element={<Unauthorized />} />
@@ -329,6 +329,6 @@ export default function PenyusunanKurikulumRoutes() {
 					</ProtectedRoute>
 				}
 			/>
-		</Routes>
+		</>
 	);
 }

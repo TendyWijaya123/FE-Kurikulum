@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Input, Button, Spin, Modal, message } from "antd";
+import { Table, Input, Button, Spin, Modal, message, Form } from "antd";
 import usePpm from "../../../../hooks/ModelKonstruksi/usePpm";
 import ImportModal from "../../../Modal/ImportModal";
 import {
@@ -25,6 +25,7 @@ const PpmTable = () => {
 		handleExportTemplatePpm,
 		handleDestroyPpms,
 		selectedRowKeys,
+		errors,
 	} = usePpm();
 
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
@@ -49,14 +50,23 @@ const PpmTable = () => {
 			title: "Deskripsi",
 			dataIndex: "deskripsi",
 			key: "deskripsi",
-			render: (_, record, index) => (
-				<Input.TextArea
-					name="deskripsi"
-					value={record.deskripsi || ""}
-					onChange={(e) => handleChangePpmPoint(index, e)}
-					autoSize={{ minRows: 1, maxRows: 5 }}
-				/>
-			),
+			render: (_, record, index) => {
+				const errorMsg = errors?.[`ppms.${index}.deskripsi`]?.[0];
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input.TextArea
+							name="deskripsi"
+							value={record.deskripsi || ""}
+							onChange={(e) => handleChangePpmPoint(index, e)}
+							autoSize={{ minRows: 1, maxRows: 5 }}
+						/>
+					</Form.Item>
+				);
+			},
 			width: "75%",
 		},
 		{
@@ -122,7 +132,7 @@ const PpmTable = () => {
 						columns={columns}
 						dataSource={ppmData.map((item, index) => ({
 							...item,
-							key: item.id,
+							key: index,
 						}))}
 						rowSelection={rowSelection}
 						pagination={false}

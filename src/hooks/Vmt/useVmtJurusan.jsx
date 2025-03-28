@@ -6,12 +6,14 @@ import {
 	updateVmtJurusan,
 } from "../../service/api";
 import { ProdiContext } from "../../context/ProdiProvider";
+import { message } from "antd";
 
 const useVmtJurusan = () => {
 	const { selectedProdiId } = useContext(ProdiContext);
 	const [loading, setLoading] = useState(false);
 	const [alert, setAlert] = useState(null);
 	const [vmtJurusan, setVmtJurusan] = useState("");
+	const [errors, setErrors] = useState(null);
 
 	useEffect(() => {
 		fetchData(selectedProdiId);
@@ -35,11 +37,19 @@ const useVmtJurusan = () => {
 	};
 
 	const handleUpsertMisiJurusans = async (misiJurusansData) => {
+		setErrors(null);
 		try {
 			await upsertMisiJurusan({ misi_jurusans: misiJurusansData });
 			await fetchData();
+			message.success("Berhasil  menyimpan misi jurusan");
 		} catch (error) {
-			setAlert({ type: "error", message: "Gagal menyimpan Misi Jurusan" });
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan misi jurusan.",
+					}
+			);
+			message.error("Gagal menyimpan misi jurusan");
 		}
 	};
 
@@ -53,17 +63,26 @@ const useVmtJurusan = () => {
 	};
 
 	const handleUpdateVmtJurusan = async (id, data) => {
+		setErrors(null);
 		try {
 			await updateVmtJurusan(id, data);
 			await fetchData();
+			message.success("Berhasil menyimpan visi jurusan");
 		} catch (error) {
-			setAlert({ type: "error", message: "Gagal mengupdate VMT Jurusan" });
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan Visi jurusan.",
+					}
+			);
+			message.error("Gagal menyimpan visi jurusan");
 		}
 	};
 
 	return {
 		loading,
 		alert,
+		errors,
 		vmtJurusan,
 		handleUpsertMisiJurusans,
 		handleDeleteMisiJurusan,

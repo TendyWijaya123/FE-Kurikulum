@@ -7,10 +7,6 @@ export const fetchCpls = async (prodiId = null) => {
 		const response = await api.get("/cpls", { params });
 		return response.data;
 	} catch (error) {
-		console.error(
-			"Error fetching CPLs:",
-			error.response?.data || error.message
-		);
 		throw error;
 	}
 };
@@ -20,7 +16,6 @@ export const upsertCpl = async (cplData) => {
 		const response = await api.post("/cpls/upsert", cplData);
 		return response.data;
 	} catch (error) {
-		console.error("Error upserting CPL:", error);
 		throw error;
 	}
 };
@@ -55,7 +50,6 @@ export const fetchPpms = async (prodiId = null) => {
 		const response = await api.get("/ppms", { params });
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching PPMs:", error);
 		throw error;
 	}
 };
@@ -65,7 +59,6 @@ export const upsertPpm = async (ppmData) => {
 		const response = await api.post("/ppms/upsert", ppmData);
 		return response.data;
 	} catch (error) {
-		console.error("Error upserting PPM:", error);
 		throw error;
 	}
 };
@@ -78,7 +71,6 @@ export const deletePpms = async (ppmData) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error deleting PPM:", error);
 		throw error;
 	}
 };
@@ -88,7 +80,6 @@ export const deletePpm = async (id) => {
 		const response = await api.delete(`/ppms/${id}`);
 		return response.data;
 	} catch (error) {
-		console.error("Error deleting PPM:", error);
 		throw error;
 	}
 };
@@ -101,7 +92,6 @@ export const fetchPeranIndustri = async (prodiId = null) => {
 		const response = await api.get("/peran-industri", { params });
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching Peran Industri:", error);
 		throw error;
 	}
 };
@@ -114,7 +104,6 @@ export const upsertPeranIndustri = async (peranIndustriData) => {
 		);
 		return response.data;
 	} catch (error) {
-		console.error("Error upserting Peran Industri:", error);
 		throw error;
 	}
 };
@@ -124,7 +113,6 @@ export const deletePeranIndustri = async (id) => {
 		const response = await api.delete(`/peran-industri/${id}`);
 		return response.data;
 	} catch (error) {
-		console.error("Error deleting Peran Industri:", error);
 		throw error;
 	}
 };
@@ -137,7 +125,6 @@ export const deletePeranIndustris = async (peranIndustriData) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.error("Error deleting PeranIndustri:", error);
 		throw error;
 	}
 };

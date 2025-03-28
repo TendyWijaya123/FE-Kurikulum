@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Input, Button, Spin, Modal, message } from "antd";
+import { Table, Input, Button, Spin, Modal, message, Form } from "antd";
 import useCpl from "../../../../hooks/ModelKonstruksi/useCpl";
 import ImportModal from "../../../Modal/ImportModal";
 import {
@@ -25,8 +25,8 @@ const CplTable = () => {
 		handleDestroyCpls,
 		rowSelection,
 		selectedRowKeys,
+		error,
 	} = useCpl();
-
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
 	const columns = [
@@ -48,14 +48,22 @@ const CplTable = () => {
 			title: "Keterangan",
 			dataIndex: "keterangan",
 			key: "keterangan",
-			render: (_, record, index) => (
-				<Input.TextArea
-					name="keterangan"
-					value={record.keterangan || ""}
-					onChange={(e) => handleChangeCplPoint(index, e)}
-					autoSize={{ minRows: 1, maxRows: 5 }}
-				/>
-			),
+			render: (_, record, index) => {
+				const errorMsg = error?.[`cpls.${index}.keterangan`]?.[0];
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input.TextArea
+							name="keterangan"
+							value={record.keterangan || ""}
+							onChange={(e) => handleChangeCplPoint(index, e)}
+							autoSize={{ minRows: 1, maxRows: 5 }}
+						/>
+					</Form.Item>
+				);
+			},
 			width: "75%",
 		},
 		{
@@ -121,7 +129,7 @@ const CplTable = () => {
 						columns={columns}
 						dataSource={cplData.map((item, index) => ({
 							...item,
-							key: item.id,
+							key: index,
 						}))}
 						rowSelection={rowSelection}
 						pagination={false}
