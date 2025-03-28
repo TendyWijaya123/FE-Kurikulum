@@ -46,3 +46,21 @@ export const progresGetData = async () => {
         throw new Error("Error fetching curriculum data: " + error.message);
     }
 }
+
+export const fetchMatakuliahDashboard = async () => {
+    try{
+        const response = await api.get('/dashboard/get-matakuliah');
+        return response.data;
+    }catch(error){
+        throw new Error("Error fetching Matakuliah data: " + error.message);
+    }
+};
+
+export const fetchMatakuliahDetailDashboard = async (prodi_id) => {
+    try{
+        const response = await api.get(`/dashboard/get-matakuliah-detail/${prodi_id}`);
+        return response.data;
+    }catch(error){
+        throw new Error("Error fetching Matakuliah data: " + error.message);
+    }
+};

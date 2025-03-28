@@ -60,9 +60,11 @@ const EvaluasiCPL = ({data, prodiData}) => {
         ],
         options: {
           chart: {
-            type: "line",
+            type: "bar",
+            stacked: true,
             height: 100,
-            toolbar: { show: false },
+            toolbar: { show: true, tools: { pan: true, zoom: true } }, // Fitur scroll & zoom
+            zoom: { enabled: true },
           },
           plotOptions: {
             bar: {
@@ -72,13 +74,17 @@ const EvaluasiCPL = ({data, prodiData}) => {
           },
           xaxis: {
             categories: prodiList,
-            labels: { style: { fontSize: "12px" } },
+            labels: {
+              style: { fontSize: "10px" },
+              rotate: -45, // Rotasi label agar tidak bertumpuk
+              hideOverlappingLabels: true,
+          },
             tickAmount: prodiList.length > 5 ? 5 : prodiList.length,
           },
           yaxis: {
-            min : 0,
-            title: { text: "Jumlah" },
-          },
+            min: 0,
+            title: { text: "Jumlah Mata Kuliah" },
+        },
           tooltip: {
             y: {
               formatter: (val) => `${val} CPL`,
@@ -86,13 +92,14 @@ const EvaluasiCPL = ({data, prodiData}) => {
           },
           legend: {
             position: "top",
-            horizontalAlign: "right",
+            horizontalAlign: "left",
           },
+          stroke: { width: 2, curve: "smooth" },
         },
       };
     
       return (
-          <ReactApexChart options={chartData.options} series={chartData.series} type="line" height={250} />
+          <ReactApexChart options={chartData.options} series={chartData.series} type="bar" height={350} />
       );
   };
 

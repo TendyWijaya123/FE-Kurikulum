@@ -22,8 +22,8 @@ import MenuItemSidebar from "./MenuItemSidebar";
 import VisibleMenu from "./VisibleMenu";
 import React, { useState, useEffect, useContext } from "react";
 import { SelectionContext } from "../../context/SelectionContext";
-import MenuRps from "./menuRps";
-import MenuPenyusunanKurikulum from "./menuPenyusunanKurikulum";
+import MenuRps from "./MenuRps";
+import MenuPenyusunanKurikulum from "./MenuPenyusunanKurikulum";
 
 const MenuSidebar = () => {
 	const { selectedOption } = useContext(SelectionContext);

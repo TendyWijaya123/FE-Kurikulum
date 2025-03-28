@@ -3,7 +3,8 @@ import { Card, Spin, Progress, Typography, Table, Alert, Row, Col, Radio } from 
 import DefaultLayout from "../../../layouts/DefaultLayout";
 import { BookOutlined, UserOutlined, HeartOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { useDashboardData } from '../../../hooks/Dashboard/useDashboardData';
-import CplContentDashboard from '../CplContent/CplContentDashboard';
+import CplContentDashboard from './CplContent/CplContentDashboard';
+import ContentMataKuliahDashboard from './MkContent/ContentMataKuliahDashboard';
 
 const { Text, Title } = Typography;
 const { Meta } = Card;
@@ -34,9 +35,8 @@ const Dashboard = () => {
   const tabItems = useMemo(() => [
     ...(curriculumData && Object.keys(curriculumData).length > 0
       ? [
-          { key: "1", label: "CPL", content: <CplContentDashboard prodi={filteredProdi} dataChart={curriculumData} title="Progres CPL" dataKey="cpls" /> },
-          { key: "2", label: "PPM", content: <CplContentDashboard prodi={filteredProdi} dataChart={curriculumData} title="Progres PPM" dataKey="ppms" /> },
-          { key: "3", label: "Mata Kuliah", content: <CplContentDashboard prodi={filteredProdi} dataChart={curriculumData} title="Progres Mata Kuliah" dataKey="cpl" /> },
+          { key: "1", label: "CPL-PPM", content: <CplContentDashboard prodi={filteredProdi} dataChart={curriculumData} /> },
+          { key: "3", label: "Mata Kuliah", content: <ContentMataKuliahDashboard dataProdi={ prodis } dataJurusan={ jurusans } /> },
       ]
       : []),
   ], [curriculumData, filteredProdi]);

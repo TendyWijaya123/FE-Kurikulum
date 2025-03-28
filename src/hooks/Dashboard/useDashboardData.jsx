@@ -22,7 +22,7 @@ export const useDashboardData = () => {
             setJurusans(jurusanData);
             setProdis(prodiData);
         } catch (error) {
-            console.error("Error fetching jurusans & prodis:", error);
+            message.error("Error fetching jurusans & prodis:", error);
             setJurusans([]);
             setProdis([]);
         } finally {

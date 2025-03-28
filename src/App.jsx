@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import PenyusunanKurikulumRoutes from "./routes/penyusunanKurikulumRoutes";
+import PenyusunanKurikulumRoutes from "./routes/PenyusunanKurikulumRoutes";
 import PengisianRpsRoutes from "./routes/PengisianRpsRoutes";
 
 function App() {
