@@ -176,7 +176,7 @@ const LineChartMataKuliah = ({ prodiData, data}) => {
                         </Accordion>
                     </>
                 ) : (
-                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Tidak ada data mata kuliah" />
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Tidak Ada Data Mata Kuliah" />
                 )}
             </div>
         </div>

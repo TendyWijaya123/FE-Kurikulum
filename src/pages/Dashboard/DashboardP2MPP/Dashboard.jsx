@@ -1,7 +1,7 @@
 import React, { useState, useMemo  }  from 'react';
-import { Card, Spin, Progress, Typography, Table, Alert, Row, Col, Radio } from 'antd';
+import { Card, Spin, Progress, Typography, Button, Empty, Row, Col, Radio } from 'antd';
 import DefaultLayout from "../../../layouts/DefaultLayout";
-import { BookOutlined, UserOutlined, HeartOutlined, ShoppingOutlined } from "@ant-design/icons";
+import { BookOutlined, UserOutlined, ReloadOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { useDashboardData } from '../../../hooks/Dashboard/useDashboardData';
 import CplContentDashboard from './CplContent/CplContentDashboard';
 import ContentMataKuliahDashboard from './MkContent/ContentMataKuliahDashboard';
@@ -22,6 +22,7 @@ const Dashboard = () => {
     selectedProdi,
     setJurusanId,
     handleJurusanChange,
+    handleRefresh
   } = useDashboardData();
 
   const [selectedTab, setSelectedTab] = useState("1");
@@ -79,57 +80,73 @@ const Dashboard = () => {
           .ant-radio-button-wrapper:hover {
             background: rgba(0, 0, 255, 0.1);
           }
+
+          .loading-bar {
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, #1890ff, #52c41a);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite linear;
+          }
+
+          @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+          }
         `}
       </style>
       
       <DefaultLayout title="Dashboard Kurikulum">
-        {isProcessing && (
-          <div style={{ marginBottom: 20 }}>
-            <Alert message="Pemrosesan data sedang berjalan..." type="info" showIcon />
-            <Progress percent={progress} status={progress === 100 ? "success" : "active"} />
-          </div>
-        )}
-
         {loading ? (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
             <Spin size='large'  />
           </div>
         ) : (
           <>
-        <Row gutter={[16, 16]} style={{ marginBottom: 20 }}>
-          {stats.map((stat, index) => (
-            <Col xs={25} sm={12} md={12} lg={6} key={index}>
-              <Card hoverable className="stat-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                  <div>
-                    <Text type="secondary">{stat.title}</Text>
-                    <Title level={3} style={{ margin: 0 }}>
-                      {stat.value} {" "}
-                      <Text style={{ color: stat.percentColor, fontSize: 16 }}>{stat.percent}</Text>
-                    </Title>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+          <Row gutter={[16, 16]} style={{ flex: 1 }}>
+            {stats.map((stat, index) => (
+              <Col xs={24} sm={12} md={12} lg={6} key={index}>
+                <Card hoverable className="stat-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+                    <div>
+                      <Text type="secondary">{stat.title}</Text>
+                      <Title level={3} style={{ margin: 0 }}>
+                        {stat.value} {" "}
+                        <Text style={{ color: stat.percentColor, fontSize: 16 }}>{stat.percent}</Text>
+                      </Title>
+                    </div>
+                    <div
+                      style={{
+                        width: 50,
+                        height: 50,
+                        backgroundColor: stat.color,
+                        borderRadius: "50%",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "white",
+                        fontSize: 24,
+                        marginLeft: 60,
+                      }}
+                    >
+                      {stat.icon}
+                    </div>
                   </div>
-  
-                  <div
-                    style={{
-                      width: 50,
-                      height: 50,
-                      backgroundColor: stat.color,
-                      borderRadius: "50%",
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      color: "white",
-                      fontSize: 24,
-                      marginLeft: 60
-                    }}
-                  >
-                    {stat.icon}
-                  </div>
-                </div>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+          <Button 
+            type="primary" 
+            icon={<ReloadOutlined />} 
+            onClick={handleRefresh} 
+            loading={isProcessing}
+            style={{ marginRight: 30 }}
+          >
+            Refresh
+          </Button>
+        </div>
   
         <div className="dashboard-tabs">
           <div className="tab-container">
@@ -146,7 +163,21 @@ const Dashboard = () => {
           </div>
   
           <div style={{ marginTop: 20, padding: 15 }}>
-            {tabItems.find((tab) => tab.key === selectedTab)?.content}
+            {isProcessing ? (
+                <div style={{ textAlign: "center" }}>
+                  <Progress type="circle" percent={progress} />
+                  <div className="loading-bar" style={{ margin: "10px auto" }} />
+                  <p style={{ marginTop: 10 }}>Memproses data, tunggu sebentar...</p>
+                </div>
+              ) : (
+                curriculumData && Object.keys(curriculumData).length > 0 ? (
+                  tabItems.find((tab) => tab.key === selectedTab)?.content
+                ) : (
+                  <div style={{ textAlign: "center", padding: 20 }}>
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Tidak Ada Data Mata Kuliah" />
+                  </div>
+                )
+              )}
           </div>
         </div>
         </>

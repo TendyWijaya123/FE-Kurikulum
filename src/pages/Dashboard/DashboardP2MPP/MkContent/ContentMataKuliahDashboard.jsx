@@ -31,25 +31,27 @@ const ContentMataKuliahDashboard = ({ dataProdi, dataJurusan }) => {
         );
     }
 
-    // Dropdown menu untuk memilih jurusan
-    const menu = (
-        <Menu>
-            {dataJurusan.map((jurusan) => (
-                <Menu.Item key={jurusan.id} onClick={() => handleJurusanChange(jurusan.id)}>
-                    {jurusan.nama}
-                </Menu.Item>
-            ))}
-            <Menu.Item key="reset" onClick={() => setSelectedJurusan(null)} style={{ color: "red" }}>
-                Reset Filter
-            </Menu.Item>
-        </Menu>
-    );
+    const menu = {
+        items: [
+            ...dataJurusan.map((jurusan) => ({
+                key: jurusan.id,
+                label: jurusan.nama,
+                onClick: () => handleJurusanChange(jurusan.id),
+            })),
+            {
+                key: "reset",
+                label: "Reset Filter",
+                onClick: () => setSelectedJurusan(null),
+                style: { color: "red" },
+            },
+        ],
+    };
 
     return (
         <>
             <Row gutter={16} style={{ marginBottom: "20px" }} align="middle">
                 <Col span={12}>
-                    <Dropdown overlay={menu} trigger={["click"]}>
+                    <Dropdown menu={menu} trigger={["click"]}>
                         <Button icon={<FilterOutlined />}>
                             {selectedJurusan
                                 ? `Filter: ${dataJurusan.find((j) => j.id === selectedJurusan)?.nama}`

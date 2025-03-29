@@ -1,5 +1,5 @@
 import React, { useState }  from 'react';
-import { Card, Tabs, Progress, Typography, Table, Row, Col, Radio} from 'antd';
+import { Typography,Empty} from 'antd';
 import ReactApexChart from 'react-apexcharts';
 
 
@@ -33,6 +33,10 @@ const EvaluasiCPL = ({data, prodiData}) => {
     })
     .flat()
     .filter(Boolean); 
+
+    if (cplData.length === 0) {
+      return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Tidak ada data CPL" />;
+    }   
     
     const { Text, Title } = Typography;
     // Mengelompokkan data berdasarkan prodi
