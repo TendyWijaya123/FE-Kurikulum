@@ -73,7 +73,7 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
                 onCancel={onClose}
                 footer={null}
                 width={1000}
-                bodyStyle={{ maxHeight: "70vh", overflow: "hidden" }}
+                styles={{ body: { maxHeight: "70vh", overflow: "hidden" } }}
             >
                 {/* Pilihan Program Studi */}
                 <div style={{ marginBottom: 20 }}>

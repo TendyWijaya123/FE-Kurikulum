@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Typography } from "antd";
+import { Card, Typography, Empty } from "antd";
 import ReactApexChart from "react-apexcharts";
 
 const { Title } = Typography;
@@ -35,7 +35,7 @@ const ChartCard = ({ prodi, dataChart, title, dataKey }) => {
     const chartOptions = {
         chart: {
             type: "bar",
-            height: 350,
+            height: 450,
             toolbar: { show: false },
         },
         plotOptions: {
@@ -51,7 +51,7 @@ const ChartCard = ({ prodi, dataChart, title, dataKey }) => {
                 rotate: -45,
                 style: { fontSize: "10px", colors: "#ffffff" },
             },
-            tickAmount: data.length > 30 ? 30 : data.length,
+            tickAmount: data.length > 20 ? 20 : data.length,
             scrollbar: { enabled: data.length > 30 },
         },
             
@@ -76,9 +76,15 @@ const ChartCard = ({ prodi, dataChart, title, dataKey }) => {
     return (
         <Card hoverable style={{ flex: 1 }}>
             <Title level={4} style={{ color: "#000000" }}>Progres {title}</Title>
-            <Card hoverable style={{ minHeight: 300, background: "linear-gradient(to right, #0052D4, #2166fe, #9a8bff)" }}>
-                <ReactApexChart options={chartOptions} series={[{ name: title, data: data.map((item) => item.value) }]} type="bar" height={300} />
-            </Card>
+            {data.every((item) => item.value === 0) ? (
+                <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={`Tidak ada data untuk ${title}`} />
+            ) : (
+                <div style={{ maxWidth: 700, overflowX: "auto", overflowY: "hidden" }}>
+                    <Card hoverable style={{ background: "linear-gradient(to right, #0052D4, #2166fe, #9a8bff)", padding: 5 }}>
+                        <ReactApexChart options={chartOptions} series={[{ name: title, data: data.map((item) => item.value) }]} type="bar" height={300} />
+                    </Card>
+                </div>
+            )}
             <div className="bg-white p-6 rounded-lg shadow-md">
                 <h2 className="text-lg font-semibold">Progres {title}</h2>
                 <p className="text-gray-500 mt-2">

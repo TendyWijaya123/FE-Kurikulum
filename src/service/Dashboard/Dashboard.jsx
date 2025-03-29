@@ -22,6 +22,7 @@ export const fetchProdi = async () => {
 
 export const fetchCurriculumData = async () => {
     try {
+        await api.get('dashboard/refresh-curriculum-data');
         const response = await api.get(`/dashboard/proses-curriculum-data`);
         return response.data;
     } catch (error) {

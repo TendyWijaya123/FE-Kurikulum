@@ -48,7 +48,6 @@ export const useDashboardData = () => {
 
     const startCurriculumProcessing = async () => {
         try {
-            setLoading(true);
             setIsProcessing(true);
             setProgress(0);
             await fetchCurriculumData();
@@ -62,16 +61,16 @@ export const useDashboardData = () => {
     };
 
     const fetchProcessedCurriculumData = async () => {
+        if(!curriculumData){
+            setLoading(true);
+        }
         try {
-            if(!curriculumData){
-                setLoading(true);
-            }
             const data = await getDataCurriculum();
             setCurriculumData(data && Object.keys(data).length > 0 ? data : []);
         } catch (error) {
             console.error("Error fetching curriculum data:", error);
             setCurriculumData([]);
-        } finally {
+        }finally{
             setLoading(false);
         }
     };
@@ -107,21 +106,19 @@ export const useDashboardData = () => {
         const initializeData = async () => {
             await fetchDropdownJurusanProdi();
             await fetchProcessedCurriculumData();
+            // await startCurriculumProcessing();
         };
 
         initializeData();
     }, []);
 
-    useEffect(() => {
-        if (curriculumData !== null && curriculumData.length === 0) {
-            console.log("Data kurikulum kosong, memulai pemrosesan...");
-            startCurriculumProcessing();
-        }
-    }, [curriculumData]);
-
     const handleJurusanChange = (value) => {
         setJurusanId(value);
         setSelectedProdi(null);
+    };
+
+    const handleRefresh = async () => {
+        await startCurriculumProcessing();
     };
 
     return {
@@ -136,5 +133,6 @@ export const useDashboardData = () => {
         selectedProdi,
         setJurusanId,
         handleJurusanChange,
+        handleRefresh
     };
 };
