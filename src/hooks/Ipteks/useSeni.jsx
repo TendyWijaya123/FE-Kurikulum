@@ -90,7 +90,7 @@ export const useSeni = () => {
 
 			if (itemToDelete?.id) {
 				await deleteSeni(itemToDelete.id);
-				message.success("Data berhasil dihapus");
+				message.success("Seni berhasil dihapus");
 			}
 
 			updatedData.splice(index, 1);

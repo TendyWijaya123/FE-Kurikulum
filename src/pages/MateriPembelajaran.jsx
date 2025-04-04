@@ -8,6 +8,7 @@ import {
 	Tooltip,
 	Spin,
 	Tag,
+	Form,
 } from "antd";
 import {
 	DeleteOutlined,
@@ -33,6 +34,7 @@ const MateriPembelajaran = () => {
 		saving,
 		rowSelection,
 		selectedRowKeys,
+		errors,
 		handleUndo,
 		handleSave,
 		handleAddRow,
@@ -59,75 +61,83 @@ const MateriPembelajaran = () => {
 			title: "Deskripsi",
 			dataIndex: "description",
 			key: "description",
-			render: (text, record) => (
-				<Input.TextArea
-					value={text}
-					onChange={(e) =>
-						handleSave({ ...record, description: e.target.value })
-					}
-					autoSize={{ minRows: 1, maxRows: 5 }} // Menentukan jumlah baris minimal dan maksimal
-					style={{
-						border: "none",
-						outline: "none",
-						boxShadow: "none",
-						padding: 0,
-						resize: "none", // Mencegah pengguna meresize secara manual
-					}}
-				/>
-			),
+			render: (text, record, index) => {
+				const errorMsg = errors?.[`${index}.description`]?.[0];
+
+				return (
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Input.TextArea
+							value={text}
+							onChange={(e) =>
+								handleSave({ ...record, description: e.target.value })
+							}
+							autoSize={{ minRows: 1, maxRows: 5 }}
+							style={{
+								border: "none",
+								outline: "none",
+								boxShadow: "none",
+								padding: 0,
+								resize: "none",
+							}}
+						/>
+					</Form.Item>
+				);
+			},
 		},
+
 		{
 			title: "Cognitif Proses",
 			dataIndex: "cognitifProses",
 			key: "cognitifProses",
-			render: (cognitifProses, record) => {
-				// Warna berdasarkan proses kognitif
-				const cognitiveColors = {
-					Remembering: "blue",
-					Understanding: "green",
-					Applying: "orange",
-					Analyzing: "red",
-					Evaluating: "purple",
-					Creating: "magenta",
-				};
+			render: (cognitifProses, record, index) => {
+				const errorMsg = errors?.[`${index}.cognitifProses`]?.[0];
 
 				return (
-					<Select
-						value={cognitifProses}
-						style={{ width: "100%" }}
-						onChange={(value) =>
-							handleSave({ ...record, cognitifProses: value })
-						}
-						options={[
-							{
-								value: "Remembering",
-								label: <Tag color="blue">Remembering</Tag>,
-							},
-							{
-								value: "Understanding",
-								label: <Tag color="green">Understanding</Tag>,
-							},
-							{
-								value: "Applying",
-								label: <Tag color="orange">Applying</Tag>,
-							},
-							{
-								value: "Analyzing",
-								label: <Tag color="red">Analyzing</Tag>,
-							},
-							{
-								value: "Evaluating",
-								label: <Tag color="purple">Evaluating</Tag>,
-							},
-							{
-								value: "Creating",
-								label: <Tag color="magenta">Creating</Tag>,
-							},
-						]}
-					/>
+					<Form.Item
+						validateStatus={errorMsg ? "error" : ""}
+						help={errorMsg || ""}
+						style={{ marginBottom: 0 }}>
+						<Select
+							value={cognitifProses}
+							style={{ width: "100%" }}
+							onChange={(value) =>
+								handleSave({ ...record, cognitifProses: value })
+							}
+							options={[
+								{
+									value: "Remembering",
+									label: <Tag color="blue">Remembering</Tag>,
+								},
+								{
+									value: "Understanding",
+									label: <Tag color="green">Understanding</Tag>,
+								},
+								{
+									value: "Applying",
+									label: <Tag color="orange">Applying</Tag>,
+								},
+								{
+									value: "Analyzing",
+									label: <Tag color="red">Analyzing</Tag>,
+								},
+								{
+									value: "Evaluating",
+									label: <Tag color="purple">Evaluating</Tag>,
+								},
+								{
+									value: "Creating",
+									label: <Tag color="magenta">Creating</Tag>,
+								},
+							]}
+						/>
+					</Form.Item>
 				);
 			},
 		},
+
 		{
 			title: "Knowledge Dimension",
 			dataIndex: "knowledgeDimension",

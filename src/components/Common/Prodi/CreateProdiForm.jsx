@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Input, Select, Button } from "antd"; // Import Ant Design components
+import { Alert, Input, Select, Button, Form } from "antd"; // Import Ant Design components
 import { JENJANG_ENUM } from "../../../constants/constants"; // Import Jenjang Enum
 import useCreateProdi from "../../../hooks/Prodi/useCreateProdi"; // Hook untuk CreateProdi
 
@@ -11,6 +11,7 @@ const CreateProdiForm = () => {
 		jurusanList,
 		alert,
 		formData,
+		errors,
 		handleChangeForm,
 		handleSubmit,
 	} = useCreateProdi();
@@ -31,35 +32,40 @@ const CreateProdiForm = () => {
 				/>
 			)}
 
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-					handleSubmit();
-				}}>
+			<Form
+				layout="vertical"
+				onFinish={handleSubmit}
+				initialValues={formData}
+				onValuesChange={(changedValues) =>
+					handleChangeForm({
+						target: {
+							name: Object.keys(changedValues)[0],
+							value: Object.values(changedValues)[0],
+						},
+					})
+				}>
 				{/* Name Input */}
-				<div className="mb-4">
-					<label
-						htmlFor="name"
-						className="block text-sm font-medium text-gray-700">
-						Name
-					</label>
+				<Form.Item
+					label="Name"
+					name="name"
+					validateStatus={errors?.name ? "error" : ""}
+					help={errors?.name || ""}
+					required>
 					<Input
 						id="name"
 						name="name"
 						value={formData.name}
 						onChange={handleChangeForm}
-						className="mt-1 block w-full"
-						required
 					/>
-				</div>
+				</Form.Item>
 
 				{/* Jenjang Select */}
-				<div className="mb-4">
-					<label
-						htmlFor="jenjang"
-						className="block text-sm font-medium text-gray-700">
-						Jenjang
-					</label>
+				<Form.Item
+					label="Jenjang"
+					name="jenjang"
+					validateStatus={errors?.jenjang ? "error" : ""}
+					help={errors?.jenjang || ""}
+					required>
 					<Select
 						id="jenjang"
 						name="jenjang"
@@ -69,7 +75,6 @@ const CreateProdiForm = () => {
 						}
 						className="mt-1 block w-full"
 						placeholder="Select Jenjang"
-						required
 						showSearch>
 						<Option value="">Select Jenjang</Option>
 						{JENJANG_ENUM.map((jenjangValue) => (
@@ -78,32 +83,30 @@ const CreateProdiForm = () => {
 							</Option>
 						))}
 					</Select>
-				</div>
+				</Form.Item>
 
 				{/* Kode Input */}
-				<div className="mb-4">
-					<label
-						htmlFor="kode"
-						className="block text-sm font-medium text-gray-700">
-						Kode
-					</label>
+				<Form.Item
+					label="Kode"
+					name="kode"
+					validateStatus={errors?.kode ? "error" : ""}
+					help={errors?.kode || ""}
+					required>
 					<Input
 						id="kode"
 						name="kode"
 						value={formData.kode}
 						onChange={handleChangeForm}
-						className="mt-1 block w-full"
-						required
 					/>
-				</div>
+				</Form.Item>
 
 				{/* Jurusan Select with Search */}
-				<div className="mb-4">
-					<label
-						htmlFor="jurusan_id"
-						className="block text-sm font-medium text-gray-700">
-						Jurusan
-					</label>
+				<Form.Item
+					label="Jurusan"
+					name="jurusan_id"
+					validateStatus={errors?.jurusan_id ? "error" : ""}
+					help={errors?.jurusan_id || ""}
+					required>
 					<Select
 						id="jurusan_id"
 						name="jurusan_id"
@@ -114,7 +117,6 @@ const CreateProdiForm = () => {
 						className="mt-1 block w-full"
 						placeholder="Select Jurusan"
 						showSearch
-						required
 						filterOption={(input, option) =>
 							option?.children.toLowerCase().includes(input.toLowerCase())
 						}>
@@ -125,20 +127,22 @@ const CreateProdiForm = () => {
 							</Option>
 						))}
 					</Select>
-				</div>
+				</Form.Item>
 
 				{/* Submit Button */}
-				<div className="flex items-center justify-center mt-6">
-					<Button
-						type="primary"
-						htmlType="submit"
-						block
-						loading={loading}
-						disabled={loading}>
-						{loading ? "Creating..." : "Create Prodi"}
-					</Button>
-				</div>
-			</form>
+				<Form.Item>
+					<div className="flex items-center justify-center mt-6">
+						<Button
+							type="primary"
+							htmlType="submit"
+							block
+							loading={loading}
+							disabled={loading}>
+							{loading ? "Creating..." : "Create Prodi"}
+						</Button>
+					</div>
+				</Form.Item>
+			</Form>
 		</div>
 	);
 };

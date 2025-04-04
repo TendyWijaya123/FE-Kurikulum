@@ -1,12 +1,12 @@
 import React from "react";
-import { Alert, Input, Select, Button } from "antd"; // Import Ant Design components
+import { Alert, Input, Select, Button, Form } from "antd"; // Import Ant Design components
 import { JURUSAN_KATEGORI } from "../../../constants/constants"; // Import kategori
 import useCreateJurusan from "../../../hooks/Jurusans/useCreateJurusan";
 
 const { Option } = Select;
 
 const CreateJurusanForm = () => {
-	const { loading, alert, formData, handleChange, handleSubmit } =
+	const { loading, errors, formData, handleChange, handleSubmit } =
 		useCreateJurusan();
 
 	return (
@@ -15,43 +15,38 @@ const CreateJurusanForm = () => {
 				Create New Jurusan
 			</h2>
 
-			{/* Display Alert if available */}
-			{alert && (
-				<Alert
-					message={alert.message}
-					type={alert.type}
-					showIcon
-					className="mb-4"
-				/>
-			)}
-
-			<form
-				onSubmit={(e) => {
-					e.preventDefault();
-					handleSubmit();
-				}}>
-				<div className="mb-4">
-					<label
-						htmlFor="nama"
-						className="block text-sm font-medium text-gray-700">
-						Nama Jurusan
-					</label>
+			<Form
+				layout="vertical"
+				onFinish={handleSubmit}
+				initialValues={formData}
+				onValuesChange={(changedValues) =>
+					handleChange({
+						target: {
+							name: Object.keys(changedValues)[0],
+							value: Object.values(changedValues)[0],
+						},
+					})
+				}>
+				<Form.Item
+					label="Nama Jurusan"
+					name="nama"
+					validateStatus={errors?.nama ? "error" : ""}
+					help={errors?.nama || ""}
+					required>
 					<Input
 						id="nama"
 						name="nama"
 						value={formData.nama}
 						onChange={handleChange}
-						className="mt-1 block w-full"
-						required
 					/>
-				</div>
+				</Form.Item>
 
-				<div className="mb-4">
-					<label
-						htmlFor="kategori"
-						className="block text-sm font-medium text-gray-700">
-						Kategori
-					</label>
+				<Form.Item
+					label="Kategori"
+					name="kategori"
+					validateStatus={errors?.kategori ? "error" : ""}
+					help={errors?.kategori || ""}
+					required>
 					<Select
 						id="kategori"
 						name="kategori"
@@ -60,8 +55,7 @@ const CreateJurusanForm = () => {
 							handleChange({ target: { name: "kategori", value } })
 						}
 						className="mt-1 block w-full"
-						placeholder="Pilih Kategori"
-						required>
+						placeholder="Pilih Kategori">
 						<Option value="">Pilih Kategori</Option>
 						<Option value={JURUSAN_KATEGORI.REKAYASA}>
 							{JURUSAN_KATEGORI.REKAYASA}
@@ -70,7 +64,7 @@ const CreateJurusanForm = () => {
 							{JURUSAN_KATEGORI.NON_REKAYASA}
 						</Option>
 					</Select>
-				</div>
+				</Form.Item>
 
 				<div className="flex items-center justify-center mt-6">
 					<Button
@@ -82,7 +76,7 @@ const CreateJurusanForm = () => {
 						{loading ? "Creating..." : "Create Jurusan"}
 					</Button>
 				</div>
-			</form>
+			</Form>
 		</div>
 	);
 };

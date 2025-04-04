@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { JURUSAN_KATEGORI } from "../../constants/constants";
 import { createJurusan } from "../../service/api";
+import { message } from "antd";
 
 const useCreateJurusan = () => {
 	const [loading, setLoading] = useState(false);
 	const [alert, setAlert] = useState(null);
+	const [errors, setErrors] = useState(null);
 
 	const [formData, setFormData] = useState({
 		nama: "",
-		kategori: JURUSAN_KATEGORI.REKAYASA, // Default kategori
+		kategori: JURUSAN_KATEGORI.REKAYASA,
 	});
 
 	const handleChange = (e) => {
@@ -24,15 +26,17 @@ const useCreateJurusan = () => {
 		setAlert(null);
 
 		try {
-			const result = await createJurusan(formData);
-			setAlert({ type: "success", message: "Jurusan berhasil dibuat!" });
+			await createJurusan(formData);
 			setFormData({ nama: "", kategori: JURUSAN_KATEGORI.REKAYASA });
-			return result;
+			message.success("Jurusan berhasil dibuat");
 		} catch (error) {
-			setAlert({
-				type: "error",
-				message: error.response?.data?.message || "Gagal membuat jurusan",
-			});
+			message.error("Jurusan gagal dibuat");
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan jurusan.",
+					}
+			);
 		} finally {
 			setLoading(false);
 		}
@@ -42,6 +46,7 @@ const useCreateJurusan = () => {
 		loading,
 		alert,
 		formData,
+		errors,
 		handleChange,
 		handleSubmit,
 	};

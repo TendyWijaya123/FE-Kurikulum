@@ -170,32 +170,28 @@ export const useKKNIData = () => {
 				code: "CPL-" + (index + 1),
 			}));
 
-			// Simpan data baru ke state
 			setDataSourceCpl(updatedDataSource);
 			return;
 		}
 
-		
 		if (deleteData?._id !== null) {
 			try {
-				await deleteKkni(deleteData._id); 
-		
+				await deleteKkni(deleteData._id);
+				message.success("CPL berhasil dihapus");
 			} catch (error) {
 				console.error(
 					`Gagal menghapus item dengan ID ${deleteData._id}:`,
 					error
 				);
-				return;
+				message.error("CPL gagal dihapus");
 			}
 		}
 
-		// Hapus item dari data lokal
 		const newData = dataSource.filter((item) => item.key !== key);
 
-		// Perbarui ulang key dan code agar tetap urut
 		const updatedDataSource = newData.map((item, index) => ({
 			...item,
-			key: "kkni" + (index + 1), // Update key: kkni1, kkni2, dst.
+			key: "kkni" + (index + 1), // Update key: kkni1, kkni2, dst
 			code: "CPL-" + (index + 1), // Update code: CPL1, CPL2, dst.
 		}));
 

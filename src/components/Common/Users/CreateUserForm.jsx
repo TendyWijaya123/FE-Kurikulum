@@ -32,29 +32,27 @@ const CreateUserForm = () => {
 				<Form.Item
 					label="Name"
 					name="name"
-					rules={[{ required: true, message: "Please enter your name" }]}>
+					validateStatus={errors?.name ? "error" : ""}
+					help={errors?.name || ""}
+					required>
 					<Input name="name" onChange={handleChangeForm} />
 				</Form.Item>
 
 				<Form.Item
-					validateStatus={errors?.email ? "error" : ""}
-					help={errors?.email || ""}
 					label="Email"
 					name="email"
-					rules={[
-						{
-							required: true,
-							type: "email",
-							message: "Please enter a valid email",
-						},
-					]}>
+					validateStatus={errors?.email ? "error" : ""}
+					help={errors?.email || ""}
+					required>
 					<Input name="email" onChange={handleChangeForm} />
 				</Form.Item>
 
 				<Form.Item
 					label="Prodi"
 					name="prodi_id"
-					rules={[{ required: true, message: "Please select a Prodi" }]}>
+					validateStatus={errors?.prodi_id ? "error" : ""}
+					help={errors?.prodi_id || ""}
+					required>
 					<Select
 						name="prodi_id"
 						onChange={(value) =>
@@ -72,7 +70,9 @@ const CreateUserForm = () => {
 				<Form.Item
 					label="Role"
 					name="role"
-					rules={[{ required: true, message: "Please select a role" }]}>
+					validateStatus={errors?.role ? "error" : ""}
+					help={errors?.role || ""}
+					required>
 					<Select
 						name="role"
 						onChange={(value) =>

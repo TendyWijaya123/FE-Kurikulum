@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import DefaultLayout from "../../layouts/DefaultLayout";
-import { Table, Pagination, Alert, Button, Input, Select, message } from "antd";
+import {
+	Table,
+	Pagination,
+	Alert,
+	Button,
+	Input,
+	Select,
+	message,
+	Switch,
+} from "antd";
 import { useNavigate } from "react-router-dom";
 import { getProdis, updateProdi } from "../../service/api";
 
@@ -121,21 +130,24 @@ const Prodis = () => {
 			dataIndex: "is_active",
 			render: (text, record) =>
 				editingProdi?.id === record.id ? (
-					<Select
-						name="is_active"
-						value={editingProdi.is_active}
-						onChange={(value) =>
-							setEditingProdi({ ...editingProdi, is_active: value })
-						}>
-						<Option value={1}>Aktif</Option>
-						<Option value={0}>Tidak Aktif</Option>
-					</Select>
-				) : text ? (
-					"Aktif"
+					<Switch
+						checked={editingProdi?.is_active}
+						onChange={(checked) =>
+							setEditingProdi({ ...editingProdi, is_active: checked })
+						}
+						checkedChildren="Aktif"
+						unCheckedChildren="Tidak Aktif"
+					/>
 				) : (
-					"Tidak Aktif"
+					<Switch
+						checked={record.is_active}
+						checkedChildren="Aktif"
+						unCheckedChildren="Tidak Aktif"
+						disabled
+					/>
 				),
 		},
+
 		{
 			title: "Aksi",
 			render: (_, record) =>

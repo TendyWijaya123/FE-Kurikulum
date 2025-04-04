@@ -20,11 +20,6 @@ const EditUserForm = ({ userId }) => {
 		<div className="w-full ml-3 bg-white p-6 rounded-lg shadow-lg">
 			<h2 className="text-2xl font-semibold mb-4">Edit User</h2>
 
-			{/* Display Alert if available */}
-			{alert && (
-				<Alert message={alert.message} type={alert.severity} className="mb-4" />
-			)}
-
 			{loading ? (
 				<div className="flex justify-center">
 					<Spin size="large" />
@@ -37,7 +32,9 @@ const EditUserForm = ({ userId }) => {
 					<Form.Item
 						label="Name"
 						name="name"
-						rules={[{ required: true, message: "Name is required!" }]}>
+						validateStatus={errors?.name ? "error" : ""}
+						help={errors?.name || ""}
+						required>
 						<Input
 							name="name"
 							placeholder="Enter name"
@@ -46,14 +43,11 @@ const EditUserForm = ({ userId }) => {
 					</Form.Item>
 
 					<Form.Item
-						validateStatus={errors?.email ? "error" : ""}
-						help={errors?.email || ""}
 						label="Email"
 						name="email"
-						rules={[
-							{ required: true, message: "Email is required!" },
-							{ type: "email", message: "Invalid email format!" },
-						]}>
+						validateStatus={errors?.email ? "error" : ""}
+						help={errors?.email || ""}
+						required>
 						<Input
 							name="email"
 							type="email"
@@ -74,7 +68,9 @@ const EditUserForm = ({ userId }) => {
 					<Form.Item
 						label="Prodi"
 						name="prodi_id"
-						rules={[{ required: true, message: "Please select a Prodi!" }]}>
+						validateStatus={errors?.prodi_id ? "error" : ""}
+						help={errors?.prodi_id || ""}
+						required>
 						<Select
 							placeholder="Select Prodi"
 							onChange={(value) =>
@@ -91,7 +87,9 @@ const EditUserForm = ({ userId }) => {
 					<Form.Item
 						label="Role"
 						name="role"
-						rules={[{ required: true, message: "Please select a role" }]}>
+						validateStatus={errors?.role ? "error" : ""}
+						help={errors?.role || ""}
+						required>
 						<Select
 							name="role
 							"

@@ -89,7 +89,7 @@ export const useIlmuPengetahuan = () => {
 
 			if (itemToDelete?.id) {
 				await deleteIlmuPengetahuan(itemToDelete.id);
-				message.success("Data berhasil dihapus");
+				message.success("Ilmu Pengetahuan berhasil dihapus");
 			}
 
 			updatedData.splice(index, 1);

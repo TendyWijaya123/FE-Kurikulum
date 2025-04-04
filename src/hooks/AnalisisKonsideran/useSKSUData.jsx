@@ -160,6 +160,7 @@ export const useSKSUData = () => {
 			try {
 				await deleteSksu(deleteData._id);
 				await fetchSKSU();
+				message.success("SKSU berhasil dihapus");
 			} catch (error) {
 				console.error("Error deleting SKSU:", error);
 				return;

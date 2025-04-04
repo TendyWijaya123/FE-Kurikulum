@@ -8,6 +8,7 @@ import {
 	Alert,
 	Button,
 	Switch,
+	message,
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import { getKurikulums, updateKurikulum } from "../../service/api";
@@ -59,12 +60,15 @@ const Kurikulums = () => {
 			setEditingKurikulum(null);
 			const { data } = await getKurikulums(currentPage);
 			setKurikulums(data.data);
+			message.success("kurikulum berhasil diupdate");
 		} catch (error) {
 			setErrorMessage(
 				error.response?.data?.message ||
 					error.message ||
 					"Terjadi kesalahan saat menyimpan data kurikulum."
 			);
+
+			message.error("Kurikulum gagal diupdate");
 		} finally {
 			setLoading(false);
 		}

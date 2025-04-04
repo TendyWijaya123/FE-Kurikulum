@@ -89,7 +89,7 @@ export const useTeknologi = () => {
 
 			if (itemToDelete?.id) {
 				await deleteTeknologi(itemToDelete.id);
-				message.success("Data berhasil dihapus");
+				message.success("Teknologi berhasil dihapus");
 			}
 
 			updatedData.splice(index, 1);

@@ -266,7 +266,7 @@ const SKSU = () => {
 							isOpen={isModalImportOpen}
 							setIsOpen={setIsModalImportOpen}
 							handleImport={handleImportSksu}
-							title="Import Materi Pembelajaran"
+							title="Import Siap Kerja  Siap Usaha"
 						/>
 
 						<Button
@@ -298,14 +298,16 @@ const SKSU = () => {
 					</VisibleMenu>
 
 					{selectedRowKeys.length > 0 && (
-						<Button
-							onClick={handleDeleteSksus}
-							type="primary"
-							danger
-							loading={loading}
-							className="text-sm p-2 w-full md:w-auto">
-							Hapus SKSU Terpilih
-						</Button>
+						<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+							<Button
+								onClick={handleDeleteSksus}
+								type="primary"
+								danger
+								loading={loading}
+								className="text-sm p-2 w-full md:w-auto">
+								Hapus SKSU Terpilih
+							</Button>
+						</VisibleMenu>
 					)}
 				</div>
 

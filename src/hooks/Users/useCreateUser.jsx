@@ -53,7 +53,7 @@ const useCreateUser = () => {
 			setErrors(
 				error.response?.data?.errors ||
 					error.response?.data?.message || {
-						message: "Terjadi kesalahan saat menyimpan CPL.",
+						message: "Terjadi kesalahan saat menyimpan user.",
 					}
 			);
 		} finally {
