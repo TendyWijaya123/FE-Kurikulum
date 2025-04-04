@@ -25,7 +25,8 @@ const MatriksCplHasIea = () => {
 			dataIndex: "rowHeader",
 			key: "rowHeader",
 			fixed: "left",
-			align: "center",
+			align: "left",
+			width: 150,
 		},
 		{
 			title: "CPL Berdasarkan IEA",
@@ -34,15 +35,15 @@ const MatriksCplHasIea = () => {
 				dataIndex: `col${colIndex + 1}`,
 				key: `col${colIndex + 1}`,
 				align: "center",
+				width: 50, 
 				render: (_, record) => (
-					<Checkbox
+					<input
+						type="checkbox"
 						checked={record[`col${colIndex + 1}`]}
 						onChange={(e) =>
 							handleCheckboxChange(record.key - 1, colIndex, e.target.checked)
 						}
-						style={{
-							transform: "scale(1.2)",
-						}}
+						style={{ transform: "scale(1.2)" }}
 					/>
 				),
 			})),

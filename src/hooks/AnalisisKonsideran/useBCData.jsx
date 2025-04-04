@@ -157,8 +157,8 @@ export const useBCData = () => {
 
 		if (deleteData?._id !== null) {
 			try {
-				await deleteBK(deleteData._id); 
-	
+				await deleteBK(deleteData._id);
+				message.success("Bench Kurikulum Berhasil dihapus");
 			} catch (error) {
 				console.error(
 					`Gagal menghapus item dengan ID ${deleteData._id}:`,

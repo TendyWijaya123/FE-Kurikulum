@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { createProdi, getJurusanDropdown } from "../../service/api";
+import { message } from "antd";
 
 const useCreateProdi = () => {
 	const [loading, setLoading] = useState(false);
 	const [jurusanList, setJurusanList] = useState([]);
 	const [alert, setAlert] = useState(null);
+	const [errors, setErrors] = useState(null);
+
 	const [formData, setFormData] = useState({
 		nama: "",
 		jenjang: "",
@@ -39,20 +42,19 @@ const useCreateProdi = () => {
 
 	const handleSubmit = async (e) => {
 		setLoading(true);
-		setAlert(null); // Clear previous alerts
+		setAlert(null); 
 
 		try {
-			const response = await createProdi(formData); // Assume createProdi API exists
-			setAlert({
-				message: response.data.message || "Prodi created successfully!",
-				severity: "success",
-			});
+			const response = await createProdi(formData); 
+			message.success("Prodi Berhasil Dibuat");
 		} catch (error) {
-			setAlert({
-				message: error.response?.data?.message || "Failed to create Prodi.",
-				severity: "error",
-			});
-			console.error("Error creating Prodi:", error);
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan jurusan.",
+					}
+			);
+			message.error("Prodi gagal dibuat");
 		} finally {
 			setLoading(false);
 		}
@@ -63,6 +65,7 @@ const useCreateProdi = () => {
 		jurusanList,
 		alert,
 		formData,
+		errors,
 		handleChangeForm,
 		handleSubmit,
 	};

@@ -10,7 +10,6 @@ const MatrixPpmCplTable = () => {
 		ppms,
 		matrixData,
 		loading,
-		error,
 		updateMatrix,
 		handleCheckboxChange,
 	} = useMatrixCplPpm();
@@ -33,13 +32,13 @@ const MatrixPpmCplTable = () => {
 					<Spin />
 				</div>
 			) : (
-				<div className="overflow-x-auto">
+				<div className="overflow-x-auto overflow-y-auto max-h-[500px]">
 					<table className="min-w-full table-auto border-collapse border border-gray-200">
-						<thead>
-							<tr className="bg-gray-100">
+						<thead className="sticky top-0 bg-gray-100 z-20">
+							<tr>
 								<th
 									rowSpan="2"
-									className="px-4 py-2 text-left font-semibold text-gray-700 sticky left-0 bg-gray-100 border border-gray-200 z-10">
+									className="px-4 py-2 text-left font-semibold text-gray-700 sticky left-0 bg-gray-100 border border-gray-200 z-30">
 									PPM
 								</th>
 								<th
@@ -48,7 +47,7 @@ const MatrixPpmCplTable = () => {
 									CPL
 								</th>
 							</tr>
-							<tr className="bg-gray-100">
+							<tr>
 								{cpls.map((cpl) => (
 									<th
 										key={cpl.id}
@@ -73,12 +72,12 @@ const MatrixPpmCplTable = () => {
 										return (
 											<td
 												key={cpl.id + ppm.id}
-												className="px-4 py-2 border border-gray-200 text-center">
+												className=" border border-gray-200 text-center">
 												<input
 													type="checkbox"
 													checked={isChecked}
 													onChange={() => handleCheckboxChange(cpl.id, ppm.id)}
-													className="h-5 w-5 "
+													className="h-5 w-5"
 												/>
 											</td>
 										);

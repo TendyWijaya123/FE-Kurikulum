@@ -199,14 +199,16 @@ const KKNI = () => {
 							</Tooltip>
 						</VisibleMenu>
 						{selectedRowKeys.length > 0 && (
-							<Button
-								onClick={handleDeleteKknis}
-								type="primary"
-								danger
-								style={{ marginBottom: "16px" }}
-								loading={loading}>
-								Hapus CPL Terpilih
-							</Button>
+							<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+								<Button
+									onClick={handleDeleteKknis}
+									type="primary"
+									danger
+									style={{ marginBottom: "16px" }}
+									loading={loading}>
+									Hapus CPL Terpilih
+								</Button>
+							</VisibleMenu>
 						)}
 					</div>
 				</div>

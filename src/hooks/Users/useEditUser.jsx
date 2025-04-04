@@ -5,6 +5,7 @@ import {
 	updateUser,
 	getUserRoles,
 } from "../../service/api";
+import { message } from "antd";
 
 const useEditUser = (userId) => {
 	const [loading, setLoading] = useState(false);
@@ -60,16 +61,8 @@ const useEditUser = (userId) => {
 		setErrors(null);
 		try {
 			const response = await updateUser(userId, formData);
-			setAlert({ message: "User updated successfully!", severity: "success" });
+			message.success("Data User Berhasil diupdate");
 		} catch (error) {
-			if (error.response && error.response.data && error.response.data.errors) {
-				const errorMessage = error.response.data.errors.email
-					? error.response.data.errors.email[0]
-					: "Failed to update user.";
-				setAlert({ message: errorMessage, severity: "error" });
-			} else {
-				setAlert({ message: "Failed to update user.", severity: "error" });
-			}
 			setErrors(
 				error.response?.data?.errors ||
 					error.response?.data?.message || {

@@ -299,14 +299,16 @@ const BenchKurikulums = () => {
 						</Tooltip>
 					</VisibleMenu>
 					{selectedRowKeys.length > 0 && (
-						<Button
-							onClick={handleDeleteBenchKurikulums}
-							type="primary"
-							danger
-							style={{ marginBottom: "16px" }}
-							loading={loading}>
-							Hapus benchKurikulums Terpilih
-						</Button>
+						<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+							<Button
+								onClick={handleDeleteBenchKurikulums}
+								type="primary"
+								danger
+								style={{ marginBottom: "16px" }}
+								loading={loading}>
+								Hapus benchKurikulums Terpilih
+							</Button>
+						</VisibleMenu>
 					)}
 				</div>
 				{loading ? (

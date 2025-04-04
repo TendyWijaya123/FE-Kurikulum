@@ -57,7 +57,7 @@ const MatrixCplPTable = () => {
 						{ps.map((p) => (
 							<tr key={p.id} className="hover:bg-gray-50">
 								<td className="px-4 py-2 text-gray-700 sticky left-0 bg-white border border-gray-200 z-10">
-									{p.kode}
+									{p.deskripsi}
 								</td>
 								{cpls.map((cpl) => {
 									const isChecked = matrixData.some(

@@ -30,7 +30,7 @@ const MatriksPHasMp = () => {
 					key: "kode",
 					fixed: "left",
 					align: "center",
-					width: 100, // Atur lebar kolom Kode
+					width: 100,
 				},
 				{
 					title: "Deskripsi",
@@ -38,7 +38,7 @@ const MatriksPHasMp = () => {
 					key: "deskripsi",
 					fixed: "left",
 					align: "center",
-					width: 300, // Atur lebar kolom Deskripsi
+					width: 300,
 				},
 			],
 		},
@@ -50,19 +50,25 @@ const MatriksPHasMp = () => {
 				key: `col${colIndex + 1}`,
 				align: "center",
 				render: (_, record) => (
-					<Checkbox
+					<input
+						type="checkbox"
 						checked={record[`col${colIndex + 1}`]}
 						onChange={(e) =>
 							handleCheckboxChange(record.key - 1, colIndex, e.target.checked)
 						}
 						style={{
-							transform: "scale(1.2)",
+							transform: "scale(1.5)",
 						}}
 					/>
 				),
 			})),
 		},
 	];
+
+	const scrollConfig = {
+		x: "max-content", // Agar bisa di-scroll secara horizontal jika kolom melebihi lebar tabel
+		y: 500, // Tinggi maksimum tabel, agar header tetap terlihat saat di-scroll
+	};
 
 	return (
 		<DefaultLayout title="Matriks Materi Pembelajaran dan Pengetahuan">
@@ -98,8 +104,8 @@ const MatriksPHasMp = () => {
 					dataSource={dataSource}
 					columns={columns}
 					pagination={false}
+					scroll={scrollConfig}
 					bordered
-					scroll={{ x: "max-content" }}
 				/>
 			</div>
 		</DefaultLayout>

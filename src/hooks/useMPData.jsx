@@ -27,6 +27,7 @@ export const useMPData = () => {
 	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [knowledgeDropdown, setKnowledgeDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
+	const [errors, setErrors] = useState(null);
 
 	const fetchMateriPembelajaran = async (prodiId = null) => {
 		setLoading(true);
@@ -131,7 +132,6 @@ export const useMPData = () => {
 		if (deleteData?._id !== null) {
 			try {
 				await deleteMateriPembelajaran(deleteData._id); // Tunggu hingga penghapusan selesai
-				
 			} catch (error) {
 				console.error(
 					`Gagal menghapus item dengan ID ${deleteData._id}:`,
@@ -155,15 +155,21 @@ export const useMPData = () => {
 		setDataSource(updatedDataSource);
 	};
 
-	// Save data to server
 	const handleSaveData = async () => {
 		setSaving(true);
+		setErrors(null);
+
 		try {
 			await postMateriPembelajaran(dataSource);
 			message.success("Data berhasil disimpan!");
 		} catch (error) {
-			message.error("Gagal menyimpan data!");
-			console.error("Error saving kkni:", error);
+			setErrors(
+				error.response?.data?.errors ||
+					error.response?.data?.message || {
+						message: "Terjadi kesalahan saat menyimpan materi pembelajaran.",
+					}
+			);
+			message.error("Gagal menyimpan materi pembelajaran");
 		} finally {
 			setSaving(false);
 		}
@@ -242,6 +248,7 @@ export const useMPData = () => {
 		undoStack,
 		rowSelection,
 		selectedRowKeys,
+		errors,
 		handleUndo,
 		handleSave,
 		handleAddRow,

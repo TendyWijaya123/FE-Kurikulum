@@ -46,7 +46,7 @@ export const useMatriksCplIeaData = () => {
 				cpl.map((cplItem, rowIndex) => {
 					const rowData = {
 						key: rowIndex + 1,
-						rowHeader: cplItem.kode, // Gunakan kode CPL sebagai header vertikal
+						rowHeader: `${cplItem.kode} - ${cplItem.keterangan}`,
 					};
 					matrix[rowIndex]?.forEach((value, colIndex) => {
 						rowData[`col${colIndex + 1}`] = value;

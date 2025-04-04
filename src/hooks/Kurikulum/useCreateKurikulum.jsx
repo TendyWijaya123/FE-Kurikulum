@@ -19,7 +19,6 @@ const useCreateKurikulum = () => {
 				setProdiList(prodiResponse);
 			} catch (error) {
 				setAlert({ message: "Failed to fetch data.", severity: "error" });
-				console.error("Error in fetching dropdown data:", error);
 			} finally {
 				setLoading(false);
 			}
@@ -35,17 +34,16 @@ const useCreateKurikulum = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		setLoading(true);
-		setAlert(null); // Clear previous alerts
+		setAlert(null); // Clear previous
 
 		try {
 			const response = await createKurikulum(formData);
-			setAlert({ message: "User created successfully!", severity: "success" });
+			setAlert({ message: "kurikulum berhasil dibuat", severity: "success" });
 		} catch (error) {
 			setAlert({
-				message: error.response?.data?.message || "Failed to create Prodi.",
+				message: error.response?.data?.message || "Gagal  membuat kurikulum",
 				severity: "error",
 			});
-			console.error("Error creating user:", error);
 		} finally {
 			setLoading(false);
 		}
