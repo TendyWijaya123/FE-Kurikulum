@@ -66,10 +66,14 @@ const usePeranIndustri = () => {
 	};
 
 	const handleExportTemplatePeranIndustri = async () => {
+		setLoading(true);
 		try {
 			await getPeranIndustriTemplate();
+			message.success("Template peran industri berhasil diexport");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -90,6 +94,7 @@ const usePeranIndustri = () => {
 		try {
 			await deletePeranIndustri(id);
 			fetchData();
+			message.success("Peran Industri  Berhasil dihapus");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
 		} finally {
@@ -122,7 +127,9 @@ const usePeranIndustri = () => {
 				prevData.filter((_, index) => !selectedRowKeys.includes(index))
 			);
 
-			setSelectedRowKeys([]); // Reset pilihan
+			setSelectedRowKeys([]);
+
+			message.success("Peran Industris  Berhasil dihapus");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
 		} finally {

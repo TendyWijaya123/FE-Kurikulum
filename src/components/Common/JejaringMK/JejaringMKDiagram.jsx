@@ -6,6 +6,8 @@ import CustomNode from "./CustomNode";
 import SmartStepEdge from "./SmartStepEdge";
 import DownloadButton from "./DownloadButton";
 import SaveButton from "./SaveButton";
+import { Button, Spin } from "antd";
+import { UndoOutlined } from "@ant-design/icons";
 
 const getRandomColor = () => {
 	const letters = "0123456789ABCDEF";
@@ -89,15 +91,25 @@ const JejaringMKDiagram = () => {
 		),
 	};
 
-	const { loading, jejaringData, mataKuliahData } = useJejaringPrasyaratMK();
+	const { loading, jejaringData, mataKuliahData, fetchJejaringPrasyarat } =
+		useJejaringPrasyaratMK();
 
-	if (loading) return <p>Loading...</p>;
+	if (loading)
+		return (
+			<div className="flex justify-center items-center h-40">
+				<Spin size="large" />
+			</div>
+		);
 
 	const nodes = generateNodes(mataKuliahData);
 	const edges = generateEdges(jejaringData);
 
 	return (
 		<div className="w-full h-[1000px]">
+			<Button
+				icon={<UndoOutlined />}
+				onClick={() => fetchJejaringPrasyarat()}
+			/>
 			<ReactFlowProvider>
 				<ReactFlow
 					nodes={nodes}

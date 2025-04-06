@@ -78,7 +78,7 @@ const KKNI = () => {
 	// Kolom tabel
 	const columns = [
 		{
-			title: "Code",
+			title: "Kode",
 			dataIndex: "code",
 			key: "code",
 			width: 100,
@@ -87,7 +87,7 @@ const KKNI = () => {
 			),
 		},
 		{
-			title: "Description",
+			title: "Deskripsi",
 			dataIndex: "description",
 			key: "description",
 			render: (text, record, index) => {

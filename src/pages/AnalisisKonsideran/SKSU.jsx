@@ -286,15 +286,6 @@ const SKSU = () => {
 							className="text-sm p-2 w-full md:w-auto">
 							Simpan Data
 						</Button>
-
-						<Tooltip title="Undo">
-							<Button
-								onClick={handleUndo}
-								type="default"
-								icon={<UndoOutlined />}
-								className="text-sm p-2 w-full md:w-auto"
-							/>
-						</Tooltip>
 					</VisibleMenu>
 
 					{selectedRowKeys.length > 0 && (

@@ -122,6 +122,7 @@ export const useIlmuPengetahuan = () => {
 	};
 
 	const handleExportTemplateIlmuPengetahuan = async () => {
+		setLoading(true);
 		try {
 			setSaving(true);
 			await downloadIlmuPengetahuanTemplate();
@@ -132,10 +133,12 @@ export const useIlmuPengetahuan = () => {
 			);
 		} finally {
 			setSaving(false);
+			setLoading(false);
 		}
 	};
 
 	const handleImportIlmuPengetahuan = async (file) => {
+		setLoading(true);
 		try {
 			setSaving(true);
 			const formData = new FormData();
@@ -153,6 +156,7 @@ export const useIlmuPengetahuan = () => {
 			throw error;
 		} finally {
 			setSaving(false);
+			setLoading(false);
 		}
 	};
 

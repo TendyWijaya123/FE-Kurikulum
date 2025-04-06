@@ -117,11 +117,11 @@ const MenuPenyusunanKurikulum = () => {
 			{/* Analisis Konsideran Page */}
 			<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 				<MenuItemSidebar
-						url="/dashboard-penyusun-kurikulum"
-						title="Dashboard"
-						icon={<Dashboard />}
-						isOpen={openMenu === "dashboard"}
-						onToggle={() => handleMenuToggle("dashboard")}></MenuItemSidebar>
+					url="/dashboard-penyusun-kurikulum"
+					title="Dashboard"
+					icon={<Dashboard />}
+					isOpen={openMenu === "dashboard"}
+					onToggle={() => handleMenuToggle("dashboard")}></MenuItemSidebar>
 			</VisibleMenu>
 			<MenuItemSidebar
 				title="Analisis Konsideran"
@@ -169,7 +169,7 @@ const MenuPenyusunanKurikulum = () => {
 				/>
 				<MenuItemSidebar
 					url="/matriks-cpl-iea"
-					title="Matriks CPL IEA"
+					title="Matriks CPL-IEA"
 					icon={<TableChart />}
 				/>
 			</MenuItemSidebar>

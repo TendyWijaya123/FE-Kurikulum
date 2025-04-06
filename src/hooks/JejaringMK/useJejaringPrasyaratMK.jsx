@@ -10,6 +10,7 @@ const useJejaringPrasyaratMK = () => {
 	const [error, setError] = useState(null);
 
 	const fetchJejaringPrasyarat = async (prodiId = null) => {
+		setLoading(true);
 		try {
 			const data = await getJejaringPrasyarat(prodiId);
 
@@ -25,7 +26,7 @@ const useJejaringPrasyaratMK = () => {
 	useEffect(() => {
 		fetchJejaringPrasyarat(selectedProdiId);
 	}, [selectedProdiId]);
-	return { loading, jejaringData, mataKuliahData };
+	return { loading, jejaringData, mataKuliahData, fetchJejaringPrasyarat };
 };
 
 export default useJejaringPrasyaratMK;

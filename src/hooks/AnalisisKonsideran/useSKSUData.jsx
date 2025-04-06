@@ -101,10 +101,14 @@ export const useSKSUData = () => {
 	};
 
 	const handleExportTemplateSksu = async () => {
+		setLoading(true);
 		try {
 			await getSksuTemplate();
+			message.success("Template Siap Kerja Siap Usaha berhasi diexport");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
 	};
 

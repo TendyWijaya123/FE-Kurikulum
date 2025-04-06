@@ -102,28 +102,33 @@ export const useBCData = () => {
 	};
 
 	const handleExportTemplateBenchKurikulum = async () => {
+		setLoading(true);
 		try {
 			await getBenchKurikulumTemplate();
+			message.success("Template berhasil diexport");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const handleImportBenchKurikulum = async (file) => {
+		setLoading(true);
 		try {
 			await importBenchKurikulum(file);
 			message.success("berhasil mengimport data");
 			await fetchBenchKurikulums();
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
+		} finally {
+			setLoading(false);
 		}
 	};
 
-	// Add row
 	const handleAddRow = () => {
 		saveToUndoStack([...dataSource]);
 
-		// Cari key yang hilang dalam urutan
 		const existingKeys = dataSource
 			.map((item) => parseInt(item.key.replace("benchKurikulums", "")))
 			.sort((a, b) => a - b);

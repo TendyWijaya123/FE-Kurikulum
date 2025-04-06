@@ -65,19 +65,27 @@ const useCpl = () => {
 	};
 
 	const handleExportTemplateCpl = async () => {
+		setLoading(true);
 		try {
 			await getCPLTemplate();
+			message.success("Template berhasil diexport");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const handleImportCpl = async (file) => {
+		setLoading(true);
 		try {
 			await importCPL(file);
 			fetchData();
+			message.success("CPL berhasil diimport");
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -122,6 +130,7 @@ const useCpl = () => {
 
 			updatedCplData.splice(index, 1);
 			setCplData(updatedCplData);
+			message.success("CPL  Berhasil dihapus");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
 		} finally {
@@ -146,6 +155,7 @@ const useCpl = () => {
 
 			fetchData();
 			setSelectedRowKeys([]);
+			message.success("CPL  Berhasil dihapus");
 		} catch (error) {
 			console.error(
 				"Error deleting CPL:",

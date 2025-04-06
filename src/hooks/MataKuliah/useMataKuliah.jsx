@@ -207,19 +207,27 @@ const useMataKuliah = () => {
 	};
 
 	const handleImportMataKuliah = async (file) => {
+		setLoading(true);
 		try {
 			await importMataKuliah(file);
 			fetchData();
+			message.success("Mata kuliah berhasil diimport");
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const handleExportTemplateMataKuliah = async () => {
+		setLoading(true);
 		try {
 			await getMataKuliahTemplate();
+			message.success("Template berhasil diexport");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
 	};
 

@@ -38,21 +38,6 @@ export const usePengetahuan = () => {
 	const [error, setError] = useState(null);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 	const { user } = useContext(AuthContext);
-	const [undoStack, setUndoStack] = useState([]);
-
-	// Function to save current state to undo stack
-	const saveToUndoStack = (data) => {
-		setUndoStack((prevStack) => [...prevStack, [...data]]);
-	};
-
-	// Handle Undo
-	const handleUndo = () => {
-		if (undoStack.length > 0) {
-			const previousState = undoStack[undoStack.length - 1];
-			setUndoStack(undoStack.slice(0, -1));
-			setPengetahuanData(previousState);
-		}
-	};
 
 	const fetchPengetahuan = async (prodiId = null) => {
 		setLoading(true);
@@ -207,14 +192,19 @@ export const usePengetahuan = () => {
 	};
 
 	const handleExportTemplatePengetahuan = async () => {
+		setLoading(true);
 		try {
 			await getPengetahuanTemplate();
+			message.success("Template berhasil  diexport");
 		} catch (error) {
 			message.error(`Gagal mengunduh template: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const handleImportPengetahuan = async (file) => {
+		setLoading(true);
 		try {
 			await importPengetahuan(file);
 			message.success(notifications.success.import);
@@ -223,6 +213,8 @@ export const usePengetahuan = () => {
 		} catch (error) {
 			message.error(notifications.error.import);
 			return false;
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -245,7 +237,6 @@ export const usePengetahuan = () => {
 		handleFieldEdit,
 		handleAddRow,
 		handleSaveAll,
-		handleUndo,
 		handleBatchCreate,
 		handleDeleteRow,
 	};
