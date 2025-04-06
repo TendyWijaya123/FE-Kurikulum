@@ -53,6 +53,7 @@ const MisiJurusan = () => {
 			setMisiJurusan((prevMisiJurusan) =>
 				prevMisiJurusan.filter((_, idx) => idx !== index)
 			);
+			message.success("Misi jurusan berhasil dihapus");
 		}
 	};
 

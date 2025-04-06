@@ -158,7 +158,7 @@ const PpmTable = () => {
 				isOpen={isModalImportOpen}
 				setIsOpen={setIsModalImportOpen}
 				handleImport={handleImportPpm}
-				title="Import CPL"
+				title="Import PPM"
 			/>
 		</div>
 	);

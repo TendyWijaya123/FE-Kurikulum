@@ -131,27 +131,25 @@ export const useMPData = () => {
 
 		if (deleteData?._id !== null) {
 			try {
-				await deleteMateriPembelajaran(deleteData._id); // Tunggu hingga penghapusan selesai
+				await deleteMateriPembelajaran(deleteData._id);
+				message.success("Materi pembelajaran berhasil dihapus");
 			} catch (error) {
 				console.error(
 					`Gagal menghapus item dengan ID ${deleteData._id}:`,
 					error
 				);
-				return; // Keluar jika ada error
+				return;
 			}
 		}
 
-		// Hapus item dari data lokal
 		const newData = dataSource.filter((item) => item.key !== key);
 
-		// Perbarui ulang key dan code agar tetap urut
 		const updatedDataSource = newData.map((item, index) => ({
 			...item,
 			key: "MP-" + (index + 1), // Update key: kkni1, kkni2, dst.
 			code: "MP-" + (index + 1), // Update code: CPL1, CPL2, dst.
 		}));
 
-		// Simpan data baru ke state
 		setDataSource(updatedDataSource);
 	};
 
@@ -161,6 +159,7 @@ export const useMPData = () => {
 
 		try {
 			await postMateriPembelajaran(dataSource);
+			await fetchMateriPembelajaran();
 			message.success("Data berhasil disimpan!");
 		} catch (error) {
 			setErrors(
@@ -181,20 +180,27 @@ export const useMPData = () => {
 	};
 
 	const handleExportTemplateMateriPembelajaran = async () => {
+		setLoading(true);
 		try {
 			await getMateriPembelajaranTemplate();
+			message.success("Template berhasil diexport");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const handleImportMateriPembelajaran = async (file) => {
+		setLoading(true);
 		try {
 			await importMateriPembelajaran(file);
 			message.success("Data berhasil disimpan!");
 			await fetchMateriPembelajaran();
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -213,22 +219,19 @@ export const useMPData = () => {
 				{ toDelete: [], toKeep: [] }
 			);
 
-			// Hapus data dari server
 			if (toDelete.length > 0) {
-				await deleteMateriPembelajarans(toDelete); // Pastikan fungsi ini menerima array
-				message.success("Data berhasil dihapus!");
+				await deleteMateriPembelajarans(toDelete);
+				message.success("Materi pembelajaran berhasil dihapus");
 			}
 
-			// Perbarui ulang key dan code agar tetap terurut
 			const updatedDataSource = toKeep.map((item, index) => ({
 				...item,
-				key: "MP-" + (index + 1), // Update key: kkni1, kkni2, dst.
-				code: "MP-" + (index + 1), // Update code: CPL1, CPL2, dst.
+				key: "MP-" + (index + 1),
+				code: "MP-" + (index + 1),
 			}));
 
-			// Simpan data baru ke state
 			setDataSource(updatedDataSource);
-			setSelectedRowKeys([]); // Hapus pilihan row
+			setSelectedRowKeys([]);
 		} catch (error) {
 			message.error("Gagal menghapus data!");
 			console.error("Error hapus bench kurikulum:", error);

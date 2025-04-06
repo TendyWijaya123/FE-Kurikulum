@@ -122,6 +122,7 @@ export const useTeknologi = () => {
 	};
 
 	const handleExportTemplateTeknologi = async () => {
+		setLoading(true);
 		try {
 			const response = await downloadTeknologiTemplate();
 			const blob = new Blob([response], {
@@ -135,15 +136,20 @@ export const useTeknologi = () => {
 			link.click();
 			window.URL.revokeObjectURL(url);
 			document.body.removeChild(link);
+
+			message.success("Template berhasil diexport");
 		} catch (error) {
 			message.error(
 				"Gagal mengunduh template: " +
 					(error.response?.data?.message || error.message)
 			);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const handleImportTeknologi = async (file) => {
+		setLoading(true);
 		try {
 			setSaving(true);
 			const formData = new FormData();
@@ -160,6 +166,7 @@ export const useTeknologi = () => {
 			);
 			throw error;
 		} finally {
+			setLoading(false);
 			setSaving(false);
 		}
 	};

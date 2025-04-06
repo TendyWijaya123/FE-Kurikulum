@@ -90,19 +90,27 @@ const usePpm = () => {
 	};
 
 	const handleExportTemplatePpm = async () => {
+		setLoading(true);
 		try {
 			await getPPMTemplate();
+			message.success("Template PPM berhasil diexport");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const handleImportPpm = async (file) => {
+		setLoading(true);
 		try {
 			await importPpm(file);
 			fetchData();
+			message.success("PPM berhasil diimport");
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
+		} finally {
+			setLoading(false);
 		}
 	};
 
@@ -111,6 +119,7 @@ const usePpm = () => {
 		try {
 			await deletePpm(id);
 			fetchData();
+			message.success("PPM  Berhasil dihapus");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
 		} finally {
@@ -147,6 +156,7 @@ const usePpm = () => {
 
 			updatedPpmData.splice(index, 1);
 			setPpmData(updatedPpmData);
+			message.success("PPM  Berhasil dihapus");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
 		} finally {

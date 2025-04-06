@@ -35,7 +35,6 @@ const BenchKurikulums = () => {
 		rowSelection,
 		selectedRowKeys,
 		errors,
-		handleUndo,
 		handleSave,
 		handleAddRow,
 		handleDeleteRow,
@@ -290,13 +289,6 @@ const BenchKurikulums = () => {
 							loading={saving}>
 							Simpan Data
 						</Button>
-						<Tooltip title="Undo">
-							<Button
-								onClick={handleUndo}
-								type="default"
-								icon={<UndoOutlined />}
-							/>
-						</Tooltip>
 					</VisibleMenu>
 					{selectedRowKeys.length > 0 && (
 						<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>

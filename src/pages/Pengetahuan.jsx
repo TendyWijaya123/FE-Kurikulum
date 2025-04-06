@@ -46,7 +46,6 @@ const Pengetahuan = () => {
 		handleFieldEdit,
 		handleAddRow,
 		handleSaveAll,
-		handleUndo,
 		handleDeleteRow,
 	} = usePengetahuan();
 
@@ -148,13 +147,7 @@ const Pengetahuan = () => {
 							style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
 							Simpan Data
 						</Button>
-						<Tooltip title="Undo">
-							<Button
-								onClick={handleUndo}
-								type="default"
-								icon={<UndoOutlined />}
-							/>
-						</Tooltip>
+
 						{selectedRowKeys.length > 0 && (
 							<Button
 								onClick={() => handleMultiDelete(selectedRowKeys)}

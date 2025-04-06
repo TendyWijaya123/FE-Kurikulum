@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import DeleteButton from "../../Button/DeleteButton";
-import { Button, Spin, Form, Input } from "antd";
+import { Button, Spin, Form, Input, message } from "antd";
 import useVmtPolban from "../../../hooks/Vmt/useVmtPolban";
 import { PlusOutlined, SaveOutlined } from "@ant-design/icons";
 import VisibleMenu from "../../Menu/VisibleMenu";
@@ -47,10 +47,10 @@ const TujuanPolban = () => {
 			);
 		} else {
 			await handleDeleteTujuanPolban(tujuan.id);
-
 			setTujuanPolban((prevTujuanPolban) =>
 				prevTujuanPolban.filter((_, idx) => idx !== index)
 			);
+			message.success("Tujuan polban berhasil dihapus");
 		}
 	};
 

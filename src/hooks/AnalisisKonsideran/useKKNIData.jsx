@@ -200,20 +200,27 @@ export const useKKNIData = () => {
 	};
 
 	const handleExportTemplateKkni = async () => {
+		setLoading(true);
 		try {
 			await getKkniTemplate();
+			message.success("Template berhasil diexport");
 		} catch (error) {
 			setAlert(`Terjadi kesalahan: ${error.message || error}`);
+		} finally {
+			setLoading(false);
 		}
 	};
 
 	const handleImportKkni = async (file) => {
+		setLoading(true);
 		try {
 			await importKkni(file);
 			message.success("berhasil inport kkni");
 			await fetchKkni();
 		} catch (error) {
 			message.error("Gagal mengunggah file. Coba lagi.");
+		} finally {
+			setLoading(false);
 		}
 	};
 
