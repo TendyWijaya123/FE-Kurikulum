@@ -26,6 +26,7 @@ import { DeleteOutline, EditOutlined } from "@mui/icons-material";
 import {
 	DownloadOutlined,
 	PlusOutlined,
+	SearchOutlined,
 	UploadOutlined,
 } from "@ant-design/icons";
 import ImportModal from "../../components/Modal/ImportModal";
@@ -46,10 +47,13 @@ const MataKuliah = () => {
 		isModalCreateVisible,
 		isModalUpdateVisible,
 		isModalImportVisible,
+		filters,
 		setIsModalImportVisible,
+		handleSearch,
 		handleExportTemplateMataKuliah,
 		handleImportMataKuliah,
 		handleModalCreateClose,
+		handleFilterChange,
 		handleModalUpdateClose,
 		handleOnEdit,
 		handleCreateSave,
@@ -333,6 +337,47 @@ const MataKuliah = () => {
 									Tambah Mata Kuliah
 								</Button>
 							</VisibleMenu>
+						</div>
+
+						<div className="mb-4 grid grid-cols-1 md:grid-cols-4 gap-2">
+							<Input
+								placeholder="Cari Nama Mata Kuliah"
+								value={filters.nama}
+								onChange={(e) => handleFilterChange("nama", e.target.value)}
+								allowClear
+							/>
+
+							<Select
+								placeholder="Kategori"
+								value={filters.kategori}
+								onChange={(val) => handleFilterChange("kategori", val)}
+								allowClear>
+								<Select.Option value="">Semua</Select.Option>
+								<Select.Option value="null">Belum Diisi</Select.Option>
+								<Select.Option value="Nasional">Nasional</Select.Option>
+								<Select.Option value="Institusi">Institusi</Select.Option>
+								<Select.Option value="Prodi">Prodi</Select.Option>
+							</Select>
+
+							<Select
+								placeholder="Semester"
+								value={filters.semester}
+								onChange={(val) => handleFilterChange("semester", val)}
+								allowClear>
+								<Select.Option value="">Semua</Select.Option>
+								<Select.Option value="null">Tanpa Semester</Select.Option>
+								{Array.from({ length: 8 }, (_, i) => (
+									<Select.Option key={i + 1} value={i + 1}>
+										Semester {i + 1}
+									</Select.Option>
+								))}
+							</Select>
+
+							<Button
+								type="primary"
+								className="w-full"
+								onClick={handleSearch}
+								icon={<SearchOutlined />}></Button>
 						</div>
 
 						<div className="overflow-x-auto">

@@ -32,6 +32,11 @@ const useMataKuliah = () => {
 	const [isModalCreateVisible, setIsModalCreateVisible] = useState(false);
 	const [isModalUpdateVisible, setIsModalUpdateVisible] = useState(false);
 	const [errors, setErrors] = useState(null);
+	const [filters, setFilters] = useState({
+		nama: "",
+		kategori: "",
+		semester: "",
+	});
 
 	const [newData, setNewData] = useState({
 		nama: "",
@@ -43,14 +48,24 @@ const useMataKuliah = () => {
 	});
 
 	useEffect(() => {
-		fetchData(selectedProdiId);
+		fetchData({
+			prodiId: selectedProdiId,
+			nama: filters.nama,
+			kategori: filters.kategori,
+			semester: filters.semester,
+		});
 	}, [selectedProdiId]);
 
-	const fetchData = (prodiId = null) => {
+	const fetchData = ({
+		prodiId = null,
+		nama = "",
+		kategori = "",
+		semester = "",
+	} = {}) => {
 		setLoading(true);
 
 		Promise.all([
-			fetchMataKuliah(prodiId),
+			fetchMataKuliah({ prodiId, nama, kategori, semester }),
 			fetchFormulasiCpaDropdown(),
 			fetchMetodePembelajaranDropdown(),
 			fetchBentukPembelajaranDropdown(),
@@ -76,6 +91,21 @@ const useMataKuliah = () => {
 			.finally(() => {
 				setLoading(false);
 			});
+	};
+	const handleFilterChange = (key, value) => {
+		setFilters((prev) => ({
+			...prev,
+			[key]: value,
+		}));
+	};
+
+	const handleSearch = () => {
+		fetchData({
+			prodiId: selectedProdiId,
+			nama: filters.nama,
+			kategori: filters.kategori || undefined,
+			semester: filters.semester || undefined,
+		});
 	};
 
 	const handleModalCreateClose = () => {
@@ -257,6 +287,9 @@ const useMataKuliah = () => {
 		isModalUpdateVisible,
 		isModalImportVisible,
 		errors,
+		filters,
+		handleFilterChange,
+		handleSearch,
 		setIsModalImportVisible,
 		handleModalCreateClose,
 		handleModalUpdateClose,

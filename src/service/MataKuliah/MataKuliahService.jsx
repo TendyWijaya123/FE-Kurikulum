@@ -1,9 +1,20 @@
 import api from "../../utils/axiosInstance";
 
 /* -------------------------------------Mata Kuliah API -------------------------------------------------- */
-export const fetchMataKuliah = async (prodiId = null) => {
+export const fetchMataKuliah = async ({
+	prodiId = null,
+	nama = "",
+	kategori = "",
+	semester = "",
+} = {}) => {
 	try {
-		const params = prodiId ? { prodiId } : {};
+		const params = {};
+
+		if (prodiId) params.prodiId = prodiId;
+		if (nama) params.nama = nama;
+		if (kategori) params.kategori = kategori;
+		if (semester) params.semester = semester;
+
 		const response = await api.get("/mata-kuliah", { params });
 		return response.data;
 	} catch (error) {
