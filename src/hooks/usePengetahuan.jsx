@@ -74,8 +74,6 @@ export const usePengetahuan = () => {
 
 	const handleMultiDelete = async (keys) => {
 		try {
-			saveToUndoStack(pengetahuanData);
-
 			const deletePromises = keys.map((key) => deletePengetahuan(key));
 			await Promise.all(deletePromises);
 
@@ -100,7 +98,6 @@ export const usePengetahuan = () => {
 				kode_pengetahuan: "Auto",
 			};
 
-			saveToUndoStack(pengetahuanData);
 			const data = [newItem];
 			await upsertPengetahuan(data);
 			message.success(notifications.success.create);
@@ -114,7 +111,6 @@ export const usePengetahuan = () => {
 
 	const handleBatchCreate = async (entries) => {
 		try {
-			saveToUndoStack(pengetahuanData);
 			const data = entries.map((entry) => ({
 				id: null,
 				deskripsi: entry.deskripsi,
@@ -132,7 +128,6 @@ export const usePengetahuan = () => {
 	};
 
 	const handleFieldEdit = (record, field, value) => {
-		saveToUndoStack(pengetahuanData);
 		const newData = [...pengetahuanData];
 		const index = newData.findIndex((item) => record.key === item.key);
 		if (index > -1) {
@@ -143,10 +138,8 @@ export const usePengetahuan = () => {
 	};
 
 	const handleAddRow = () => {
-		saveToUndoStack(pengetahuanData);
 		const newRow = {
 			id: null,
-			key: `new-${Date.now()}`,
 			kode_pengetahuan: "Auto",
 			deskripsi: "",
 		};
