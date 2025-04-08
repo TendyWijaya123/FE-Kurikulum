@@ -33,7 +33,7 @@ const generateNodes = (mataKuliahData) => {
 		newNodes.push({
 			id: semesterId,
 			type: "group",
-			data: { label: `Semester ${semester}` },
+			data: { label: semester ? `Semester ${semester}` : null },
 			position: { x: 0, y: semesterNumber * 300 },
 			style: {
 				width: maxMKPerSemester * 240 + 300,
@@ -83,8 +83,11 @@ const JejaringMKDiagram = () => {
 		custom: CustomNode,
 		group: ({ data }) => (
 			<div className="w-full h-full flex items-center border border-gray-400 bg-white">
-				<h2 className=" h-full text-lg font-bold bg-yellow-300 border-r border-gray-400 flex items-center leading-none">
-					{data.label}
+				<h2
+					className={`h-full text-lg font-bold border-r border-gray-400 flex items-center leading-none ${
+						data.label ? "bg-yellow-300" : "bg-red-500 text-white"
+					}`}>
+					{data.label ?? "Semester Belum diisi"}
 				</h2>
 				<div className="flex-1"></div>
 			</div>

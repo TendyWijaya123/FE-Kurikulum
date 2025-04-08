@@ -9,7 +9,7 @@ import {
 } from "@tisoap/react-flow-smart-edge";
 
 const getRandomPadding = () => {
-	const paddingOptions = [40, 50, 60];
+	const paddingOptions = [30, 50, 70];
 	return paddingOptions[Math.floor(Math.random() * paddingOptions.length)];
 };
 

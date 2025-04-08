@@ -1,8 +1,7 @@
 import React from "react";
 import useMatrixCplMk from "../../../hooks/ModelKonstruksi/useMatrixCplMk";
-import { Button, Spin } from "antd";
+import { Spin } from "antd";
 import VisibleMenu from "../../Menu/VisibleMenu";
-import { SaveOutlined } from "@ant-design/icons";
 
 const MatrixCplMkTable = () => {
 	const {
@@ -25,13 +24,11 @@ const MatrixCplMkTable = () => {
 		<div className="p-4 bg-white">
 			<div className="mb-4">
 				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-					<Button
-						type="primary"
-						icon={<SaveOutlined />}
+					<button
 						onClick={updateMatrix}
-						style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
+						className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
 						Simpan Perubahan
-					</Button>
+					</button>
 				</VisibleMenu>
 			</div>
 			{loading ? (

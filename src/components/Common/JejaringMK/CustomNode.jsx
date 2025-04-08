@@ -21,8 +21,8 @@ const CustomNode = ({ data }) => {
 	};
 
 	const getHandlePosition = (index, total, position) => {
-		if (total === 1) return {}; // Jika hanya satu, tetap default
-		const gap = 100 / (total + 1); // Atur jarak antar Handle
+		if (total === 1) return {};
+		const gap = 100 / (total + 1);
 		return position === "left" || position === "right"
 			? { top: `${gap * (index + 1)}%` }
 			: { left: `${gap * (index + 1)}%` };
