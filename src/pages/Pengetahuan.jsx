@@ -134,7 +134,7 @@ const Pengetahuan = () => {
 							Import
 						</Button>
 						<Button
-							onClick={handleAddRow}
+							onClick={() => handleAddRow()}
 							icon={<PlusOutlined />}
 							type="primary">
 							Tambah Baris
