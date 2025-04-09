@@ -3,7 +3,7 @@ import { AuthContext } from "../../context/AuthProvider";
 
 const VisibleMenu = ({
 	children,
-	isProdiRestricted = true,
+	isProdiRestricted = false,
 	allowedRoles = [],
 }) => {
 	const { user } = useContext(AuthContext);
