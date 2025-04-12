@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Select } from "antd";
+import { Button, Form, Input, Modal, Select, message } from "antd";
 import { useState } from "react";
 import { createMataKuliah } from "../../../service/MataKuliah/MataKuliahService";
 
@@ -94,24 +94,27 @@ const ModalCreateMataKuliah = ({
 		}, 0);
 	};
 
-	const handleSave = () => {
-		onSave(newData);
-		setNewData({
-			nama: "",
-			kode: "",
-			kategori: "",
-			tujuan: "",
-			semester: null,
-			teori_bt: 0,
-			teori_pt: 0,
-			teori_m: 0,
-			praktek_bt: 0,
-			praktek_pt: 0,
-			praktek_m: 0,
-			formulasi_cpas: [],
-			kemampuan_akhir: [],
-			tujuan_belajar: [],
-		});
+	const handleSave = async () => {
+		try {
+			await onSave(newData);
+
+			setNewData({
+				nama: "",
+				kode: "",
+				kategori: "",
+				tujuan: "",
+				semester: null,
+				teori_bt: 0,
+				teori_pt: 0,
+				teori_m: 0,
+				praktek_bt: 0,
+				praktek_pt: 0,
+				praktek_m: 0,
+				formulasi_cpas: [],
+				kemampuan_akhir: [],
+				tujuan_belajar: [],
+			});
+		} catch (error) {}
 	};
 
 	return (
