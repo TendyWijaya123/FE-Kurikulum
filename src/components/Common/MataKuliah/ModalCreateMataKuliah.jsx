@@ -94,6 +94,26 @@ const ModalCreateMataKuliah = ({
 		}, 0);
 	};
 
+	const handleSave = () => {
+		onSave(newData);
+		setNewData({
+			nama: "",
+			kode: "",
+			kategori: "",
+			tujuan: "",
+			semester: null,
+			teori_bt: 0,
+			teori_pt: 0,
+			teori_m: 0,
+			praktek_bt: 0,
+			praktek_pt: 0,
+			praktek_m: 0,
+			formulasi_cpas: [],
+			kemampuan_akhir: [],
+			tujuan_belajar: [],
+		});
+	};
+
 	return (
 		<Modal
 			title="Create Mata  Kuliah"
@@ -106,12 +126,7 @@ const ModalCreateMataKuliah = ({
 				<Button key="cancel" onClick={() => handleClose()}>
 					Cancel
 				</Button>,
-				<Button
-					key="save"
-					type="primary"
-					onClick={() => {
-						onSave(newData);
-					}}>
+				<Button key="save" type="primary" onClick={handleSave}>
 					Save
 				</Button>,
 			]}
