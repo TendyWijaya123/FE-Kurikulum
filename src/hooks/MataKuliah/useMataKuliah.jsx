@@ -191,6 +191,7 @@ const useMataKuliah = () => {
 					}
 			);
 			message.error("Gagal menyimpan Mata kuliah");
+			throw error;
 		}
 	};
 
@@ -233,6 +234,8 @@ const useMataKuliah = () => {
 					}
 			);
 			message.error("Gagal menyimpan Mata kuliah");
+
+			throw error;
 		}
 	};
 
