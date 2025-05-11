@@ -17,7 +17,7 @@ const VMT = () => {
 		useContext(ProdiContext);
 
 	return (
-		<DefaultLayout title="Visi, Misi Tujuan">
+		<DefaultLayout title="Visi, Misi dan Tujuan">
 			<div className="font-semibold">
 				<VisibleMenu allowedRoles={"P2MPP"}>
 					<Select

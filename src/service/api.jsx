@@ -488,3 +488,24 @@ export const deletePengetahuan = async (id) => {
 		throw error;
 	}
 };
+
+/* -----------------------------Profile API----------------------------- */
+export const getProfile = async () => {
+    try {
+        const response = await api.get('/profile');
+        return response.data;
+    } catch (error) {
+        console.error("Error fetching profile:", error);
+        throw error;
+    }
+};
+
+export const updatePassword = async (passwordData) => {
+    try {
+        const response = await api.post('/profile/update-password', passwordData);
+        return response.data;
+    } catch (error) {
+        console.error("Error updating password:", error.response?.data || error.message);
+        throw error;
+    }
+};

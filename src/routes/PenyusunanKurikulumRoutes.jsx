@@ -38,6 +38,7 @@ import PenyusunanKurikulumExport from "../pages/PenyusunanKurikulum/PenyusunanKu
 import PetaKompetensi from "../pages/PetaKomptensi";
 import DashboardPenyusunanKurikulum from "../pages/Dashboard/DashboardPenyusunanKurikulum";
 import JejaringMK from "../pages/JejaringMK/JejaringMK";
+import Profile from "../pages/Profile";
 
 export default function PenyusunanKurikulumRoutes() {
 	return (
@@ -326,6 +327,15 @@ export default function PenyusunanKurikulumRoutes() {
 				element={
 					<ProtectedRoute>
 						<PenyusunanKurikulumExport />
+					</ProtectedRoute>
+				}
+			/>
+
+			<Route
+				path="/profile"
+				element={
+					<ProtectedRoute>
+						<Profile />
 					</ProtectedRoute>
 				}
 			/>
