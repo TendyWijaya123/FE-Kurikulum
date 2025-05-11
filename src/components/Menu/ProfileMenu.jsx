@@ -18,6 +18,11 @@ const ProfileMenu = () => {
 		navigate("/login");
 	};
 
+	const handleProfileClick = () => {
+		navigate("/profile");
+		setIsOpenMenu(false); // Close menu after clicking
+	};
+
 	return (
 		<div
 			className="relative flex items-center gap-2 cursor-pointer"
@@ -34,11 +39,9 @@ const ProfileMenu = () => {
 			{isOpenMenu && (
 				<div className="absolute top-full z-20 right-0 mt-2 w-40 bg-white shadow-lg rounded-md border border-gray-200">
 					<ul>
-						<li className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100">
+						<li className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
+							onClick={handleProfileClick}>
 							Profile
-						</li>
-						<li className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100">
-							Settings
 						</li>
 						<li
 							className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"

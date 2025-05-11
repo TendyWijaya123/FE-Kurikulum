@@ -12,7 +12,7 @@ const CplPpmVm = () => {
 	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
 		useContext(ProdiContext);
 	return (
-		<DefaultLayout>
+		<DefaultLayout title="CPL-PPM-VM">
 			<div className="flex flex-col gap-2">
 				<VisibleMenu allowedRoles={["P2MPP"]}>
 					<Select
