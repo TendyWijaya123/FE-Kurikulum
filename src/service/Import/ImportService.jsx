@@ -276,7 +276,6 @@ export const importSksu = async (file) => {
 	const formData = new FormData();
 	formData.append("file", file);
 
-	console.log("Form data:", formData);
 
 	try {
 		const response = await api.post("/sksu/import", formData, {
