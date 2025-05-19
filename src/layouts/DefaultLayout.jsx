@@ -1,9 +1,14 @@
 import { useState } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import FloatingButton from "../components/Button/FloatingButton";
+import { Drawer } from "antd";
+import ChatRoom from "../components/Common/ChatRoom";
 
 const DefaultLayout = ({ children, title }) => {
 	const [isCollapseSidebar, setIsCollapseSidebar] = useState(true);
+
+	const [openChat, setOpenChat] = useState(false);
 
 	return (
 		<div className="flex min-h-screen w-full font-sans text-black relative overflow-x-auto">
@@ -27,6 +32,16 @@ const DefaultLayout = ({ children, title }) => {
 					{/* Children */}
 					<div className="p-4 flex-1">{children}</div>
 				</div>
+				<FloatingButton onClick={()=> setOpenChat(true)} />
+				<Drawer
+					title="Room Chat"
+					placement="right"
+					width={600}
+					onClose={() => setOpenChat(false)}
+					open={openChat}
+				>
+					<ChatRoom />
+				</Drawer>
 			</div>
 		</div>
 	);

@@ -1,10 +1,10 @@
-import React, { useMemo, useState } from "react";
-import { Modal, Select, Table, Radio } from "antd";
+import React, { useMemo, useState, useEffect } from "react";
+import { Modal, Select, Table, Radio, Button, message } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { useDashboardData } from "../../../../hooks/Dashboard/useDashboardData";
 
 const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
-    
-    // Mengonversi data kurikulum ke format yang lebih mudah diakses
+    const { handleSendNotification } = useDashboardData();
     const prodiData = useMemo(() => {
         return curriculumData
             ? Object.keys(curriculumData).reduce((acc, key) => {
@@ -18,7 +18,7 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
     }, [curriculumData]);
 
     const [selectedProdi, setSelectedProdi] = useState(null);
-    const [filterStatus, setFilterStatus] = useState("all"); // Default: Semua
+    const [filterStatus, setFilterStatus] = useState("all");
 
     const columns = [
         {
@@ -51,7 +51,6 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
         },
     ];
 
-    // Filter data berdasarkan status yang dipilih
     const filteredData = useMemo(() => {
         if (!selectedProdi) return [];
 
@@ -61,9 +60,34 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
             } else if (filterStatus === "perluPerbaikan") {
                 return item.issues !== "CPL sesuai dengan standar.";
             }
-            return true; // Tampilkan semua jika "all"
+            return true;
         });
     }, [selectedProdi, filterStatus, prodiData]);
+
+    const SendNotification = () => {
+        if (selectedProdi) {
+            const cplPerluPerbaikan = prodiData[selectedProdi].filter(
+                (item) => item.issues !== "CPL sesuai dengan standar."
+            );
+
+            if (cplPerluPerbaikan.length > 0) {
+                const dataToSend = {
+                    prodiName: selectedProdi,
+                    cpl: cplPerluPerbaikan.map((item) => ({
+                        kode: item.kode,
+                        keterangan: item.keterangan,
+                        issues: item.issues,
+                    })),
+                };
+
+                handleSendNotification(dataToSend);
+            } else {
+                message.warning("Tidak ada CPL yang perlu perbaikan untuk dikirim pemberitahuannya.");
+            }
+        } else {
+            message.error("Silakan pilih program studi terlebih dahulu.");
+        }
+    };
 
     return (
         <>
@@ -75,7 +99,6 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
                 width={1000}
                 styles={{ body: { maxHeight: "70vh", overflow: "hidden" } }}
             >
-                {/* Pilihan Program Studi */}
                 <div style={{ marginBottom: 20 }}>
                     <Select
                         style={{ width: "100%" }}
@@ -89,7 +112,6 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
                     />
                 </div>
 
-                {/* Filter Status */}
                 {selectedProdi && (
                     <div style={{ marginBottom: 20, textAlign: "center" }}>
                         <Radio.Group value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
@@ -100,7 +122,14 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
                     </div>
                 )}
 
-                {/* Tabel Data */}
+                {selectedProdi && (
+                    <div style={{ marginBottom: 20, textAlign: "center" }}>
+                        <Button type="primary" onClick={SendNotification}>
+                            Kirim Pemberitahuan
+                        </Button>
+                    </div>
+                )}
+
                 {selectedProdi && (
                     <Table
                         dataSource={filteredData}

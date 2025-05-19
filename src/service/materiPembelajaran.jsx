@@ -1,25 +1,10 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:8000/api";
-
-const api = axios.create({
-	baseURL: API_URL,
-	headers: {
-		"Content-Type": "application/json",
-		Accept: "application/json",
-	},
-});
+import api from "../utils/axiosInstance";
 
 export const getMateriPembelajarans = async (prodiId = null) => {
 	try {
 		const params = prodiId ? { prodiId } : {};
-		const token = localStorage.getItem("authToken");
-
-		const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
 		const response = await api.get(`/materi-pembelajaran`, {
 			params,
-			headers,
 		});
 		return response.data;
 	} catch (error) {
@@ -35,11 +20,7 @@ export const getMateriPembelajarans = async (prodiId = null) => {
 
 export const postMateriPembelajaran = async (data) => {
 	try {
-		const token = localStorage.getItem("authToken");
-
-		const headers = token ? { Authorization: `Bearer ${token}` } : {};
-		const response = await api.post(`/materi-pembelajaran`, data, { headers });
-
+		const response = await api.post(`/materi-pembelajaran`, data);
 		return response.data;
 	} catch (error) {
 		if (error.response) {
@@ -54,12 +35,7 @@ export const postMateriPembelajaran = async (data) => {
 
 export const deleteMateriPembelajarans = async (data) => {
 	try {
-		const token = localStorage.getItem("authToken");
-
-		const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
 		const response = await api.delete(`/materi-pembelajaran`, {
-			headers,
 			data,
 		});
 
@@ -77,13 +53,7 @@ export const deleteMateriPembelajarans = async (data) => {
 
 export const deleteMateriPembelajaran = async (id) => {
 	try {
-		const token = localStorage.getItem("authToken");
-
-		const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-		const response = await api.delete(`/materi-pembelajaran/${id}`, {
-			headers,
-		});
+		const response = await api.delete(`/materi-pembelajaran/${id}`);
 		return response.data;
 	} catch (error) {
 		if (error.response) {

@@ -1,18 +1,155 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Select, Row, Col, Typography, Divider, Table, Space, message, Spin, Tooltip, Empty, Popconfirm } from 'antd';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { List, Typography, message, Spin, Button, Modal, Checkbox, Row, Col, Tooltip, Popconfirm  } from 'antd';
 import DefaultLayout from "../../layouts/DefaultLayout";
-import Accordion from '../../components/Accordion/Accordion';
+import { useDashboardPenyusunKurikulumData } from '../../hooks/Dashboard/useDashboardPenyusunKurikulumData';  
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 
-const { Title, Text } = Typography;
-const { Option } = Select;
+const { Title } = Typography;
 
 const DashboardPenyusunanKurikulum = () => {
-    
+  const { 
+    notifikasi,
+    selectedIds,
+    markAsRead, 
+    markAllAsRead, 
+    handleDelete, 
+    handleDeleteAll, 
+    handleSelect } = useDashboardPenyusunKurikulumData();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState(null);
+
+
+  const openModal = (notification) => {
+    setSelectedNotification(notification);
+    setModalVisible(true);
+    if (notification.status === "unread") {
+      markAsRead(notification.id);
+    }
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedNotification(null);
+  };
+
+  const visitPage = () => {
+    if (selectedNotification) {
+      navigate('/cpl-ppm-vm');
+    }
+  }
 
   return (
     <DefaultLayout title="Dashboard Kurikulum">
-       <h1>pages/Dashboard</h1>
+      <div style={{ padding: 20, backgroundColor: '#fff', borderRadius: 8, boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)' }}>
+          <div style={{ marginBottom: 20 }}>
+            <Title level={3}>Notifikasi</Title>
+            <Button type="primary" onClick={markAllAsRead}>
+              Tandai Semua Sebagai Telah Dibaca
+            </Button>
+            <Button
+              danger
+              onClick={handleDeleteAll}
+              style={{ marginLeft: 10 }}
+            >
+              Hapus Terpilih
+            </Button>
+
+          </div>
+          {loading ? (
+            <Spin style={{ display: 'block', margin: '20px auto' }} />
+          ) : notifikasi.length > 0 ? (
+            <div style={{ maxHeight: 400, overflowY: 'auto' }}>
+              <List
+                itemLayout="horizontal"
+                dataSource={notifikasi}
+                renderItem={(item) => (
+                  <List.Item
+                    style={{
+                    backgroundColor: item.status === "read" ? '#fafafa' : '#e6f7ff',
+                    borderBottom: '1px solid #d9d9d9',
+                    padding: '10px 15px',
+                  }}
+                  actions={[
+                    <Tooltip title="Lihat" key="view">
+                      <Button
+                        type="link"
+                        onClick={() => openModal(item)}
+                        icon={<EyeOutlined />}
+                      />
+                    </Tooltip>,
+                    <Tooltip title="Hapus" key="delete">
+                      <Popconfirm
+                        title="Yakin ingin menghapus notifikasi ini?"
+                        onConfirm={() => handleDelete(item.id)}
+                        okText="Ya"
+                        cancelText="Tidak"
+                      >
+                        <Button
+                          type="link"
+                          danger
+                          icon={<DeleteOutlined />}
+                        />
+                      </Popconfirm>
+                    </Tooltip>
+                  ]}
+                >
+                  <Row style={{ width: '100%' }}>
+                    <Col flex="30px">
+                      <Checkbox
+                        checked={selectedIds.includes(item.id)}
+                        onChange={(e) => handleSelect(item.id, e.target.checked)}
+                      />
+                    </Col>
+                    <Col flex="auto">
+                      <List.Item.Meta
+                        title={
+                          <Typography.Text
+                            strong
+                            style={{ color: item.status === "read" ? '#8c8c8c' : '#1890ff' }}
+                          >
+                            {item.kode}
+                          </Typography.Text>
+                        }
+                        description={
+                          <Typography.Text
+                            style={{ color: item.status === "read" ? '#8c8c8c' : '#000' }}
+                          >
+                            {item.deskripsi}
+                          </Typography.Text>
+                        }
+                      />
+                    </Col>
+                  </Row>
+                </List.Item>
+
+                )}
+              />
+            </div>
+          ) : (
+            <div style={{ textAlign: 'center', padding: 20 }}>
+              <Typography.Text>Tidak ada notifikasi</Typography.Text>
+            </div>
+          )}
+
+          <Modal
+            title={selectedNotification?.kode}
+            visible={modalVisible}
+            onCancel={closeModal}
+            footer={[
+              <Button type='primary' key="Check" onClick={visitPage}>
+                Check
+              </Button>,
+              <Button key="close" onClick={closeModal}>
+                Tutup
+            </Button>
+            ]}
+          >
+            <Typography.Text>{selectedNotification?.deskripsi}</Typography.Text>
+          </Modal>
+      </div>
     </DefaultLayout>
   );
 };

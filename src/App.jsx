@@ -4,7 +4,7 @@ import PengisianRpsRoutes from "./routes/PengisianRpsRoutes";
 
 function App() {
 	return (
-		<Router>
+		<Router basename="/kurikulum">
 			<Routes>
 				{PenyusunanKurikulumRoutes()}
 				{PengisianRpsRoutes()}

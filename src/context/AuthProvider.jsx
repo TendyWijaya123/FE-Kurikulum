@@ -37,7 +37,8 @@ const AuthProvider = ({ children }) => {
 
 	const login = async (email, password) => {
 		try {
-			const response = await axios.post("http://localhost:8000/api/login", {
+			const url_login = import.meta.env.VITE_REACT_APP_API_URL;
+			const response = await axios.post(`${url_login}/login`, {
 				email,
 				password,
 			});
@@ -53,8 +54,9 @@ const AuthProvider = ({ children }) => {
 
 	const loginRps = async (email, password) => {
 		try {
+			const url_login = import.meta.env.VITE_REACT_APP_API_URL;
 			const response = await axios.post(
-				"http://localhost:8000/api/login-dosen",
+				`${url_login}/login-dosen`,
 				{
 					email,
 					password,
@@ -75,10 +77,11 @@ const AuthProvider = ({ children }) => {
 		localStorage.clear();
 		setUser(null);
 		setToken(null);
+		const url_logout = import.meta.env.VITE_REACT_APP_API_URL;
 
 		axios
 			.post(
-				"http://localhost:8000/api/logout",
+				`${url_logout}/logout`,
 				{},
 				{
 					headers: {
