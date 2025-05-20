@@ -22,6 +22,7 @@ const useRps = (id) => {
 		setError(null);
 		try {
 			const data = await getRps(id);
+			console.log(data?.data);
 			setRpsData(data?.data?.rps || null);
 			setMataKuliahData(data?.data?.mataKuliah || null);
 			setCplDropdown(data?.data?.mataKuliah?.cpls || null);

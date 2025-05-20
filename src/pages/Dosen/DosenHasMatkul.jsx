@@ -51,6 +51,12 @@ const DosenHasMatkul = () => {
 			render: (text) => text,
 		},
 		{
+			title: "Prodi",
+			dataIndex: "prodi",
+			key: "prodi",
+			render: (text) => text,
+		},
+		{
 			title: "Dosen Pengampu",
 			dataIndex: "dosen",
 			key: "dosen",

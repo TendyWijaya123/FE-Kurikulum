@@ -12,6 +12,7 @@ import {
 	Select,
 	Spin,
 	Table,
+	Tag,
 	message,
 } from "antd";
 import Accordion from "../../../components/Accordion/Accordion";
@@ -77,6 +78,16 @@ const Rps = () => {
 			title: "Nama Mata Kuliah",
 			key: "nama",
 			dataIndex: "nama",
+			render: (_, record) => (
+				<>
+					{record.nama}{" "}
+					{record.nama_inggris ? (
+						<i>({record.nama_inggris})</i>
+					) : (
+						<Tag color="error">Nama Inggris belum diisi</Tag>
+					)}
+				</>
+			),
 		},
 		{
 			title: "Kode Mata  Kuliah",
@@ -109,6 +120,12 @@ const Rps = () => {
 		{
 			title: "Keterangan",
 			dataIndex: "keterangan",
+			key: "keterangan",
+		},
+
+		{
+			title: "Level Of Learning",
+			dataIndex: ["pivot", "kategori"],
 			key: "keterangan",
 		},
 	];
@@ -147,7 +164,9 @@ const Rps = () => {
 			width: 350,
 			render: (_, record) => {
 				return (
-					record.modalitas_bentuk_strategi_metodepembelajaran || "Belum Diisi"
+					record.modalitas_bentuk_strategi_metodepembelajaran || (
+						<Tag color="error">Belum Diisi</Tag>
+					)
 				);
 			},
 		},
@@ -157,7 +176,9 @@ const Rps = () => {
 			key: "instrumen_penilaian",
 			width: 200,
 			render: (_, record) => {
-				return record.instrumen_penilaian || "Belum Diisi";
+				return (
+					record.instrumen_penilaian || <Tag color="error">Belum Diisi</Tag>
+				);
 			},
 		},
 		{
@@ -190,7 +211,7 @@ const Rps = () => {
 			key: "hasil_belajar",
 			width: 300,
 			render: (_, record) => {
-				return record.hasil_belajar || "Belum Diisi";
+				return record.hasil_belajar || <Tag color="error">Belum Diisi</Tag>;
 			},
 		},
 		{
@@ -199,7 +220,7 @@ const Rps = () => {
 			dataIndex: "cpl",
 			width: 100,
 			render: (_, record) => {
-				return record.cpl?.kode || "Belum Diisi";
+				return record.cpl?.kode || <Tag color="error">Belum Diisi</Tag>;
 			},
 		},
 		{
@@ -208,7 +229,9 @@ const Rps = () => {
 			dataIndex: "tujuan_belajar",
 			width: 100,
 			render: (_, record) => {
-				return record.tujuan_belajar?.kode || "Belum Diisi";
+				return (
+					record.tujuan_belajar?.kode || <Tag color="error">Belum Diisi</Tag>
+				);
 			},
 		},
 		{
@@ -216,6 +239,9 @@ const Rps = () => {
 			dataIndex: "bobot_penilaian",
 			key: "bobot_penilaian",
 			width: 100,
+			render: (_, record) => {
+				return record.bobot_penilaian || <Tag color="error">Belum Diisi</Tag>;
+			},
 		},
 		{
 			title: "Action",
@@ -278,21 +304,28 @@ const Rps = () => {
 						<Descriptions.Item label="Deskripsi Singkat MK">
 							{mataKuliahData.deskripsi_singkat ||
 								"Belum Mengisikan Deskripsi Singkat"}
+							{mataKuliahData.deskripsi_singkat_inggris && (
+								<>
+									<br />
+									<br />
+									<i>{mataKuliahData.deskripsi_singkat_inggris}</i>
+								</>
+							)}
 						</Descriptions.Item>
 
 						<Descriptions.Item label="Bahan Kajian/Materi Pembelajaran">
 							{mataKuliahData?.materi_pembelajarans &&
-								mataKuliahData.materi_pembelajarans.length > 0 && (
-									<ul className="list-disc pl-5 space-y-2">
-										{mataKuliahData.materi_pembelajarans.map(
-											(materi, index) => (
-												<li key={index} className="">
-													{materi.description}{" "}
-												</li>
-											)
-										)}
-									</ul>
-								)}
+								mataKuliahData.materi_pembelajarans.length > 0 &&
+								mataKuliahData.materi_pembelajarans
+									.map((materi) => materi.description)
+									.join("; ")}
+							{mataKuliahData?.materi_pembelajaran_inggris && (
+								<>
+									<br />
+									<br />
+									<i>{mataKuliahData.materi_pembelajaran_inggris}</i>
+								</>
+							)}
 						</Descriptions.Item>
 
 						<Descriptions.Item label="Daftar Referensi">
@@ -300,13 +333,11 @@ const Rps = () => {
 							mataKuliahData.buku_referensis.length > 0 ? (
 								<ul className="list-disc pl-5 space-y-2">
 									{mataKuliahData.buku_referensis.map((buku, index) => (
-										<li key={index}>
-											{buku.judul} {/* Ganti dengan properti yang sesuai */}
-										</li>
+										<li key={index}>{buku.judul}</li>
 									))}
 								</ul>
 							) : (
-								<span>Tidak ada referensi</span>
+								<Tag color="error">Tidak ada referensi</Tag>
 							)}
 						</Descriptions.Item>
 
@@ -424,7 +455,7 @@ const Rps = () => {
 						</Select>
 					</Form.Item>
 
-					<Form.Item label="CPL ID" name="cpl_id" rules={[]}>
+					<Form.Item label="CPL" name="cpl_id" rules={[]}>
 						<Select
 							placeholder="Pilih Capaian Pembelajaran Lulusan"
 							optionFilterProp="children"

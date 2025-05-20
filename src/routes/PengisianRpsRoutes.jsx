@@ -5,6 +5,7 @@ import BukuReferensi from "../pages/BukuReferensi/BukuReferensi";
 import ReferensiMataKuliah from "../pages/ReferensiMataKuliah/ReferensiMataKuliah";
 import MataKuliahPengampu from "../pages/DosenPages/RPS/MataKuliahPengampu";
 import Rps from "../pages/DosenPages/RPS/Rps";
+import DosenHasMatkul from "../pages/Dosen/DosenHasMatkul";
 
 export default function PengisianRpsRoutes() {
 	return (
@@ -32,6 +33,15 @@ export default function PengisianRpsRoutes() {
 				element={
 					<ProtectedRoute>
 						<MataKuliahPengampu />
+					</ProtectedRoute>
+				}
+			/>
+
+			<Route
+				path="/dosen-pengampu"
+				element={
+					<ProtectedRoute>
+						<DosenHasMatkul />
 					</ProtectedRoute>
 				}
 			/>

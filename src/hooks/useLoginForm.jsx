@@ -8,7 +8,7 @@ export const useLoginForm = () => {
 	const { user, login, loginRps } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
-	const [isLoggedIn, setIsLoggedIn] = useState(false); 
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 	useEffect(() => {
 		if (isLoggedIn && user?.roles) {
@@ -31,13 +31,13 @@ export const useLoginForm = () => {
 	};
 
 	const handleLoginRedirect = (role) => {
-		if (!role || role.length === 0) return; // 🔹 Pastikan role ada sebelum redirect
+		if (!role || role.length === 0) return;
 
 		if (role.includes("Penyusun Kurikulum")) {
 			navigate("/dashboard-penyusun-kurikulum");
 		} else if (role.includes("P2MPP")) {
 			navigate("/dashboard");
-		} 
+		}
 	};
 
 	const handleSubmitRps = async (e) => {
@@ -45,7 +45,7 @@ export const useLoginForm = () => {
 
 		try {
 			await loginRps(email, password);
-			navigate("/dashboard");
+			navigate("/mata-kuliah-pengampu");
 		} catch (error) {
 			console.error("Login failed:", error.response?.data || error.message);
 			alert("Login failed, please try again.");
