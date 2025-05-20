@@ -5,6 +5,8 @@ import { AuthContext } from "./context/AuthProvider";
 const ProtectedRoute = ({
 	children,
 	isProdiRestricted = false,
+	isKurikulumRestricted = false,
+	prodiSpecific = false,
 	allowedRoles = [],
 }) => {
 	const { user, loading } = useContext(AuthContext);
@@ -17,16 +19,38 @@ const ProtectedRoute = ({
 		return <Navigate to="/login" replace />;
 	}
 
+	if (user.roles && user.roles.includes("P2MPP")) {
+		return children;
+	}
+
 	if (
 		isProdiRestricted &&
-		user.isActiveProdi !== undefined &&
+		typeof user.isActiveProdi !== 'undefined' &&
 		user.isActiveProdi === 0
 	) {
 		return <Navigate to="/temporary-unavailable" replace />;
 	}
 
 	if (
+		isKurikulumRestricted &&
+		typeof user.isActiveKurikulum !== 'undefined' &&
+		user.isActiveKurikulum === 0
+	) {
+		return <Navigate to="/temporary-unavailable" replace />;
+	}
+
+	if (
+		prodiSpecific && 
+		user.roles &&
+		user.roles.includes("Tim Penyusunan Kurikulum") && 
+		(!user.prodiId || user.prodiId === null)
+	) {
+		return <Navigate to="/unauthorized" replace />;
+	}
+
+	if (
 		allowedRoles.length > 0 &&
+		user.roles &&
 		!user.roles.some((role) => allowedRoles.includes(role))
 	) {
 		return <Navigate to="/unauthorized" replace />;

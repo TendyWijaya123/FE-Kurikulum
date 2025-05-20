@@ -231,8 +231,8 @@ export const useKKNIData = () => {
 		try {
 			const data = {
 				dataSource: dataSource,
-				selectedKemampuanKerja,
-				selectedPengetahuan,
+				selectedKemampuanKerja: [],
+				selectedPengetahuan: [],
 			};
 			await postKkni(data);
 			message.success("Data berhasil disimpan!");
