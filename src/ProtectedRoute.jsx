@@ -19,13 +19,13 @@ const ProtectedRoute = ({
 		return <Navigate to="/login" replace />;
 	}
 
-	if (user.roles.includes("P2MPP")) {
+	if (user.roles && user.roles.includes("P2MPP")) {
 		return children;
 	}
 
 	if (
 		isProdiRestricted &&
-		user.isActiveProdi !== undefined &&
+		typeof user.isActiveProdi !== 'undefined' &&
 		user.isActiveProdi === 0
 	) {
 		return <Navigate to="/temporary-unavailable" replace />;
@@ -33,7 +33,7 @@ const ProtectedRoute = ({
 
 	if (
 		isKurikulumRestricted &&
-		user.isActiveKurikulum !== undefined &&
+		typeof user.isActiveKurikulum !== 'undefined' &&
 		user.isActiveKurikulum === 0
 	) {
 		return <Navigate to="/temporary-unavailable" replace />;
@@ -41,6 +41,7 @@ const ProtectedRoute = ({
 
 	if (
 		prodiSpecific && 
+		user.roles &&
 		user.roles.includes("Tim Penyusunan Kurikulum") && 
 		(!user.prodiId || user.prodiId === null)
 	) {
@@ -49,6 +50,7 @@ const ProtectedRoute = ({
 
 	if (
 		allowedRoles.length > 0 &&
+		user.roles &&
 		!user.roles.some((role) => allowedRoles.includes(role))
 	) {
 		return <Navigate to="/unauthorized" replace />;
