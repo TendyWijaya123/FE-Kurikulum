@@ -33,7 +33,7 @@ export const useIlmuPengetahuan = () => {
 			const response = await getIlmuPengetahuan(prodiId);
 			setData(response.data);
 		} catch (error) {
-			message.error(
+			console.error(
 				"Gagal mengambil data: " +
 					(error.response?.data?.message || error.message)
 			);

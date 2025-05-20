@@ -32,7 +32,7 @@ export const useTeknologi = () => {
 			const response = await getTeknologi(prodiId);
 			setData(response.data);
 		} catch (error) {
-			message.error(
+			console.error(
 				"Gagal mengambil data: " +
 					(error.response?.data?.message || error.message)
 			);
