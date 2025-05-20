@@ -150,6 +150,8 @@ const TeknologiTable = () => {
 				pagination={{ pageSize: 5 }}
 				bordered
 				loading={loading}
+				className="normal-font"
+				style={{fontWeight: 'normal'}}
 			/>
 		</div>
 	);
