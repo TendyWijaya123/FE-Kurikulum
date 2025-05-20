@@ -1,30 +1,63 @@
 import { useEffect, useState } from "react";
-import { Table, Select, Button, message, Modal } from "antd";
+import { Table, Select, Button, message, Modal, Input } from "antd";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import {
 	assignReferensiKeMataKuliah,
 	fetchMataKuliahByJurusan,
 } from "../../service/MataKuliah/MataKuliahService";
 import { getDropDownBukuReferensiByJurusan } from "../../service/BukuReferensi/BukuReferensiService";
+import { BookOutlined, SearchOutlined } from "@ant-design/icons";
+import { getProdiDropdownByJurusanDosen } from "../../service/api";
 
 const ReferensiMataKuliah = () => {
 	const [mataKuliahs, setMataKuliahs] = useState([]);
+	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [dropdownBuku, setDropdownBuku] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [selectedBukuReferensi, setSelectedBukuReferensi] = useState({});
 	const [modalVisible, setModalVisible] = useState(false);
 	const [selectedMataKuliah, setSelectedMataKuliah] = useState(null);
+	const [filters, setFilters] = useState({
+		nama: "",
+		kode: "",
+		prodi_id: undefined,
+	});
+	const [pagination, setPagination] = useState({
+		current: 1,
+		pageSize: 10,
+		total: 0,
+	});
 
 	useEffect(() => {
-		loadMataKuliahs();
+		loadMataKuliahs(1);
 		loadDropdownBuku();
 	}, []);
 
-	const loadMataKuliahs = async () => {
+	useEffect(() => {
+		loadProdiDropdown();
+	}, []);
+
+	const loadProdiDropdown = async () => {
+		try {
+			const data = await getProdiDropdownByJurusanDosen();
+			setProdiDropdown(data);
+		} catch (error) {}
+	};
+
+	const loadMataKuliahs = async (page = 1) => {
 		setLoading(true);
 		try {
-			const data = await fetchMataKuliahByJurusan();
-			setMataKuliahs(data.mata_kuliahs);
+			const response = await fetchMataKuliahByJurusan({
+				...filters,
+				page,
+			});
+			console.log(response.data);
+			setMataKuliahs(response.data);
+			setPagination((prev) => ({
+				...prev,
+				current: page,
+				total: response.total,
+			}));
 		} catch (error) {
 			message.error("Gagal mengambil data Mata Kuliah");
 		}
@@ -40,6 +73,14 @@ const ReferensiMataKuliah = () => {
 			message.error("Gagal mengambil data Buku Referensi");
 		}
 		setLoading(false);
+	};
+
+	const handleSearch = () => {
+		loadMataKuliahs(1);
+	};
+
+	const handleTableChange = (pagination) => {
+		loadMataKuliahs(pagination.current);
 	};
 
 	const handleAssignReferensi = async () => {
@@ -80,6 +121,11 @@ const ReferensiMataKuliah = () => {
 			key: "nama",
 		},
 		{
+			title: "Prodi",
+			dataIndex: ["kurikulum", "prodi", "name"],
+			key: "prodi",
+		},
+		{
 			title: "Semester",
 			dataIndex: "semester",
 			key: "semester",
@@ -106,30 +152,75 @@ const ReferensiMataKuliah = () => {
 			key: "aksi",
 			render: (text, record) => (
 				<Button type="primary" onClick={() => openModal(record)}>
-					Kelola Referensi
+					<BookOutlined />
 				</Button>
 			),
 		},
 	];
 
 	return (
-		<DefaultLayout>
+		<DefaultLayout title={"Manajemen Referensi Mata Kuliah"}>
 			<div className="p-6 bg-white shadow-lg rounded-lg">
 				<h1 className="text-xl font-bold mb-4">
 					Manajemen Referensi Mata Kuliah
 				</h1>
+
+				{/* Filter */}
+				<div className="mb-4 flex gap-4">
+					<Input
+						placeholder="Cari Kode Mata Kuliah"
+						value={filters.kode}
+						onChange={(e) =>
+							setFilters((prev) => ({ ...prev, kode: e.target.value }))
+						}
+					/>
+					<Input
+						placeholder="Cari Nama Mata Kuliah"
+						value={filters.nama}
+						onChange={(e) =>
+							setFilters((prev) => ({ ...prev, nama: e.target.value }))
+						}
+					/>
+					<Select
+						placeholder="Pilih Prodi"
+						allowClear
+						style={{ width: 200, marginRight: 8 }}
+						value={filters.prodi_id}
+						onChange={(value) =>
+							setFilters((prev) => ({ ...prev, prodi_id: value }))
+						}>
+						{prodiDropdown.map((prodi) => (
+							<Select.Option key={prodi.id} value={prodi.id}>
+								{prodi.name}
+							</Select.Option>
+						))}
+					</Select>
+					<Button type="primary" onClick={handleSearch}>
+						<SearchOutlined />
+					</Button>
+				</div>
+
+				{/* Tabel */}
 				<Table
+					className="overflow-x-auto"
 					dataSource={mataKuliahs}
 					columns={columns}
 					rowKey="id"
 					loading={loading}
 					bordered
+					pagination={{
+						current: pagination.current,
+						pageSize: pagination.pageSize,
+						total: pagination.total,
+						showSizeChanger: false,
+					}}
+					onChange={handleTableChange}
 				/>
 			</div>
 
 			<Modal
 				title="Kelola Buku Referensi"
-				visible={modalVisible}
+				open={modalVisible}
 				onCancel={() => setModalVisible(false)}
 				onOk={handleAssignReferensi}>
 				{selectedMataKuliah && (

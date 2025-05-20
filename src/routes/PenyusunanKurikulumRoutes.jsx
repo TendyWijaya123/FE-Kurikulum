@@ -313,14 +313,7 @@ export default function PenyusunanKurikulumRoutes() {
 				}
 			/>
 
-			<Route
-				path="/dosen-pengampu"
-				element={
-					<ProtectedRoute>
-						<DosenHasMatkul />
-					</ProtectedRoute>
-				}
-			/>
+		
 
 			<Route
 				path="/export-penyusunan-kurikulum"
