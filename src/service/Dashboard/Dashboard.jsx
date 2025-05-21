@@ -84,11 +84,16 @@ export const sendNotification = async (data) => {
 export const fetchNotifikasi = async () => {
     try {
         const response = await api.get(`/notifikasi`);
-        return response.data;
+        return response.data || [];
     } catch (error) {
-        throw new Error("Error fetching notification: " + error.message);
+        if (error.response && error.response.status === 404) {
+            return [];
+        } else {
+            throw new Error("Error fetching notification: " + error.message);
+        }
     }
-}
+};
+
 
 export const changeStatus = async (ids) => {
     try {

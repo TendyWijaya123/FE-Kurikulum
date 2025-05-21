@@ -11,7 +11,7 @@ export const useDashboardPenyusunKurikulumData = () => {
             const data = await fetchNotifikasi();
             setNotifikasi(data);
         }catch(error){
-            message.error(`Error fetching data notifikasi   : ${error})`);
+            message.error(`${error})`);
         }
     }
 
