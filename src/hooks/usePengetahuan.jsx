@@ -163,11 +163,18 @@ export const usePengetahuan = () => {
 	const handleSaveAll = async () => {
 		setSaving(true);
 		try {
-			const itemsToSave = pengetahuanData.filter(
-				(item) => item.deskripsi.trim() !== ""
+			// Cek apakah ada data kosong
+			const emptyItems = pengetahuanData.filter(
+				(item) => !item.deskripsi || item.deskripsi.trim() === ""
 			);
 
-			const payload = itemsToSave.map((item) => ({
+			// Jika ada data kosong, tampilkan error
+			if (emptyItems.length > 0) {
+				message.error("Data tidak boleh kosong");
+				return false;
+			}
+
+			const payload = pengetahuanData.map((item) => ({
 				id: item.id,
 				deskripsi: item.deskripsi,
 			}));
