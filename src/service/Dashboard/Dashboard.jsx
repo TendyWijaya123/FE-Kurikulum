@@ -65,3 +65,42 @@ export const fetchMatakuliahDetailDashboard = async (prodi_id) => {
         throw new Error("Error fetching Matakuliah data: " + error.message);
     }
 };
+
+//------------------------------------Penyusun Kurikulum------------------------------------//
+
+export const sendNotification = async (data) => {
+    try {
+        if (!data || typeof data !== 'object') {
+            throw new Error("Invalid data: Notification payload must be an object.");
+        }
+        const response = await api.post('/notifikasi', data);
+        return response.data;
+    } catch (error) {
+        console.error("Error sending notification:", error);
+        throw new Error("Error sending notification: " + error.message);
+    }
+}
+
+export const fetchNotifikasi = async () => {
+    try {
+        const response = await api.get(`/notifikasi`);
+        return response.data || [];
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            return [];
+        } else {
+            throw new Error("Error fetching notification: " + error.message);
+        }
+    }
+};
+
+
+export const changeStatus = async (ids) => {
+    try {
+        console.log(ids);
+        const response = await api.put(`/notifikasi/change-status`, {ids});
+        return response.data;
+    } catch (error) {
+        throw new Error("Error marking notification as read: " + error.message);
+    }
+}

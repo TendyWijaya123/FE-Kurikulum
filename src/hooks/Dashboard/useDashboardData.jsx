@@ -6,7 +6,7 @@ import {
 	fetchProdi,
 } from "../../service/Dashboard/Dashboard";
 import { message } from "antd";
-import { progresGetData } from "../../service/Dashboard/Dashboard";
+import { progresGetData, sendNotification } from "../../service/Dashboard/Dashboard";
 
 export const useDashboardData = () => {
 	const [loading, setLoading] = useState(false);
@@ -137,6 +137,16 @@ export const useDashboardData = () => {
 		await startCurriculumProcessing();
 	};
 
+	const handleSendNotification = async (data) => {
+		try {
+			console.log(data);
+			await sendNotification(data);
+			message.success("Pemberitahuan telah dikirim.");
+		} catch (error) {
+			message.error("Error sending notification:", error);
+		}
+	}
+
 	return {
 		loading,
 		progress,
@@ -150,5 +160,6 @@ export const useDashboardData = () => {
 		setJurusanId,
 		handleJurusanChange,
 		handleRefresh,
+		handleSendNotification
 	};
 };

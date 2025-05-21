@@ -37,7 +37,7 @@ const ImportModal = ({ isOpen, setIsOpen, handleImport, title }) => {
 			confirmLoading={importing}
 		>
 			<Upload
-				accept=".xlsx, .csv"
+				accept=".xlsx, .xls, .csv"
 				maxCount={1}
 				fileList={fileList}
 				beforeUpload={() => false}

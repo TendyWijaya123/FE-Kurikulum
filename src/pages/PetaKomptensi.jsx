@@ -19,7 +19,7 @@ import { usePetaKompetensi } from "../hooks/usePetaKompetensi";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 
 const { Title, Text } = Typography;
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:8001";
 
 const PetaKompetensi = () => {
 	const { loading, uploading, deleting, petaData, handleUpload, handleDelete } =

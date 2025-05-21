@@ -1,25 +1,11 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:8000/api";
-
-const api = axios.create({
-	baseURL: API_URL,
-	headers: {
-		"Content-Type": "application/json",
-		Accept: "application/json",
-	},
-});
+import api from "../../utils/axiosInstance";
 
 export const getBenchKurikulums = async (prodiId = null) => {
 	try {
 		const params = prodiId ? { prodiId } : {};
-		const token = localStorage.getItem("authToken");
-
-		const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
 		const response = await api.get(`/bench-kurikulums`, {
 			params,
-			headers,
 		});
 		return response.data;
 	} catch (error) {
@@ -29,10 +15,7 @@ export const getBenchKurikulums = async (prodiId = null) => {
 
 export const postBenchKurikulms = async (data) => {
 	try {
-		const token = localStorage.getItem("authToken");
-
-		const headers = token ? { Authorization: `Bearer ${token}` } : {};
-		const response = await api.post(`/bench-kurikulums`, data, { headers });
+		const response = await api.post(`/bench-kurikulums`, data);
 
 		return response.data;
 	} catch (error) {
@@ -42,12 +25,7 @@ export const postBenchKurikulms = async (data) => {
 
 export const deleteBenchKurikulums = async (data) => {
 	try {
-		const token = localStorage.getItem("authToken");
-
-		const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
 		const response = await api.delete(`/bench-kurikulums`, {
-			headers,
 			data,
 		});
 
@@ -65,11 +43,7 @@ export const deleteBenchKurikulums = async (data) => {
 
 export const deleteBK = async (id) => {
 	try {
-		const token = localStorage.getItem("authToken");
-
-		const headers = token ? { Authorization: `Bearer ${token}` } : {};
-
-		const response = await api.delete(`/bench-kurikulums/${id}`, { headers });
+		const response = await api.delete(`/bench-kurikulums/${id}`);
 		return response.data;
 	} catch (error) {
 		if (error.response) {

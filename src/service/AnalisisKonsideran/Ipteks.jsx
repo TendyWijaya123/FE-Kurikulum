@@ -1,24 +1,10 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:8000/api";
-
-const api = axios.create({
-	baseURL: API_URL,
-	headers: {
-		"Content-Type": "application/json",
-		Accept: "application/json",
-	},
-});
+import api from "../../utils/axiosInstance";
 
 export const getIlmuPengetahuan = async (prodiId = null) => {
 	try {
 		const params = prodiId ? { prodiId } : {};
 
-		const token = localStorage.getItem("authToken");
 		const response = await api.get("/ilmu-pengetahuan", {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
 			params,
 		});
 		return response.data;
@@ -30,13 +16,7 @@ export const getIlmuPengetahuan = async (prodiId = null) => {
 
 export const createIlmuPengetahuan = async (data) => {
 	try {
-		const token = localStorage.getItem("authToken");
-		const response = await api.post("/ilmu-pengetahuan", data, {
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-		});
+		const response = await api.post("/ilmu-pengetahuan", data);
 		return response.data;
 	} catch (error) {
 		throw error;
@@ -45,12 +25,7 @@ export const createIlmuPengetahuan = async (data) => {
 
 export const deleteIlmuPengetahuan = async (id) => {
 	try {
-		const token = localStorage.getItem("authToken");
-		const response = await api.delete(`/ilmu-pengetahuan/${id}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		});
+		const response = await api.delete(`/ilmu-pengetahuan/${id}`);
 		return response.data;
 	} catch (error) {
 		throw error;
@@ -59,11 +34,7 @@ export const deleteIlmuPengetahuan = async (id) => {
 
 export const downloadIlmuPengetahuanTemplate = async () => {
 	try {
-		const token = localStorage.getItem("authToken");
 		const response = await api.get("/ilmu-pengetahuan/template", {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
 			responseType: "blob",
 		});
 
@@ -90,10 +61,8 @@ export const downloadIlmuPengetahuanTemplate = async () => {
 
 export const importIlmuPengetahuan = async (formData) => {
 	try {
-		const token = localStorage.getItem("authToken");
 		const response = await api.post("/ilmu-pengetahuan/import", formData, {
 			headers: {
-				Authorization: `Bearer ${token}`,
 				"Content-Type": "multipart/form-data",
 			},
 		});
@@ -107,11 +76,7 @@ export const importIlmuPengetahuan = async (formData) => {
 export const getTeknologi = async (prodiId = null) => {
 	try {
 		const params = prodiId ? { prodiId } : {};
-		const token = localStorage.getItem("authToken");
 		const response = await api.get("/teknologi", {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
 			params,
 		});
 		return response.data;
@@ -122,13 +87,7 @@ export const getTeknologi = async (prodiId = null) => {
 
 export const createTeknologi = async (data) => {
 	try {
-		const token = localStorage.getItem("authToken");
-		const response = await api.post("/teknologi", data, {
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-		});
+		const response = await api.post("/teknologi", data);
 		return response.data;
 	} catch (error) {
 		throw error;
@@ -137,12 +96,7 @@ export const createTeknologi = async (data) => {
 
 export const deleteTeknologi = async (id) => {
 	try {
-		const token = localStorage.getItem("authToken");
-		const response = await api.delete(`teknologi/${id}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		});
+		const response = await api.delete(`teknologi/${id}`);
 		return response.data;
 	} catch (error) {
 		throw error;
@@ -151,11 +105,7 @@ export const deleteTeknologi = async (id) => {
 
 export const downloadTeknologiTemplate = async () => {
 	try {
-		const token = localStorage.getItem("authToken");
 		const response = await api.get("/teknologi/template", {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
 			responseType: "blob",
 		});
 		return response.data;
@@ -167,10 +117,8 @@ export const downloadTeknologiTemplate = async () => {
 
 export const importTeknologi = async (formData) => {
 	try {
-		const token = localStorage.getItem("authToken");
 		const response = await api.post("/teknologi/import", formData, {
 			headers: {
-				Authorization: `Bearer ${token}`,
 				"Content-Type": "multipart/form-data",
 			},
 		});
@@ -184,12 +132,7 @@ export const importTeknologi = async (formData) => {
 export const getSeni = async (prodiId = null) => {
 	try {
 		const params = prodiId ? { prodiId } : {};
-
-		const token = localStorage.getItem("authToken");
 		const response = await api.get("/seni", {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
 			params,
 		});
 		return response.data;
@@ -200,13 +143,7 @@ export const getSeni = async (prodiId = null) => {
 
 export const createSeni = async (data) => {
 	try {
-		const token = localStorage.getItem("authToken");
-		const response = await api.post("/seni", data, {
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: `Bearer ${token}`,
-			},
-		});
+		const response = await api.post("/seni", data);
 		return response.data;
 	} catch (error) {
 		throw error;
@@ -215,12 +152,7 @@ export const createSeni = async (data) => {
 
 export const deleteSeni = async (id) => {
 	try {
-		const token = localStorage.getItem("authToken");
-		const response = await api.delete(`seni/${id}`, {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		});
+		const response = await api.delete(`seni/${id}`);
 		return response.data;
 	} catch (error) {
 		console.error("Error deleting seni:", error);
@@ -230,11 +162,7 @@ export const deleteSeni = async (id) => {
 
 export const downloadSeniTemplate = async () => {
 	try {
-		const token = localStorage.getItem("authToken");
 		const response = await api.get("/seni/template", {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
 			responseType: "blob",
 		});
 		return response.data;
@@ -246,10 +174,8 @@ export const downloadSeniTemplate = async () => {
 
 export const importSeni = async (formData) => {
 	try {
-		const token = localStorage.getItem("authToken");
 		const response = await api.post("/seni/import", formData, {
 			headers: {
-				Authorization: `Bearer ${token}`,
 				"Content-Type": "multipart/form-data",
 			},
 		});

@@ -143,6 +143,7 @@ export const useIlmuPengetahuan = () => {
 			setSaving(true);
 			const formData = new FormData();
 			formData.append("file", file);
+			console.log("FormData:", formData);
 
 			await importIlmuPengetahuan(formData);
 			await fetchData();
