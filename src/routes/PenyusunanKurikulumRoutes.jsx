@@ -136,7 +136,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/vmt"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<VMT />
 					</ProtectedRoute>
 				}
@@ -145,7 +145,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/cpl-ppm-vm"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<CplPpmVm />
 					</ProtectedRoute>
 				}
@@ -154,7 +154,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/matrix-cpl-ppm"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<MatrixCplPpm />
 					</ProtectedRoute>
 				}
@@ -181,7 +181,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/analisis-konsideran/sksu"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<SKSU />
 					</ProtectedRoute>
 				}
@@ -190,7 +190,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/analisis-konsideran/bench-kurikulums"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<BenchKurikulums />
 					</ProtectedRoute>
 				}
@@ -199,7 +199,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/analisis-konsideran/kkni"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<KKNI />
 					</ProtectedRoute>
 				}
@@ -208,7 +208,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/mp"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>		
 						<MateriPembelajaran />
 					</ProtectedRoute>
 				}
@@ -216,7 +216,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/matriks-cpl-iea"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<MatriksCplHasIea />
 					</ProtectedRoute>
 				}
@@ -224,7 +224,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/matriks-p-mp"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<MatriksPHasMp />
 					</ProtectedRoute>
 				}
@@ -232,7 +232,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/analisis-konsideran/ipteks"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<Ipteks />
 					</ProtectedRoute>
 				}
@@ -242,7 +242,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/pengetahuan"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<Pengetahuan />
 					</ProtectedRoute>
 				}
@@ -253,7 +253,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/mata-kuliah"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<MataKuliah />
 					</ProtectedRoute>
 				}
@@ -262,7 +262,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/jejaring-matakuliah"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<JejaringMK />
 					</ProtectedRoute>
 				}
@@ -271,7 +271,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/matrix-cpl-p"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<MatrixCplP />
 					</ProtectedRoute>
 				}
@@ -280,7 +280,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/peta-kompetensi"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<PetaKompetensi />
 					</ProtectedRoute>
 				}
@@ -289,7 +289,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/matriks-p-mp-mk"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<MatriksMpPMk />
 					</ProtectedRoute>
 				}
@@ -298,7 +298,7 @@ export default function PenyusunanKurikulumRoutes() {
 			<Route
 				path="/matrix-cpl-mk"
 				element={
-					<ProtectedRoute>
+					<ProtectedRoute isProdiRestricted={true} isKurikulumRestricted={true}>
 						<MatrixCplMk />
 					</ProtectedRoute>
 				}
@@ -313,14 +313,7 @@ export default function PenyusunanKurikulumRoutes() {
 				}
 			/>
 
-			<Route
-				path="/dosen-pengampu"
-				element={
-					<ProtectedRoute>
-						<DosenHasMatkul />
-					</ProtectedRoute>
-				}
-			/>
+		
 
 			<Route
 				path="/export-penyusunan-kurikulum"

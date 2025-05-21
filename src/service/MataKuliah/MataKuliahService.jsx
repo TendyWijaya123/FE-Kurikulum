@@ -33,9 +33,11 @@ export const getMataKuliahDropdown = async () => {
 	}
 };
 
-export const fetchMataKuliahByJurusan = async () => {
+export const fetchMataKuliahByJurusan = async (params = {}) => {
 	try {
-		const response = await api.get("/mata-kuliah/show-jurusan");
+		const response = await api.get("/mata-kuliah/show-jurusan", {
+			params,
+		});
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching Mata Kuliah by Jurusan:", error);
@@ -43,8 +45,16 @@ export const fetchMataKuliahByJurusan = async () => {
 	}
 };
 
-export const getMataKuliahByDosenPengampu = async () => {
-	const response = await api.get("/mata-kuliah/pengampu");
+export const getMataKuliahByDosenPengampu = async (params = {}) => {
+	const response = await api.get("/mata-kuliah/pengampu", {
+		params: {
+			nama: params.nama,
+			kode: params.kode,
+			prodi_id: params.prodi_id,
+			page: params.page || 1,
+			per_page: params.perPage || 10,
+		},
+	});
 	return response.data;
 };
 
@@ -66,10 +76,19 @@ export const updateMataKuliah = async (id, mataKuliahData) => {
 	}
 };
 
-export const updateDeskripsiSingkatMK = async (id, deskripsi) => {
+export const updateDeskripsiSingkatMK = async (
+	id,
+	deskripsi,
+	deskripsiSingkatInggris,
+	namaInggris,
+	MPInggris
+) => {
 	try {
 		const response = await api.put(`/mata-kuliah/pengampu/${id}`, {
 			deskripsi_singkat: deskripsi,
+			deskripsi_singkat_inggris: deskripsiSingkatInggris,
+			nama_inggris: namaInggris,
+			materi_pembelajaran_inggris: MPInggris,
 		});
 		return response.data;
 	} catch (error) {

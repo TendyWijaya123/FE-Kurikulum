@@ -14,11 +14,6 @@ const MenuRps = () => {
 					title="Input RPS"
 					icon={<ImportContacts />}
 				/>
-				<MenuItemSidebar
-					url="/rps/review"
-					title="Review RPS"
-					icon={<Assignment />}
-				/>
 			</MenuItemSidebar>
 
 			<MenuItemSidebar
@@ -29,6 +24,11 @@ const MenuRps = () => {
 				title="Buku Referensi"
 				icon={<Assignment />}
 				url="/buku-referensi"></MenuItemSidebar>
+
+			<MenuItemSidebar
+				title="Dosen Pengampu"
+				icon={<Assignment />}
+				url="/dosen-pengampu"></MenuItemSidebar>
 
 			<MenuItemSidebar
 				title="Referensi Mata Kuliah"

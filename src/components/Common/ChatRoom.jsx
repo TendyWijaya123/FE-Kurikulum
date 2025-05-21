@@ -1,27 +1,73 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useChatData } from "../../hooks/Chat/useChatData";
+import { db } from "../../utils/config/firebaseConfig";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { ProdiContext } from "../../context/ProdiProvider";
+import { Button, Spin } from "antd";
+import { SendOutlined, CheckOutlined } from "@ant-design/icons";
 
 const ChatRoom = () => {
   const {
     messages,
-    roomList,
     activeRoomId,
     setActiveRoomId,
     user,
     newMsg,
+    loadingSend,
+    sentStatus,
     handleSend,
-    setNewMsg
+    setNewMsg,
   } = useChatData();
+  const {prodiDropdown} = useContext(ProdiContext);
+
+  useEffect(() => {
+    if (!activeRoomId || !messages.length) return;
+    const unreadMessages = messages.filter(
+      (msg) =>
+        msg.roomId === `${activeRoomId}` &&
+        msg.sender_id !== user.id &&
+        (!msg.readBy || !msg.readBy.includes(user.id))
+    );
+
+    // Update readBy di Firestore
+    unreadMessages.forEach((msg) => {
+      const msgRef = doc(db, `rooms/${msg.roomId}/messages/${msg.id}`);
+      updateDoc(msgRef, {
+        readBy: arrayUnion(user.id),
+      });
+    });
+  }, [activeRoomId, messages, user]);
 
   const [search, setSearch] = useState("");
 
-  const filteredRooms = roomList.filter((room) =>
+  const prodiList = prodiDropdown.filter((room) =>
     room.name.toLowerCase().includes(search.toLowerCase())
   );
 
   const sortedMessages = [...messages]
-    .filter((msg) => msg.roomId === activeRoomId)
+    .filter((msg) => (msg.roomId === `${activeRoomId}` || msg.roomId === activeRoomId))
     .sort((a, b) => a.createdAt - b.createdAt);
+
+  const getUnreadCountByRoom = () => {
+    const counts = {};
+    messages.forEach((msg) => {
+      if (
+        msg.sender_id !== user.id &&
+        (!msg.readBy || !msg.readBy.includes(user.id))
+      ) {
+        if (!counts[msg.roomId]) {
+          counts[msg.roomId] = 1;
+        } else {
+          counts[msg.roomId]++;
+        }
+      }
+    });
+    return counts;
+  };
+
+  const unreadCounts = getUnreadCountByRoom();
+
+
 
   return (
     <div style={{
@@ -62,22 +108,40 @@ const ChatRoom = () => {
           </div>
 
           <div style={{ flex: 1, overflowY: "auto" }}>
-            {filteredRooms.map((room) => (
+            {prodiList.map((room) => (
               <div
                 key={room.id}
-                onClick={() => setActiveRoomId(room.id)}
+                onClick={() => {
+                  setActiveRoomId(room.id);
+                }}
                 style={{
                   padding: "10px 16px",
                   cursor: "pointer",
                   backgroundColor: room.id === activeRoomId ? "#e0f0ff" : "transparent",
                   borderBottom: "1px solid #eee",
                   fontWeight: room.id === activeRoomId ? "bold" : "normal",
-                  transition: "background 0.2s",
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
-                {room.name}
+                <span>{room.name}</span>
+                {unreadCounts[room.id] > 0 && (
+                  <span
+                    style={{
+                      backgroundColor: "#dc3545",
+                      color: "white",
+                      borderRadius: "12px",
+                      padding: "2px 8px",
+                      fontSize: "0.75em",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {unreadCounts[room.id]}
+                  </span>
+                )}
               </div>
             ))}
+
           </div>
         </div>
       )}
@@ -94,11 +158,10 @@ const ChatRoom = () => {
           fontSize: "1.1em"
         }}>
           {activeRoomId
-            ? `Room: ${roomList.find((r) => r.id === activeRoomId)?.name || "P2MPP"}`
+            ? `Room: ${prodiList.find((r) => r.id === activeRoomId)?.name || "P2MPP"}`
             : "Pilih Room untuk mulai chat"}
         </div>
 
-        {/* Chat Messages */}
         <div style={{ flex: 1, overflowY: "auto", padding: "16px", background: "#fff" }}>
           {sortedMessages.map((msg) => (
             <div
@@ -146,25 +209,32 @@ const ChatRoom = () => {
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault(); // Supaya tidak bikin baris baru
+                  e.preventDefault();
                   handleSend();
                 }
               }}
             />
 
-            <button
+            <Button
+              type="primary"
+              icon={sentStatus ? <CheckOutlined /> : <SendOutlined />}
               onClick={handleSend}
+              loading={loadingSend}
+              disabled={!newMsg.trim() || loadingSend}
               style={{
-                backgroundColor: "#007bff",
-                color: "white",
-                padding: "10px 16px",
-                borderRadius: 4,
-                border: "none",
-                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                padding: "0 20px",
+                height: 40,
+                borderRadius: 6,
+                backgroundColor: sentStatus ? "#52c41a" : undefined,
+                borderColor: sentStatus ? "#52c41a" : undefined,
+                marginTop: 11,
+                color: sentStatus ? "#fff" : undefined,
               }}
-            >
-              Kirim
-            </button>
+            />
+
+
           </div>
         )}
       </div>

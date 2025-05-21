@@ -5,15 +5,18 @@ import App from "./App.jsx";
 import AuthProvider from "./context/AuthProvider.jsx";
 import { SelectionProvider } from "./context/SelectionContext";
 import ProdiProvider from "./context/ProdiProvider.jsx";
+import { NotifikasiChatProvider } from "./context/notifikasiChatProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
 	<StrictMode>
-		<SelectionProvider>
-			<AuthProvider>
-				<ProdiProvider>
-					<App />
-				</ProdiProvider>
-			</AuthProvider>
-		</SelectionProvider>
+			<SelectionProvider>
+				<AuthProvider>
+					<NotifikasiChatProvider>
+						<ProdiProvider>
+							<App />
+						</ProdiProvider>
+					</NotifikasiChatProvider>
+				</AuthProvider>
+			</SelectionProvider>
 	</StrictMode>
 );

@@ -232,11 +232,6 @@ const MenuPenyusunanKurikulum = () => {
 			</MenuItemSidebar>
 
 			<MenuItemSidebar
-				title="Dosen Pengampu"
-				icon={<Assignment />}
-				url="/dosen-pengampu"></MenuItemSidebar>
-
-			<MenuItemSidebar
 				title="Export"
 				icon={<Assignment />}
 				isOpen={openMenu === "Export"}

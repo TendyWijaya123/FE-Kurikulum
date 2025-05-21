@@ -46,8 +46,10 @@ const useMatrixCplMk = () => {
 			prevMatrixData.map((item) => {
 				if (item.cpl_id === cplId) {
 					const mkIds = item.mk_ids.some((mk) => mk.mk_id === mkId)
-						? item.mk_ids.filter((mk) => mk.mk_id !== mkId)
-						: [...item.mk_ids, { mk_id: mkId, kategori }];
+						? item.mk_ids.map((mk) =>
+								mk.mk_id === mkId ? { mk_id: mkId, kategori } : mk
+						  )
+						: [...item.mk_ids, { mk_id: mkId, kategori }]; // Jika mkId belum ada, tambahkan baru
 
 					return { ...item, mk_ids: mkIds };
 				}

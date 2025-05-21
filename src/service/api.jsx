@@ -147,6 +147,16 @@ export const getProdiKurikulumDropdown = async () => {
 	}
 };
 
+export const getProdiDropdownByJurusanDosen = async () => {
+	try {
+		const response = await api.get("/rps/prodi-dropdown/jurusan-dosen");
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching Prodi dropdown:", error);
+		throw error;
+	}
+};
+
 /* -----------------------------Jurusan API----------------------------- */
 export const getJurusans = async (page) => {
 	try {
@@ -491,21 +501,24 @@ export const deletePengetahuan = async (id) => {
 
 /* -----------------------------Profile API----------------------------- */
 export const getProfile = async () => {
-    try {
-        const response = await api.get('/profile');
-        return response.data;
-    } catch (error) {
-        console.error("Error fetching profile:", error);
-        throw error;
-    }
+	try {
+		const response = await api.get("/profile");
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching profile:", error);
+		throw error;
+	}
 };
 
 export const updatePassword = async (passwordData) => {
-    try {
-        const response = await api.post('/profile/update-password', passwordData);
-        return response.data;
-    } catch (error) {
-        console.error("Error updating password:", error.response?.data || error.message);
-        throw error;
-    }
+	try {
+		const response = await api.post("/profile/update-password", passwordData);
+		return response.data;
+	} catch (error) {
+		console.error(
+			"Error updating password:",
+			error.response?.data || error.message
+		);
+		throw error;
+	}
 };
