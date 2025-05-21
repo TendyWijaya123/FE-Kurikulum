@@ -63,19 +63,25 @@ const Pengetahuan = () => {
 			key: "deskripsi",
 			width: "75%",
 			render: (text, record) => (
-				<Input.TextArea
-					value={text}
-					onChange={(e) => handleFieldEdit(record, "deskripsi", e.target.value)}
-					autoSize={{ minRows: 1, maxRows: 5 }}
-					style={{
-						border: "none",
-						outline: "none",
-						boxShadow: "none",
-						padding: 0,
-						background: "transparent",
-						resize: "none",
-					}}
-				/>
+				<Form.Item
+					validateStatus={!text || text.trim() === "" ? "error" : ""}
+					help={!text || text.trim() === "" ? "Deskripsi tidak boleh kosong" : ""}
+					style={{ marginBottom: 0 }}
+				>
+					<Input.TextArea
+						value={text}
+						onChange={(e) => handleFieldEdit(record, "deskripsi", e.target.value)}
+						autoSize={{ minRows: 1, maxRows: 5 }}
+						style={{
+							border: "none",
+							outline: "none",
+							boxShadow: "none",
+							padding: 0,
+							background: "transparent",
+							resize: "none",
+						}}
+					/>
+				</Form.Item>
 			),
 		},
 		{
@@ -180,7 +186,7 @@ const Pengetahuan = () => {
 						rowSelection={rowSelection}
 						columns={columns}
 						dataSource={pengetahuanData}
-						pagination={{ pageSize: 5, position: ["bottomRight"] }}
+						pagination={{ pageSize: 10, position: ["bottomRight"] }}
 						bordered
 					/>
 				)}

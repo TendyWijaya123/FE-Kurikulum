@@ -66,7 +66,20 @@ const MatriksMpPMk = () => {
 			title:
 				"Materi Pembelajaran yang Ditunjang Pengetahuan untuk mendukung CPL",
 			children: pengetahuan.map((item, colIndex) => ({
-				title: item.kode_pengetahuan,
+				title: (
+					<Tooltip title={item.deskripsi}>
+						<span
+							style={{
+								whiteSpace: "nowrap",
+								display: "inline-block",
+								minWidth: 50,
+								textAlign: "center",
+								cursor: "pointer",
+							}}>
+							{item.kode_pengetahuan}
+						</span>
+					</Tooltip>
+				),
 				dataIndex: `col${colIndex + 1}`,
 				key: `col${colIndex + 1}`,
 				align: "center",
@@ -78,7 +91,6 @@ const MatriksMpPMk = () => {
 					if (cell.enabled) {
 						const selectedIds = cell.mata_kuliahs.map((mk) => mk.id);
 
-						// Filter opsi untuk dropdown
 						const filteredOptions = mks.filter(
 							(mk) =>
 								!selectedIds.includes(mk.id) ||
