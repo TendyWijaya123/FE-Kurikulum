@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Table, Button, Checkbox, Select } from "antd";
+import { Table, Button, Checkbox, Select, Tooltip } from "antd";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { useMatriksCplIeaData } from "../../hooks/useMatriksCplIeaData";
 import { ProdiContext } from "../../context/ProdiProvider";
@@ -22,20 +22,40 @@ const MatriksCplHasIea = () => {
 	const columns = [
 		{
 			title: "CPL",
-			dataIndex: "rowHeader",
-			key: "rowHeader",
-			fixed: "left",
-			align: "left",
-			width: 150,
+			children: [
+				{
+					title: "Kode",
+					dataIndex: "kode",
+					key: "kode",
+					fixed: "left",
+					width: 100,
+					minWidth: 100,
+				},
+				{
+					title: "Deskripsi",
+					dataIndex: "deskripsi",
+					key: "deskripsi",
+					fixed: "left",
+					width: 300,
+					minWidth: 200,
+				},
+			],
 		},
 		{
-			title: "CPL Berdasarkan IEA",
+			title: "IEA",
 			children: iea.map((item, colIndex) => ({
-				title: item.code,
+				title: (
+					<Tooltip title={item.deskripsi || item.keterangan || item.description || "-"}>
+						<span style={{ whiteSpace: "nowrap", display: "inline-block", minWidth: 50, textAlign: "center", cursor: "pointer" }}>
+							{item.code}
+						</span>
+					</Tooltip>
+				),
 				dataIndex: `col${colIndex + 1}`,
 				key: `col${colIndex + 1}`,
 				align: "center",
-				width: 50, 
+				width: 80,
+				minWidth: 80,
 				render: (_, record) => (
 					<input
 						type="checkbox"
@@ -43,7 +63,7 @@ const MatriksCplHasIea = () => {
 						onChange={(e) =>
 							handleCheckboxChange(record.key - 1, colIndex, e.target.checked)
 						}
-						style={{ transform: "scale(1.2)" }}
+						style={{ transform: "scale(1.5)" }}
 					/>
 				),
 			})),

@@ -5,7 +5,6 @@ import FloatingButton from "../components/Button/FloatingButton";
 import { Drawer } from "antd";
 import ChatRoom from "../components/Common/ChatRoom";
 import { useNotifikasiChat } from "../context/notifikasiChatProvider";
-import { useDefaultLayout } from "../hooks/Chat/useDefaultLayout";
 
 const DefaultLayout = ({ children, title }) => {
 	const [isCollapseSidebar, setIsCollapseSidebar] = useState(true);
