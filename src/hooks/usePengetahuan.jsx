@@ -142,6 +142,7 @@ export const usePengetahuan = () => {
 			id: null,
 			kode_pengetahuan: "Auto",
 			deskripsi: "",
+			key: `new_${Date.now()}_${Math.random()}`, 
 		};
 		setPengetahuanData([...pengetahuanData, newRow]);
 	};

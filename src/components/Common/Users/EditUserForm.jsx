@@ -60,6 +60,7 @@ const EditUserForm = ({ userId }) => {
 						label="Password (Leave blank to keep current)"
 						name="password">
 						<Input.Password
+							name="password"
 							placeholder="Enter new password"
 							onChange={(e) => handleChangeForm(e)}
 						/>
