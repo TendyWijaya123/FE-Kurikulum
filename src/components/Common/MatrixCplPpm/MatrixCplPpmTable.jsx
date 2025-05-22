@@ -39,12 +39,21 @@ const MatrixCplPpmTable = () => {
             children: cpls.map((cpl) => ({
                 title: (
                     <Tooltip title={cpl.keterangan}>
-                        <span style={{ cursor: "pointer" }}>{cpl.kode}</span>
+                        <div style={{ 
+                            cursor: "pointer", 
+                            whiteSpace: "nowrap", 
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            minWidth: 80 
+                        }}>
+                            {cpl.kode}
+                        </div>
                     </Tooltip>
                 ),
                 dataIndex: `cpl${cpl.id}`,
                 key: `cpl${cpl.id}`,
                 align: "center",
+                width: 80,
                 render: (_, record) => {
                     const isChecked = matrixData.some(
                         (item) =>
@@ -53,14 +62,16 @@ const MatrixCplPpmTable = () => {
                     );
 
                     return (
-                        <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => handleCheckboxChange(cpl.id, record.id)}
-                            style={{
-                                transform: "scale(1.5)",
-                            }}
-                        />
+                        <div style={{ display: "flex", justifyContent: "center" }}>
+                            <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => handleCheckboxChange(cpl.id, record.id)}
+                                style={{
+                                    transform: "scale(1.5)",
+                                }}
+                            />
+                        </div>
                     );
                 }
             }))
@@ -75,12 +86,12 @@ const MatrixCplPpmTable = () => {
     }));
 
     const scrollConfig = {
-        x: "max-content",
+        x: cpls.length * 80 + 400, // Dynamic width based on number of CPL columns plus fixed columns
         y: 500,
     };
 
     return (
-        <div className="w-full bg-white overflow-auto p-2">
+        <div className="w-full bg-white p-2">
             <div style={{ marginBottom: "10px", display: "flex", gap: "5px" }}>
                 <VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
                     <Button
@@ -92,14 +103,18 @@ const MatrixCplPpmTable = () => {
                     </Button>
                 </VisibleMenu>
             </div>
-            <Table
-                loading={loading}
-                dataSource={dataSource}
-                columns={columns}
-                pagination={false}
-                scroll={scrollConfig}
-                bordered
-            />
+            <div className="matrix-table-container" style={{ overflow: "auto" }}>
+                <Table
+                    loading={loading}
+                    dataSource={dataSource}
+                    columns={columns}
+                    pagination={false}
+                    scroll={scrollConfig}
+                    bordered
+                    sticky
+                    size="middle"
+                />
+            </div>
         </div>
     );
 };

@@ -172,7 +172,7 @@ const MatriksMpPMk = () => {
 							type="primary"
 							style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
 							loading={updating}>
-							simpan perubahan
+							Simpan Perubahan
 						</Button>
 						`
 					</VisibleMenu>
