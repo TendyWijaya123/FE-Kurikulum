@@ -15,29 +15,30 @@ export const useDosenHasMatkuluData = () => {
 	const [undoStack, setUndoStack] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
+	// Add filterParams parameter to fetchDosenHasMatkul
+	const fetchDosenHasMatkul = async (filterParams = {}) => {
+		setLoading(true);
+		try {
+			const data = await getDosenHasMatkul(user?.prodiId, filterParams);
+			setDosenDropdown(data.dosens);
+			const formattedData = data.mata_kuliahs.data.map((matkul) => ({
+				key: `matkul${matkul.id}`,
+				mata_kuliah_id: matkul.id,
+				kode: matkul.kode,
+				nama: matkul.nama,
+				prodi: matkul.kurikulum.prodi.name,
+				dosen: matkul.dosens.map((dosen) => dosen.nama),
+			}));
+
+			setDataSource(formattedData);
+		} catch (error) {
+			console.error("Error fetching dosenHasMatkul:", error);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	useEffect(() => {
-		const fetchDosenHasMatkul = async () => {
-			setLoading(true);
-			try {
-				const data = await getDosenHasMatkul(user?.prodiId);
-				setDosenDropdown(data.dosens);
-				const formattedData = data.mata_kuliahs.data.map((matkul) => ({
-					key: `matkul${matkul.id}`,
-					mata_kuliah_id: matkul.id,
-					kode: matkul.kode,
-					nama: matkul.nama,
-					prodi: matkul.kurikulum.prodi.name,
-					dosen: matkul.dosens.map((dosen) => dosen.nama),
-				}));
-
-				setDataSource(formattedData);
-			} catch (error) {
-				console.error("Error fetching dosenHasMatkul:", error);
-			} finally {
-				setLoading(false);
-			}
-		};
-
 		fetchDosenHasMatkul();
 	}, [user?.prodiId]);
 
@@ -113,6 +114,10 @@ export const useDosenHasMatkuluData = () => {
 		}
 	};
 
+	const handleFilter = (filters) => {
+		fetchDosenHasMatkul(filters);
+	};
+
 	const rowSelection = {
 		selectedRowKeys,
 		onChange: (newSelectedRowKeys) => setSelectedRowKeys(newSelectedRowKeys),
@@ -122,14 +127,15 @@ export const useDosenHasMatkuluData = () => {
 		dosenDropdown,
 		loading,
 		dataSource,
+		setDataSource,
 		saving,
-		undoStack,
 		rowSelection,
 		selectedRowKeys,
 		handleUndo,
 		handleSave,
 		handleDeleteRow,
 		handleSaveData,
-		// handleDeleteDosens,
+		handleFilter,
+		fetchDosenHasMatkul, 
 	};
 };

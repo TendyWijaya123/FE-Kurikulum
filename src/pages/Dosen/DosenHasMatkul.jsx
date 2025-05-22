@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useDosenData } from "../../hooks/Dosen/useDosenData";
 import { useDosenHasMatkuluData } from "../../hooks/Dosen/useDosenHasMatkuluData";
 import DefaultLayout from "../../layouts/DefaultLayout";
-import { UndoOutlined, EditOutlined } from "@ant-design/icons";
+import { UndoOutlined, EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { Table, Input, Button, Popconfirm, Select, Tooltip, Spin } from "antd";
 import { SaveOutlined } from "@mui/icons-material";
 
@@ -11,15 +11,29 @@ const DosenHasMatkul = () => {
 		dosenDropdown,
 		loading,
 		dataSource,
+		setDataSource, 
 		saving,
 		rowSelection,
 		selectedRowKeys,
 		handleSave,
 		handleDeleteRow,
 		handleSaveData,
+		fetchDosenHasMatkul,
 	} = useDosenHasMatkuluData();
 
+	const { prodiDropdown } = useDosenData();
+
 	const [editingKey, setEditingKey] = useState(null);
+	const [pagination, setPagination] = useState({
+		current: 1,
+		pageSize: 10,
+	});
+	const [filters, setFilters] = useState({
+		nama: "",
+		kode: "",
+		dosen: "",
+		prodi_id: undefined, 
+	});
 
 	const isEditing = (record) => record.key === editingKey;
 
@@ -31,12 +45,48 @@ const DosenHasMatkul = () => {
 		setEditingKey(null);
 	};
 
+	const handleSearch = () => {
+		const isFiltersEmpty = !filters.kode && !filters.nama && !filters.dosen && !filters.prodi_id;
+		
+		if (isFiltersEmpty) {
+			fetchDosenHasMatkul();
+			return;
+		}
+
+		const filteredData = dataSource.filter((item) => {
+			const matchKode = filters.kode
+				? item.kode.toLowerCase().includes(filters.kode.toLowerCase())
+				: true;
+			const matchNama = filters.nama
+				? item.nama.toLowerCase().includes(filters.nama.toLowerCase())
+				: true;
+			const matchDosen = filters.dosen
+				? (item.dosen
+					? item.dosen.some((dosen) =>
+						dosen.toLowerCase().includes(filters.dosen.toLowerCase())
+					)
+					: false)
+				: true;
+			const matchProdi = filters.prodi_id
+					? item.prodi
+						.split(", ")
+						.map(p => p.trim())
+						.includes(prodiDropdown.find(p => p.id === filters.prodi_id)?.name)
+					: true;
+
+			return matchKode && matchNama && matchDosen && matchProdi;
+		});
+
+		setDataSource(filteredData);
+	};
+
 	const columns = [
 		{
 			title: "No",
 			dataIndex: "no",
 			key: "no",
-			render: (_, __, index) => index + 1,
+			render: (_, __, index) =>
+				(pagination.current - 1) * pagination.pageSize + index + 1,
 		},
 		{
 			title: "Kode",
@@ -51,7 +101,7 @@ const DosenHasMatkul = () => {
 			render: (text) => text,
 		},
 		{
-			title: "Prodi",
+			title: "Program Studi",
 			dataIndex: "prodi",
 			key: "prodi",
 			render: (text) => text,
@@ -126,47 +176,99 @@ const DosenHasMatkul = () => {
 
 	return (
 		<DefaultLayout title="Dosen Mengampu Mata Kuliah">
-			<div style={{ padding: "24px", background: "#fff", minHeight: "100%" }}>
-				<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
-					<>
-						<Button
-							icon={<SaveOutlined />}
-							style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
-							onClick={handleSaveData}
-							type="primary"
-							loading={saving}>
-							Simpan Data
-						</Button>
-					</>
-					{selectedRowKeys.length > 0 && (
-						<Button
-							onClick={handleDeleteRow}
-							type="primary"
-							danger
-							loading={loading}>
-							Hapus Dosen Terpilih
-						</Button>
-					)}
-				</div>
-				{loading ? (
-					<div
-						style={{
-							display: "flex",
-							justifyContent: "center",
-							marginTop: "50px",
-						}}>
-						<Spin size="large" />
+				<div className="p-6 bg-white shadow-lg rounded-lg">
+					<h1 className="text-xl font-bold mb-4">
+						Dosen Mengampu Mata Kuliah
+					</h1>
+
+					{/* Buttons Section */}
+					<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
+						<>
+							<Button
+								icon={<SaveOutlined />}
+								style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
+								onClick={handleSaveData}
+								type="primary"
+								loading={saving}>
+								Simpan Data
+							</Button>
+						</>
+						{selectedRowKeys.length > 0 && (
+							<Button
+								onClick={handleDeleteRow}
+								type="primary"
+								danger
+								loading={loading}>
+								Hapus Dosen Terpilih
+							</Button>
+						)}
 					</div>
-				) : (
+
+					{/* Filter Section */}
+					<div className="mb-4 flex gap-4">
+						<Input
+							placeholder="Cari Kode Mata Kuliah"
+							value={filters.kode}
+							onChange={(e) =>
+								setFilters((prev) => ({ ...prev, kode: e.target.value }))
+								}
+						/>
+						<Input
+							placeholder="Cari Nama Mata Kuliah"
+							value={filters.nama}
+							onChange={(e) =>
+								setFilters((prev) => ({ ...prev, nama: e.target.value }))
+								}
+						/>
+						<Input
+							placeholder="Cari Nama Dosen"
+							value={filters.dosen}
+							onChange={(e) =>
+								setFilters((prev) => ({ ...prev, dosen: e.target.value }))
+								}
+						/>
+						<Select
+							placeholder="Pilih Prodi"
+							allowClear
+							style={{ width: 200 }}
+							value={filters.prodi_id}
+							onChange={(value) =>
+								setFilters((prev) => ({ ...prev, prodi_id: value }))
+							}
+						>
+							{prodiDropdown.map((prodi) => (
+								<Select.Option key={prodi.id} value={prodi.id}>
+									{prodi.name}
+								</Select.Option>
+							))}
+						</Select>
+						<Button type="primary" onClick={handleSearch}>
+							<SearchOutlined />
+						</Button>
+					</div>
+
+					{/* Table Section */}
 					<Table
+						className="overflow-x-auto"
 						rowSelection={rowSelection}
 						dataSource={dataSource}
 						columns={columns}
-						pagination={{ pageSize: 5 }}
+						loading={loading}
+						pagination={{
+							...pagination,
+							total: dataSource.length,
+							showSizeChanger: false,
+							onChange: (page, pageSize) => {
+								setPagination({
+									...pagination,
+									current: page,
+									pageSize: pageSize,
+								});
+							},
+						}}
 						bordered
 					/>
-				)}
-			</div>
+				</div>
 		</DefaultLayout>
 	);
 };
