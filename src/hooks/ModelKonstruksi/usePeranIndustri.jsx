@@ -9,11 +9,11 @@ import {
 	getPeranIndustriTemplate,
 	importPeranIndustri,
 } from "../../service/Import/ImportService";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import { message } from "antd";
 
 const usePeranIndustri = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [peranIndustriData, setPeranIndustriData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [errors, setErrors] = useState(null);

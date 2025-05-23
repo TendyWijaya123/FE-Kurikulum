@@ -4,12 +4,12 @@ import { InfoCircleOutlined, SaveOutlined } from "@ant-design/icons";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { useMatriksMpPMkData } from "../../hooks/useMatriksMpPMkData";
 import { useNavigate } from "react-router-dom";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
 
 const MatriksMpPMk = () => {
 	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+		useContext(AppDataContext);
 	const {
 		updating,
 		dataSource,

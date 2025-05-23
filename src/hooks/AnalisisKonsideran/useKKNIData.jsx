@@ -15,10 +15,10 @@ import {
 	importKkni,
 } from "../../service/Import/ImportService";
 import { ContactPageSharp } from "@mui/icons-material";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 export const useKKNIData = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [kkni, setKkni] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const { user } = useContext(AuthContext);

@@ -10,7 +10,7 @@ import {
 	importPengetahuan,
 } from "../service/Import/ImportService";
 import { message } from "antd";
-import { ProdiContext } from "../context/ProdiProvider";
+import { AppDataContext } from "../context/AppDataProvider";
 
 const notifications = {
 	success: {
@@ -31,7 +31,7 @@ const notifications = {
 };
 
 export const usePengetahuan = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [pengetahuanData, setPengetahuanData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [saving, setSaving] = useState(false);

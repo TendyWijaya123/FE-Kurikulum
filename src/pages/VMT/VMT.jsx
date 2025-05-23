@@ -8,13 +8,13 @@ import VisiPolban from "../../components/Common/VMT/VisiPolban";
 import MisiPolban from "../../components/Common/VMT/MisiPolban";
 import TujuanPolban from "../../components/Common/VMT/TujuanPolban";
 import Accordion from "../../components/Accordion/Accordion";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import { Select } from "antd";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
 
 const VMT = () => {
 	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+		useContext(AppDataContext);
 
 	return (
 		<DefaultLayout title="Visi, Misi dan Tujuan">

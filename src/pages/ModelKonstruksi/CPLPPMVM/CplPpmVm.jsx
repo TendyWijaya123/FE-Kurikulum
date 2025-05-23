@@ -4,13 +4,13 @@ import CplTable from "../../../components/Common/Model Konstruksi/CPL-PPM-VM/Cpl
 import PpmTable from "../../../components/Common/Model Konstruksi/CPL-PPM-VM/PpmTable";
 import PeranIndustriTable from "../../../components/Common/Model Konstruksi/CPL-PPM-VM/PeranIndustriTable";
 import Accordion from "../../../components/Accordion/Accordion";
-import { ProdiContext } from "../../../context/ProdiProvider";
+import { AppDataContext } from "../../../context/AppDataProvider";
 import { Select } from "antd";
 import VisibleMenu from "../../../components/Menu/VisibleMenu";
 
 const CplPpmVm = () => {
 	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+		useContext(AppDataContext);
 	return (
 		<DefaultLayout title="CPL-PPM-VM">
 			<div className="flex flex-col gap-2">

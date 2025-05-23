@@ -2,13 +2,13 @@ import { useContext } from "react";
 import MatrixCplMkTable from "../../../components/Common/MatrixCplMk/MatrixCplMkTable";
 import MatrixCplPTable from "../../../components/Common/MatrixCplP/MatrixCplPTable";
 import VisibleMenu from "../../../components/Menu/VisibleMenu";
-import { ProdiContext } from "../../../context/ProdiProvider";
+import { AppDataContext } from "../../../context/AppDataProvider";
 import DefaultLayout from "../../../layouts/DefaultLayout";
 import { Select } from "antd";
 
 const MatrixCplMk = () => {
 	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+		useContext(AppDataContext);
 	return (
 		<DefaultLayout title="Matriks CPL-Matakuliah">
 			<VisibleMenu allowedRoles={["P2MPP"]}>

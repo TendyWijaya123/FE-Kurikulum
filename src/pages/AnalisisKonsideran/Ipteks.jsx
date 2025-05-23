@@ -4,13 +4,13 @@ import IlmuPengetahuanTable from "../../components/Common/Ipteks/IlmuPengetahuan
 import TeknologiTable from "../../components/Common/Ipteks/TeknologiTable";
 import SeniTable from "../../components/Common/Ipteks/SeniTable";
 import Accordion from "../../components/Accordion/Accordion";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
 import { Select } from "antd";
 
 const Ipteks = () => {
 	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+		useContext(AppDataContext);
 	return (
 		<DefaultLayout title="IPTEKS">
 			<VisibleMenu allowedRoles={["P2MPP"]}>

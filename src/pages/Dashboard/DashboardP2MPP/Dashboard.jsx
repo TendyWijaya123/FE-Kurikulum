@@ -142,6 +142,7 @@ const Dashboard = () => {
             icon={<ReloadOutlined />} 
             onClick={handleRefresh} 
             loading={isProcessing}
+            disabled={isProcessing}
             style={{ marginRight: 30 }}
           >
             Refresh
@@ -165,7 +166,7 @@ const Dashboard = () => {
           <div style={{ marginTop: 20, padding: 15 }}>
             {isProcessing ? (
                 <div style={{ textAlign: "center" }}>
-                  <Progress type="circle" percent={progress} />
+                  <Progress type="circle" percent={progress ?? 0} />
                   <div className="loading-bar" style={{ margin: "10px auto" }} />
                   <p style={{ marginTop: 10 }}>Memproses data, tunggu sebentar...</p>
                 </div>
@@ -174,7 +175,7 @@ const Dashboard = () => {
                   tabItems.find((tab) => tab.key === selectedTab)?.content
                 ) : (
                   <div style={{ textAlign: "center", padding: 20 }}>
-                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Tidak Ada Data Mata Kuliah" />
+                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Tidak Ada Data" />
                   </div>
                 )
               )}

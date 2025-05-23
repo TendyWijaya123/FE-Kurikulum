@@ -9,10 +9,10 @@ import {
 } from "../../service/AnalisisKonsideran/Ipteks";
 import { AuthContext } from "../../context/AuthProvider";
 import { get } from "react-hook-form";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 export const useIlmuPengetahuan = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [alert, setAlert] = useState(null);
 	const [data, setData] = useState([]);
 	const [loading, setLoading] = useState(true);

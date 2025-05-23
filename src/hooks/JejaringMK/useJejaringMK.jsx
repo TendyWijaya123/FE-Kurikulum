@@ -5,10 +5,10 @@ import {
 } from "../../service/JejaringMataKuliah/JejaringMataKuliahService";
 import { getMataKuliahDropdown } from "../../service/MataKuliah/MataKuliahService";
 import { message } from "antd";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 const useJejaringMK = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [matakuliahData, setMataKuliahData] = useState([]);
 	const [matakuliahDropdown, setMatakuliahDropdown] = useState([]);
 	const [loading, setLoading] = useState(false);

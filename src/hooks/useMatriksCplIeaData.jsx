@@ -6,10 +6,10 @@ import {
 import { message } from "antd";
 import { AuthContext } from "../context/AuthProvider";
 import { getProdiDropdown } from "../service/api";
-import { ProdiContext } from "../context/ProdiProvider";
+import { AppDataContext } from "../context/AppDataProvider";
 
 export const useMatriksCplIeaData = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const { user } = useContext(AuthContext);
 	const [matrix, setMatrix] = useState([]);
 	const [loading, setLoading] = useState(false);

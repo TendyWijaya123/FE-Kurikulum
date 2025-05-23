@@ -13,10 +13,10 @@ import {
 	getSksuTemplate,
 	importSksu,
 } from "../../service/Import/ImportService";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 export const useSKSUData = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId, prodiDropdown } = useContext(AppDataContext);
 	const [sksu, setSksu] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const { user } = useContext(AuthContext);
@@ -24,7 +24,6 @@ export const useSKSUData = () => {
 	const [saving, setSaving] = useState(false);
 	const [undoStack, setUndoStack] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-	const [prodiDropdown, setProdiDropdown] = useState([]);
 	const [selectedProdi, setSelectedProdi] = useState(null);
 	const [errors, setErrors] = useState(null);
 
@@ -127,6 +126,7 @@ export const useSKSUData = () => {
 
 	// Add row
 	const handleAddRow = () => {
+		const prodiName = prodiDropdown.find(item=>item.id === user?.id).name;
 		saveToUndoStack([...dataSource]);
 
 		const existingKeys = dataSource
@@ -145,7 +145,7 @@ export const useSKSUData = () => {
 			key: "sksu" + newKeyNumber,
 			_id: null,
 			profilLulusan: "",
-			kualifikasi: "",
+			kualifikasi: `${prodiName}`,
 			kategori: "",
 			kompetensiKerja: "",
 			prodiId: selectedProdi || user.prodiId,

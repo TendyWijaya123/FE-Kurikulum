@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useChatData } from "../../hooks/Chat/useChatData";
 import { db } from "../../utils/config/firebaseConfig";
 import { doc, updateDoc, arrayUnion } from "firebase/firestore";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import { Button, Spin } from "antd";
 import { SendOutlined, CheckOutlined } from "@ant-design/icons";
 
@@ -18,7 +18,7 @@ const ChatRoom = () => {
     handleSend,
     setNewMsg,
   } = useChatData();
-  const {prodiDropdown} = useContext(ProdiContext);
+  const {prodiDropdown} = useContext(AppDataContext);
 
   useEffect(() => {
     if (!activeRoomId || !messages.length) return;

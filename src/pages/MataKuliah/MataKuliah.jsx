@@ -30,12 +30,12 @@ import {
 	UploadOutlined,
 } from "@ant-design/icons";
 import ImportModal from "../../components/Modal/ImportModal";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
 
 const MataKuliah = () => {
 	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+		useContext(AppDataContext);
 	const {
 		mataKuliahData,
 		formulasiCpaDropdown,

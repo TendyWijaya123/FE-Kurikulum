@@ -5,12 +5,13 @@ import FloatingButton from "../components/Button/FloatingButton";
 import { Drawer } from "antd";
 import ChatRoom from "../components/Common/ChatRoom";
 import { useNotifikasiChat } from "../context/notifikasiChatProvider";
+import { SelectionContext } from "../context/SelectionContext";
 
 const DefaultLayout = ({ children, title }) => {
 	const [isCollapseSidebar, setIsCollapseSidebar] = useState(true);
 	const [openChat, setOpenChat] = useState(false);
 	const { countUnRead } = useNotifikasiChat();
-
+	const { selectedOption } = useContext(SelectionContext);
 	return (
 		<div className="flex min-h-screen w-full font-sans text-black relative overflow-x-auto">
 			{/* Main Layout */}
@@ -33,16 +34,20 @@ const DefaultLayout = ({ children, title }) => {
 					{/* Children */}
 					<div className="p-4 flex-1">{children}</div>
 				</div>
-				<FloatingButton onClick={()=> setOpenChat(true)} count={countUnRead} />
-				<Drawer
-					title="Room Chat"
-					placement="right"
-					width={600}
-					onClose={() => setOpenChat(false)}
-					open={openChat}
-				>
-					<ChatRoom />
-				</Drawer>
+				{selectedOption === "kurikulum" && (
+					<>
+						<FloatingButton onClick={() => setOpenChat(true)} count={countUnRead} />
+						<Drawer
+							title="Room Chat"
+							placement="right"
+							width={600}
+							onClose={() => setOpenChat(false)}
+							open={openChat}
+						>
+							<ChatRoom />
+						</Drawer>
+					</>
+				)}
 			</div>
 		</div>
 	);

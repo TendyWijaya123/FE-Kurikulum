@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App.jsx";
 import AuthProvider from "./context/AuthProvider.jsx";
 import { SelectionProvider } from "./context/SelectionContext";
-import ProdiProvider from "./context/ProdiProvider.jsx";
+import AppDataProvider from "./context/AppDataProvider.jsx";
 import { NotifikasiChatProvider } from "./context/notifikasiChatProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
@@ -12,9 +12,9 @@ createRoot(document.getElementById("root")).render(
 			<SelectionProvider>
 				<AuthProvider>
 					<NotifikasiChatProvider>
-						<ProdiProvider>
+						<AppDataProvider>
 							<App />
-						</ProdiProvider>
+						</AppDataProvider>
 					</NotifikasiChatProvider>
 				</AuthProvider>
 			</SelectionProvider>

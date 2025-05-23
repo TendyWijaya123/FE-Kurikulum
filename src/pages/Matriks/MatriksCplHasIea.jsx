@@ -2,13 +2,13 @@ import React, { useContext, useState } from "react";
 import { Table, Button, Checkbox, Select, Tooltip } from "antd";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { useMatriksCplIeaData } from "../../hooks/useMatriksCplIeaData";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
 import { SaveOutlined } from "@ant-design/icons";
 
 const MatriksCplHasIea = () => {
 	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+		useContext(AppDataContext);
 	const {
 		loading,
 		dataSource,

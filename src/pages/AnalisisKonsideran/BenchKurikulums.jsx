@@ -23,11 +23,11 @@ import { useBCData } from "../../hooks/AnalisisKonsideran/useBCData";
 import { useContext, useState } from "react";
 import ImportModal from "../../components/Modal/ImportModal";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 const BenchKurikulums = () => {
 	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+		useContext(AppDataContext);
 	const {
 		dataSource,
 		loading,

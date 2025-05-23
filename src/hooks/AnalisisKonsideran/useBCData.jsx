@@ -14,10 +14,10 @@ import {
 	getBenchKurikulumTemplate,
 	importBenchKurikulum,
 } from "../../service/Import/ImportService";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 export const useBCData = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [benchKurikulums, setBenchKurikulums] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const { user } = useContext(AuthContext);

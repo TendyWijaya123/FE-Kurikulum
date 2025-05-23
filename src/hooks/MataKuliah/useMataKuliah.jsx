@@ -13,10 +13,10 @@ import {
 	getMataKuliahTemplate,
 	importMataKuliah,
 } from "../../service/Import/ImportService";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 const useMataKuliah = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [mataKuliahData, setMataKuliahData] = useState([]);
 	const [formulasiCpaDropdown, setFormulasiCpaDropdown] = useState([]);
 	const [metodePembelajaranDropdown, setMetodePembelajaranDropdown] = useState(

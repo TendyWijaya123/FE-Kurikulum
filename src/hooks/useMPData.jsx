@@ -13,10 +13,10 @@ import {
 	getMateriPembelajaranTemplate,
 	importMateriPembelajaran,
 } from "../service/Import/ImportService";
-import { ProdiContext } from "../context/ProdiProvider";
+import { AppDataContext } from "../context/AppDataProvider";
 
 export const useMPData = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [materiPembelajaran, setMateriPembelajaran] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const { user } = useContext(AuthContext);

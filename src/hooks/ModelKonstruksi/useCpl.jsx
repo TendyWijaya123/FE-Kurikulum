@@ -6,11 +6,11 @@ import {
 	upsertCpl,
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
 import { getCPLTemplate, importCPL } from "../../service/Import/ImportService";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import { message } from "antd";
 
 const useCpl = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [loading, setLoading] = useState(false);
 	const [cplData, setCplData] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);

@@ -22,12 +22,12 @@ import { useKKNIData } from "../../../hooks/AnalisisKonsideran/useKKNIData";
 import ImportModal from "../../../components/Modal/ImportModal";
 import { DeleteOutlined, NightShelter } from "@mui/icons-material";
 import ModalKkni from "./ModalKkni";
-import { ProdiContext } from "../../../context/ProdiProvider";
+import { AppDataContext } from "../../../context/AppDataProvider";
 import VisibleMenu from "../../../components/Menu/VisibleMenu";
 
 const KKNI = () => {
 	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+		useContext(AppDataContext);
 	const {
 		isAutoCpl,
 		kemampuanKerjaKkni,

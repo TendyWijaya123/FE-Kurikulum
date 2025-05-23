@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import {
 	getDataCurriculum,
 	fetchCurriculumData,
@@ -7,6 +7,7 @@ import {
 } from "../../service/Dashboard/Dashboard";
 import { message } from "antd";
 import { progresGetData, sendNotification } from "../../service/Dashboard/Dashboard";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 export const useDashboardData = () => {
 	const [loading, setLoading] = useState(false);
@@ -19,6 +20,7 @@ export const useDashboardData = () => {
 	const [filteredProdi, setFilteredProdi] = useState([]);
 	const [isProcessing, setIsProcessing] = useState(false);
 	const intervalRef = useRef(null);
+	const {jurusanDropdown} = useContext(AppDataContext);
 
 	const fetchDropdownJurusanProdi = async () => {
 		setLoading(true);
@@ -48,7 +50,10 @@ export const useDashboardData = () => {
 	};
 
 	const startCurriculumProcessing = async () => {
-		// setLoading(true);
+		if (intervalRef.current) {
+			console.warn("Process is already running. Ignored.");
+			return;
+		}
 		setProgress(0);
 		setIsProcessing(true);
 
@@ -71,6 +76,7 @@ export const useDashboardData = () => {
 						await fetchProcessedCurriculumData();
 						setLoading(false);
 						setIsProcessing(false); 
+						setProgress(0);
 					}
 				} catch (error) {
 					console.error("Error fetching progress:", error);
@@ -97,7 +103,9 @@ export const useDashboardData = () => {
 	}, []);
 
 	const fetchProcessedCurriculumData = async () => {
-		setLoading(true);
+		if(!curriculumData){
+			setLoading(true);
+		}
 		try {
 			const data = await getDataCurriculum();
 			setCurriculumData(data && Object.keys(data).length > 0 ? data : []);
@@ -139,7 +147,6 @@ export const useDashboardData = () => {
 
 	const handleSendNotification = async (data) => {
 		try {
-			console.log(data);
 			await sendNotification(data);
 			message.success("Pemberitahuan telah dikirim.");
 		} catch (error) {

@@ -4,13 +4,13 @@ import DefaultLayout from "../../layouts/DefaultLayout";
 import Accordion from "../../components/Accordion/Accordion";
 import JejaringMKTable from "../../components/Common/JejaringMK/JejaringMKTable";
 import JejaringMKDiagram from "../../components/Common/JejaringMK/JejaringMKDiagram";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import { useContext } from "react";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
 
 const JejaringMK = () => {
 	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+		useContext(AppDataContext);
 	return (
 		<DefaultLayout title="Jejaring Mata Kuliah">
 			<VisibleMenu allowedRoles={["P2MPP"]}>
