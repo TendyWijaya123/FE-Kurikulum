@@ -37,3 +37,24 @@ export const deleteRps = async (id) => {
 		throw error;
 	}
 };
+
+export const generateRpsPdf = async (id, payload) => {
+	try {
+		const response = await api.get(`rps-pdf/${id}`, {
+			responseType: "blob",
+		});
+
+		const url = window.URL.createObjectURL(
+			new Blob([response.data], { type: "application/pdf" })
+		);
+		const link = document.createElement("a");
+		link.href = url;
+		link.setAttribute("download", "rps.pdf");
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	} catch (error) {
+		console.error("Gagal mendownload PDF RPS:", error);
+		throw error;
+	}
+};

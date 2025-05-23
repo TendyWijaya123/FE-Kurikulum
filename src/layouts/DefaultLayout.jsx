@@ -2,10 +2,13 @@ import { useState, useContext } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 import FloatingButton from "../components/Button/FloatingButton";
-import { Drawer } from "antd";
+import { Drawer, Layout, Typography } from "antd";
 import ChatRoom from "../components/Common/ChatRoom";
 import { useNotifikasiChat } from "../context/notifikasiChatProvider";
 import { SelectionContext } from "../context/SelectionContext";
+
+const { Footer: AntFooter } = Layout;
+const { Text, Paragraph } = Typography;
 
 const DefaultLayout = ({ children, title }) => {
 	const [isCollapseSidebar, setIsCollapseSidebar] = useState(true);

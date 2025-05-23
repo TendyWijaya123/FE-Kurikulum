@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import {
 	deleteRps,
+	generateRpsPdf,
 	getRps,
 	storeRps,
 	updateRps,
@@ -68,6 +69,25 @@ const useRps = (id) => {
 		}
 	};
 
+	const handleDownloadPdf = async (id, payload) => {
+		setLoading(true);
+		setError(null);
+
+		try {
+			const response = await generateRpsPdf(id, payload);
+		} catch (err) {
+			setError(err);
+			console.error("Gagal mengunduh PDF:", err);
+
+			// Pesan error lebih informatif
+			const messageText =
+				err.response?.data?.message || "Terjadi kesalahan saat mengunduh PDF";
+			message.error(messageText);
+		} finally {
+			setLoading(false);
+		}
+	};
+
 	const handleDelete = async (id) => {
 		setLoading(true);
 		setError(null);
@@ -104,6 +124,7 @@ const useRps = (id) => {
 		handleDelete,
 		editedData,
 		handleOnEdit,
+		handleDownloadPdf,
 	};
 };
 

@@ -43,7 +43,7 @@ const DosenEditModal = ({ visible, onClose, dosenData }) => {
             setLoading(true);
             const values = await form.validateFields();
             await updateDosen(dosenData._id, values); 
-            message.success("Dosen berhasil diperbarui:");
+            message.success("Dosen berhasil diperbarui!");
             setLoading(false);
             onClose();
         } catch (error) {
