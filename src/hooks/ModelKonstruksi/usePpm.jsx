@@ -6,11 +6,11 @@ import {
 	upsertPpm,
 } from "../../service/ModelKonstruksi/CPLPPMVM/CPLPPMVM";
 import { getPPMTemplate, importPpm } from "../../service/Import/ImportService";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import { message } from "antd";
 
 const usePpm = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [loading, setLoading] = useState(false);
 	const [ppmData, setPpmData] = useState([]);
 	const [selectedRowKeys, setSelectedRowKeys] = useState([]);

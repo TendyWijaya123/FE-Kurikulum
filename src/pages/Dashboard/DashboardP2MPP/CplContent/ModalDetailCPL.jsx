@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from "react";
 import { Modal, Select, Table, Radio, Button, message } from "antd";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 import { useDashboardData } from "../../../../hooks/Dashboard/useDashboardData";
+import { WarningAmberOutlined } from "@mui/icons-material";
 
 const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
     const { handleSendNotification } = useDashboardData();
@@ -28,7 +29,7 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
             width: 150,
         },
         {
-            title: "Keterangan",
+            title: "Deskripsi CPL",
             dataIndex: "keterangan",
             key: "keterangan",
         },
@@ -36,6 +37,14 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
             title: "Issues",
             dataIndex: "issues",
             key: "issues",
+        },
+        {
+            title: "saran Perbaikan",
+            dataIndex: "saran_perbaikan",
+            key: "saran_perbaikan",
+            render: (text) => (
+                <span>{text || "Tidak ada saran perbaikan."}</span>
+            ),
         },
         {
             title: "Status",
@@ -46,7 +55,7 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
                 record.issues === "CPL sesuai dengan standar." ? (
                     <CheckCircleOutlined style={{ color: "green", fontSize: "18px" }} />
                 ) : (
-                    <CloseCircleOutlined style={{ color: "red", fontSize: "18px" }} />
+                    <WarningAmberOutlined style={{ color: "orange", fontSize: "18px" }} />
                 ),
         },
     ];
@@ -57,7 +66,7 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
         return prodiData[selectedProdi].filter((item) => {
             if (filterStatus === "sesuai") {
                 return item.issues === "CPL sesuai dengan standar.";
-            } else if (filterStatus === "perluPerbaikan") {
+            } else if (filterStatus === "warning") {
                 return item.issues !== "CPL sesuai dengan standar.";
             }
             return true;
@@ -97,7 +106,7 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
                 onCancel={onClose}
                 footer={null}
                 width={1000}
-                styles={{ body: { maxHeight: "70vh", overflow: "hidden" } }}
+                styles={{ body: { maxHeight: "100vh", overflow: "hidden" } }}
             >
                 <div style={{ marginBottom: 20 }}>
                     <Select
@@ -117,7 +126,7 @@ const ModalDetailCPL = ({ visible, onClose, curriculumData }) => {
                         <Radio.Group value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
                             <Radio.Button value="all">Semua</Radio.Button>
                             <Radio.Button value="sesuai">Sesuai ✅</Radio.Button>
-                            <Radio.Button value="perluPerbaikan">Perlu Perbaikan ❌</Radio.Button>
+                            <Radio.Button value="warning">Warning ⚠️</Radio.Button>
                         </Radio.Group>
                     </div>
                 )}

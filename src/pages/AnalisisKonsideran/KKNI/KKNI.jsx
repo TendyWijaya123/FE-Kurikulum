@@ -22,12 +22,13 @@ import { useKKNIData } from "../../../hooks/AnalisisKonsideran/useKKNIData";
 import ImportModal from "../../../components/Modal/ImportModal";
 import { DeleteOutlined, NightShelter } from "@mui/icons-material";
 import ModalKkni from "./ModalKkni";
-import { ProdiContext } from "../../../context/ProdiProvider";
+import { AppDataContext } from "../../../context/AppDataProvider";
 import VisibleMenu from "../../../components/Menu/VisibleMenu";
+import ProgresButton  from "../../../components/Button/ProgresButton";
 
 const KKNI = () => {
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId, currendKurikulum, handleTandaiSelesai } =
+		useContext(AppDataContext);
 	const {
 		isAutoCpl,
 		kemampuanKerjaKkni,
@@ -59,12 +60,18 @@ const KKNI = () => {
 		setSelectedPengetahuan,
 		setSelectedKemampuanKerja,
 	} = useKKNIData();
+
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
-
 	const isDisabled = !selectedPengetahuan || !selectedKemampuanKerja;
-
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [selectedType, setSelectedType] = useState("");
+	const [statusPerancanganCPL, setStatusPerancanganCPL] = useState(`${currendKurikulum?.data.is_perancangan_cpl}`);
+	const handleChangeStatusPerancanganCPL = (newStatus) => {
+		setStatusPerancanganCPL(newStatus);
+		handleTandaiSelesai("is_perancangan_cpl", newStatus);
+	};
+
+
 
 	const handleModalOpen = (type) => {
 		setSelectedType(type);
@@ -146,7 +153,7 @@ const KKNI = () => {
 					}))}
 					defaultValue={selectedProdiId}
 					onChange={(value) => handleChangeSelectedProdiId(value)}
-					style={{ width: 250 }}
+					style={{ width: 250, marginBottom: 10 }}
 					allowClear
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
@@ -156,60 +163,68 @@ const KKNI = () => {
 					<h1>
 						<b>Rancangan CPL</b>
 					</h1>
-					<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
-						<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-							<Button
-								icon={<DownloadOutlined />}
-								onClick={handleExportTemplateKkni}
-								type="primary">
-								Download Template KKNI
-							</Button>
-							<Button
-								icon={<UploadOutlined />}
-								onClick={() => setIsModalImportOpen(true)}
-								type="default">
-								Import KKNI
-							</Button>
-							<Button
-								icon={<PlusOutlined />}
-								onClick={handleAddRow}
-								type="primary">
-								Tambah Baris
-							</Button>
-							<ImportModal
-								isOpen={isModalImportOpen}
-								setIsOpen={setIsModalImportOpen}
-								handleImport={handleImportKkni}
-								title="Import KKNI"
-							/>
-							<Button
-								icon={<SaveOutlined />}
-								style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
-								onClick={handleSaveData}
-								type="primary"
-								loading={saving}>
-								Simpan Data
-							</Button>
-							<Tooltip title="Undo">
+					<div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+						<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
+							<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 								<Button
-									onClick={handleUndo}
-									type="default"
-									icon={<UndoOutlined />}
-								/>
-							</Tooltip>
-						</VisibleMenu>
-						{selectedRowKeys.length > 0 && (
-							<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
-								<Button
-									onClick={handleDeleteKknis}
-									type="primary"
-									danger
-									style={{ marginBottom: "16px" }}
-									loading={loading}>
-									Hapus CPL Terpilih
+									icon={<DownloadOutlined />}
+									onClick={handleExportTemplateKkni}
+									type="primary">
+									Download Template KKNI
 								</Button>
+								<Button
+									icon={<UploadOutlined />}
+									onClick={() => setIsModalImportOpen(true)}
+									type="default">
+									Import KKNI
+								</Button>
+								<Button
+									icon={<PlusOutlined />}
+									onClick={handleAddRow}
+									type="primary">
+									Tambah Baris
+								</Button>
+								<ImportModal
+									isOpen={isModalImportOpen}
+									setIsOpen={setIsModalImportOpen}
+									handleImport={handleImportKkni}
+									title="Import KKNI"
+								/>
+								<Button
+									icon={<SaveOutlined />}
+									style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
+									onClick={handleSaveData}
+									type="primary"
+									loading={saving}>
+									Simpan Data
+								</Button>
+								<Tooltip title="Undo">
+									<Button
+										onClick={handleUndo}
+										type="default"
+										icon={<UndoOutlined />}
+									/>
+								</Tooltip>
 							</VisibleMenu>
-						)}
+							{selectedRowKeys.length > 0 && (
+								<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+									<Button
+										onClick={handleDeleteKknis}
+										type="primary"
+										danger
+										style={{ marginBottom: "16px" }}
+										loading={loading}>
+										Hapus CPL Terpilih
+									</Button>
+								</VisibleMenu>
+							)}
+						</div>
+
+						<div className="ml-auto">
+							<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+								<ProgresButton status={statusPerancanganCPL} onChange={handleChangeStatusPerancanganCPL} />
+							</VisibleMenu>
+						</div>
 					</div>
 				</div>
 				{loading ? (
@@ -232,133 +247,136 @@ const KKNI = () => {
 					/>
 				)}
 
-				<hr style={{ margin: "16px 0", border: "0.5px solid #ddd" }} />
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<hr style={{ margin: "16px 0", border: "0.5px solid #ddd" }} />
 
-				<div style={{ marginTop: "50px" }}>
-					<h3 style={{ textAlign: "center", marginBottom: "16px" }}>
-						<b>Rekomendasi Rancangan CPL</b>
-						<br />
-						<span style={{ fontWeight: "normal", fontSize: "18px" }}>
-							Berdasarkan Analisis Konsideran
-						</span>
-					</h3>
+					<div style={{ marginTop: "50px" }}>
+						<h3 style={{ textAlign: "center", marginBottom: "16px" }}>
+							<b>Rekomendasi Rancangan CPL</b>
+							<br />
+							<span style={{ fontWeight: "normal", fontSize: "18px" }}>
+								Berdasarkan Analisis Konsideran
+							</span>
+						</h3>
 
-					<div>
-						<h2 style={{ marginBottom: "16px" }}>
-							Pilih Level Pengetahuan dan Kemampuan Kerja KKNI
-						</h2>
+						<div>
+							<h2 style={{ marginBottom: "16px" }}>
+								Pilih Level Pengetahuan dan Kemampuan Kerja KKNI
+							</h2>
 
-						<div
-							style={{
-								display: "flex",
-								alignItems: "center",
-								justifyContent: "space-between",
-								marginBottom: "16px",
-							}}>
-							{/* Container Dropdown */}
-							<div style={{ display: "flex", gap: "50px", flexGrow: 1 }}>
-								<div
-									style={{
-										display: "flex",
-										flexDirection: "column",
-										gap: "4px",
-									}}>
-									<label>Pengetahuan KKNI:</label>
-									<div
-										style={{
-											display: "flex",
-											alignItems: "center",
-											gap: "2px",
-										}}>
-										<Tooltip title="Lihat Detail Pengetahuan KKNI">
-											<Button
-												type="link"
-												icon={<EyeOutlined />}
-												onClick={() => handleModalOpen("pengetahuan")}
-											/>
-										</Tooltip>
-										<Select
-											placeholder="Pilih Pengetahuan KKNI"
-											options={pengetahuanKkni.map((item) => ({
-												label: item.level,
-												value: item.id,
-											}))}
-											value={selectedPengetahuan}
-											onChange={setSelectedPengetahuan}
-											style={{ width: 200 }}
-										/>
-									</div>
-								</div>
-
-								<div
-									style={{
-										display: "flex",
-										flexDirection: "column",
-										gap: "4px",
-									}}>
-									<label>Kemampuan Kerja KKNI:</label>
-									<div
-										style={{
-											display: "flex",
-											alignItems: "center",
-											gap: "2px",
-										}}>
-										<Tooltip title="Lihat Detail Kemampuan Kerja KKNI">
-											<Button
-												type="link"
-												icon={<EyeOutlined />}
-												onClick={() => handleModalOpen("kemampuanKerja")}
-											/>
-										</Tooltip>
-										<Select
-											placeholder="Pilih Kemampuan Kerja KKNI"
-											options={kemampuanKerjaKkni.map((item) => ({
-												label: item.level,
-												value: item.id,
-											}))}
-											value={selectedKemampuanKerja}
-											onChange={setSelectedKemampuanKerja}
-											style={{ width: 200 }}
-										/>
-									</div>
-								</div>
-							</div>
-
-							{/* Container untuk tombol */}
 							<div
-								style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-								{/* Tombol Tambah CPL tetap di tempatnya dengan visibility */}
-								<Button
-									onClick={addToDataSource}
-									type="primary"
-									disabled={isDisabled}
-									style={{
-										visibility:
-											selectedRowKeysCpl.length > 0 ? "visible" : "hidden",
-									}}>
-									Tambah CPL
-								</Button>
+								style={{
+									display: "flex",
+									alignItems: "center",
+									justifyContent: "space-between",
+									marginBottom: "16px",
+								}}>
+								{/* Container Dropdown */}
+								<div style={{ display: "flex", gap: "50px", flexGrow: 1 }}>
+									<div
+										style={{
+											display: "flex",
+											flexDirection: "column",
+											gap: "4px",
+										}}>
+										<label>Pengetahuan KKNI:</label>
+										<div
+											style={{
+												display: "flex",
+												alignItems: "center",
+												gap: "2px",
+											}}>
+											<Tooltip title="Lihat Detail Pengetahuan KKNI">
+												<Button
+													type="link"
+													icon={<EyeOutlined />}
+													onClick={() => handleModalOpen("pengetahuan")}
+												/>
+											</Tooltip>
+											<Select
+												placeholder="Pilih Pengetahuan KKNI"
+												options={pengetahuanKkni.map((item) => ({
+													label: item.level,
+													value: item.id,
+												}))}
+												value={selectedPengetahuan}
+												onChange={setSelectedPengetahuan}
+												style={{ width: 200 }}
+											/>
+										</div>
+									</div>
 
-								<Button
-									onClick={handleautocpl}
-									type="primary"
-									loading={isAutoCpl}
-									disabled={isDisabled}>
-									{dataSourceCpl.length > 0 ? "Refresh" : "Rekomendasi CPL"}
-								</Button>
+									<div
+										style={{
+											display: "flex",
+											flexDirection: "column",
+											gap: "4px",
+										}}>
+										<label>Kemampuan Kerja KKNI:</label>
+										<div
+											style={{
+												display: "flex",
+												alignItems: "center",
+												gap: "2px",
+											}}>
+											<Tooltip title="Lihat Detail Kemampuan Kerja KKNI">
+												<Button
+													type="link"
+													icon={<EyeOutlined />}
+													onClick={() => handleModalOpen("kemampuanKerja")}
+												/>
+											</Tooltip>
+											<Select
+												placeholder="Pilih Kemampuan Kerja KKNI"
+												options={kemampuanKerjaKkni.map((item) => ({
+													label: item.level,
+													value: item.id,
+												}))}
+												value={selectedKemampuanKerja}
+												onChange={setSelectedKemampuanKerja}
+												style={{ width: 200 }}
+											/>
+										</div>
+									</div>
+								</div>
+
+								{/* Container untuk tombol */}
+								<div
+									style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+									{/* Tombol Tambah CPL tetap di tempatnya dengan visibility */}
+									<Button
+										onClick={addToDataSource}
+										type="primary"
+										disabled={isDisabled}
+										style={{
+											visibility:
+												selectedRowKeysCpl.length > 0 ? "visible" : "hidden",
+										}}>
+										Tambah CPL
+									</Button>
+
+									<Button
+										onClick={handleautocpl}
+										type="primary"
+										loading={isAutoCpl}
+										disabled={isDisabled}>
+										{dataSourceCpl.length > 0 ? "Refresh" : "Rekomendasi CPL"}
+									</Button>
+								</div>
 							</div>
-						</div>
 
-						{/* Tabel */}
-						<Table
-							dataSource={dataSourceCpl}
-							rowSelection={rowSelectionCpl}
-							columns={columns}
-							pagination={{ pageSize: 5 }}
-							bordered
-						/>
+							{/* Tabel */}
+							<Table
+								dataSource={dataSourceCpl}
+								rowSelection={rowSelectionCpl}
+								columns={columns}
+								pagination={{ pageSize: 5 }}
+								bordered
+							/>
+						</div>
 					</div>
-				</div>
+				</VisibleMenu>
+
 				<ModalKkni
 					modalType={selectedType}
 					isModalVisible={isModalVisible}

@@ -30,12 +30,18 @@ import {
 	UploadOutlined,
 } from "@ant-design/icons";
 import ImportModal from "../../components/Modal/ImportModal";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
+import ProgresButton from "../../components/Button/ProgresButton";
 
 const MataKuliah = () => {
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId, handleTandaiSelesai, currendKurikulum } =
+		useContext(AppDataContext);
+	const [status, setStatus] = useState(`${currendKurikulum?.data.is_mata_kuliah}`);
+	const handleChangeStatus = (newStatus) => {
+		setStatus(newStatus);
+		handleTandaiSelesai("is_mata_kuliah", newStatus);
+	}
 	const {
 		mataKuliahData,
 		formulasiCpaDropdown,
@@ -296,7 +302,7 @@ const MataKuliah = () => {
 					}))}
 					defaultValue={selectedProdiId}
 					onChange={(value) => handleChangeSelectedProdiId(value)}
-					style={{ width: 250 }}
+					style={{ width: 250, marginBottom: 10 }}
 					allowClear
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
@@ -309,6 +315,8 @@ const MataKuliah = () => {
 					</div>
 				) : (
 					<>
+					<div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
 						<div className="mb-4 grid grid-cols-2 gap-2 md:flex md:flex-wrap">
 							<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 								<Button
@@ -338,6 +346,12 @@ const MataKuliah = () => {
 								</Button>
 							</VisibleMenu>
 						</div>
+						<div className="ml-auto">
+							<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+								<ProgresButton status={status} onChange={handleChangeStatus} />
+							</VisibleMenu>
+						</div>
+					</div>
 
 						<div className="mb-4 grid grid-cols-1 md:grid-cols-4 gap-2">
 							<Input

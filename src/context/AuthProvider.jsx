@@ -35,11 +35,11 @@ const AuthProvider = ({ children }) => {
 		}
 	};
 
-	const login = async (email, password) => {
+	const login = async (username, password) => {
 		try {
 			const url_login = import.meta.env.VITE_REACT_APP_API_URL;
 			const response = await axios.post(`${url_login}/login`, {
-				email,
+				username,
 				password,
 			});
 			const { token } = response.data;
@@ -52,13 +52,13 @@ const AuthProvider = ({ children }) => {
 		}
 	};
 
-	const loginRps = async (email, password) => {
+	const loginRps = async (username, password) => {
 		try {
 			const url_login = import.meta.env.VITE_REACT_APP_API_URL;
 			const response = await axios.post(
 				`${url_login}/login-dosen`,
 				{
-					email,
+					username,
 					password,
 				}
 			);
@@ -91,6 +91,8 @@ const AuthProvider = ({ children }) => {
 			)
 			.catch((error) => console.error("Error logging out:", error));
 	};
+
+	
 
 	return (
 		<AuthContext.Provider

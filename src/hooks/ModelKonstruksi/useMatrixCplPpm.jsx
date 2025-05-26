@@ -4,10 +4,10 @@ import {
 	updateMatrixCplPpm,
 } from "../../service/ModelKonstruksi/Matrix/MatrixCplPpmService";
 import { message } from "antd";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 const useMatrixCplPpm = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [cpls, setCpls] = useState([]);
 	const [ppms, setPpms] = useState([]);
 	const [matrixData, setMatrixData] = useState([]);

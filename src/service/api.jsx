@@ -522,3 +522,28 @@ export const updatePassword = async (passwordData) => {
 		throw error;
 	}
 };
+
+/* -----------------------------Tandai Selesai API----------------------------- */
+export const tandaiSelesai = async (nameStatus, status) => {
+	try {
+		const response = await api.post("/kurikulum/progres", {
+			'nameStatus': nameStatus,
+			'status': status,
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error marking as completed:", error);
+		throw error;
+	}
+}
+
+export const getCurrendKurikulum = async () => {
+	try {
+		const response = await api.get("/kurikulum/get-current-kurikulum");
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching current curriculum:", error);
+		throw error;
+	}
+}
+

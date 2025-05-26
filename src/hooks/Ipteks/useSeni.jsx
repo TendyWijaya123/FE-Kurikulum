@@ -9,10 +9,10 @@ import {
 	deleteTeknologi,
 } from "../../service/AnalisisKonsideran/Ipteks";
 import { AuthContext } from "../../context/AuthProvider";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 export const useSeni = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [data, setData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [saving, setSaving] = useState(false);
@@ -132,7 +132,7 @@ export const useSeni = () => {
 			const url = window.URL.createObjectURL(blob);
 			const link = document.createElement("a");
 			link.href = url;
-			link.setAttribute("download", "seni-template.xlsx");
+			link.setAttribute("download", "template-seni.xlsx");
 			document.body.appendChild(link);
 			link.click();
 			window.URL.revokeObjectURL(url);

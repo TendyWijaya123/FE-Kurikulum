@@ -42,14 +42,14 @@ const ChartCard = ({ prodi, dataChart, title, dataKey }) => {
             bar: {
                 horizontal: false,
                 columnWidth: "100%",
-                borderRadius: 5,
+                borderRadius: 0,
             },
         },
         xaxis: {
             categories: data.map((item) => item.kode),
             labels: {
                 rotate: -45,
-                style: { fontSize: "10px", colors: "#ffffff" },
+                style: { fontSize: "10px", colors: "#000000" },
             },
             tickAmount: data.length > 20 ? 20 : data.length,
             scrollbar: { enabled: data.length > 30 },
@@ -57,11 +57,11 @@ const ChartCard = ({ prodi, dataChart, title, dataKey }) => {
             
         yaxis: {
             min: 0,
-            title: { text: "Jumlah", style: { color: "#ffffff" } },
-            labels: { style: { colors: "#ffffff" } },
+            title: { text: "Jumlah", style: { color: "#000000" } },
+            labels: { style: { colors: "#000000" } },
         },
         grid: {
-            borderColor: "rgba(255, 255, 255, 0.9)", // Warna grid transparan putih
+            borderColor: "#000000",
             strokeDashArray: 5,
         },
         tooltip: {
@@ -70,7 +70,7 @@ const ChartCard = ({ prodi, dataChart, title, dataKey }) => {
                 formatter: (val, { dataPointIndex }) => `${val} - ${data[dataPointIndex].name}`,
             },
         },
-        colors: ["rgba(255,255,255,0.9)"], // Warna bar putih transparan
+        colors: ["#4e96ff"], 
     };
 
     return (
@@ -80,7 +80,7 @@ const ChartCard = ({ prodi, dataChart, title, dataKey }) => {
                 <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={`Tidak ada data untuk ${title}`} />
             ) : (
                 <div style={{ maxWidth: 700, overflowX: "auto", overflowY: "hidden" }}>
-                    <Card hoverable style={{ background: "linear-gradient(to right, #0052D4, #2166fe, #9a8bff)", padding: 5 }}>
+                    <Card hoverable>
                         <ReactApexChart options={chartOptions} series={[{ name: title, data: data.map((item) => item.value) }]} type="bar" height={300} />
                     </Card>
                 </div>

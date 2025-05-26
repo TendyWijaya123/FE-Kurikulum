@@ -26,13 +26,18 @@ const Dashboard = () => {
   } = useDashboardData();
 
   const [selectedTab, setSelectedTab] = useState("1");
-  
-  const stats = [
-    { title: "Total Jurusan", value: jurusans.length, icon: <UserOutlined />, color: "#1890ff" },
-    { title: "Total Prodi", value: prodis.length, icon: <BookOutlined />, color: "#52c41a" }
-  ];
-  
-  
+  const stats = useMemo(() => {
+    if (Array.isArray(jurusans) && Array.isArray(prodis)) {
+      return [
+        { title: "Total Jurusan", value: jurusans.length, icon: <UserOutlined />, color: "#1890ff" },
+        { title: "Total Prodi", value: prodis.length, icon: <BookOutlined />, color: "#52c41a" }
+      ];
+    }
+    return [];
+  }, [jurusans, prodis]);
+
+
+
   const tabItems = useMemo(() => [
     ...(curriculumData && Object.keys(curriculumData).length > 0
       ? [
@@ -80,109 +85,100 @@ const Dashboard = () => {
           .ant-radio-button-wrapper:hover {
             background: rgba(0, 0, 255, 0.1);
           }
-
-          .loading-bar {
-            width: 100px;
-            height: 5px;
-            background: linear-gradient(90deg, #1890ff, #52c41a);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite linear;
-          }
-
-          @keyframes loading {
-            0% { background-position: 200% 0; }
-            100% { background-position: -200% 0; }
-          }
         `}
       </style>
       
       <DefaultLayout title="Dashboard Kurikulum">
-        {loading ? (
-          <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh" }}>
-            <Spin size='large'  />
-          </div>
-        ) : (
-          <>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-          <Row gutter={[16, 16]} style={{ flex: 1 }}>
-            {stats.map((stat, index) => (
-              <Col xs={24} sm={12} md={12} lg={6} key={index}>
-                <Card hoverable className="stat-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-                    <div>
-                      <Text type="secondary">{stat.title}</Text>
-                      <Title level={3} style={{ margin: 0 }}>
-                        {stat.value} {" "}
-                        <Text style={{ color: stat.percentColor, fontSize: 16 }}>{stat.percent}</Text>
-                      </Title>
-                    </div>
-                    <div
-                      style={{
-                        width: 50,
-                        height: 50,
-                        backgroundColor: stat.color,
-                        borderRadius: "50%",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        color: "white",
-                        fontSize: 24,
-                        marginLeft: 60,
-                      }}
-                    >
-                      {stat.icon}
-                    </div>
+  {loading ? (
+    <div className="flex justify-center items-center h-[50vh]">
+      <Spin size="large" />
+    </div>
+  ) : (
+    <>
+      {/* Header Stats + Refresh */}
+      <div className="flex flex-wrap justify-between items-center gap-4 mb-6 px-4">
+        <Row gutter={[16, 16]} className="flex-1 w-full lg:w-auto">
+          {stats.map((stat, index) => (
+            <Col xs={24} sm={12} md={12} lg={6} key={index}>
+              <Card hoverable className="stat-card">
+                <div className="flex justify-between items-center gap-4">
+                  <div>
+                    <Text type="secondary">{stat.title}</Text>
+                    <Title level={3} style={{ margin: 0 }}>
+                      {stat.value}{" "}
+                      <Text style={{ color: stat.percentColor, fontSize: 16 }}>{stat.percent}</Text>
+                    </Title>
                   </div>
-                </Card>
-              </Col>
-            ))}
-          </Row>
-          <Button 
-            type="primary" 
-            icon={<ReloadOutlined />} 
-            onClick={handleRefresh} 
-            loading={isProcessing}
-            style={{ marginRight: 30 }}
+                  <div
+                    style={{
+                      width: 50,
+                      height: 50,
+                      backgroundColor: stat.color,
+                      borderRadius: "50%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      color: "white",
+                      fontSize: 24,
+                    }}
+                  >
+                    {stat.icon}
+                  </div>
+                </div>
+              </Card>
+            </Col>
+          ))}
+        </Row>
+
+        <div className="flex-shrink-0">
+          <Button
+            type="primary"
+            icon={!isProcessing && <ReloadOutlined />}
+            onClick={handleRefresh}
+            disabled={isProcessing}
+            className="flex items-center justify-center h-10 w-32"
           >
-            Refresh
+            {isProcessing ? (
+              <div className="flex items-center gap-2">
+                <Progress type="circle" percent={progress} size={22} />
+                <span className="text-white">Processing</span>
+              </div>
+            ) : (
+              "Refresh"
+            )}
           </Button>
         </div>
-  
-        <div className="dashboard-tabs">
-          <div className="tab-container">
-            <Title level={4} style={{ marginLeft: 20 }}>
-                {tabItems.find((tab) => tab.key === selectedTab)?.label || "Pilih Menu"}
-            </Title>
-            <Radio.Group value={selectedTab} onChange={(e) => setSelectedTab(e.target.value)}>
-              {tabItems.map((tab) => (
-                <Radio.Button key={tab.key} value={tab.key}>
-                  {tab.label}
-                </Radio.Button>
-              ))}
-            </Radio.Group>
-          </div>
-  
-          <div style={{ marginTop: 20, padding: 15 }}>
-            {isProcessing ? (
-                <div style={{ textAlign: "center" }}>
-                  <Progress type="circle" percent={progress} />
-                  <div className="loading-bar" style={{ margin: "10px auto" }} />
-                  <p style={{ marginTop: 10 }}>Memproses data, tunggu sebentar...</p>
-                </div>
-              ) : (
-                curriculumData && Object.keys(curriculumData).length > 0 ? (
-                  tabItems.find((tab) => tab.key === selectedTab)?.content
-                ) : (
-                  <div style={{ textAlign: "center", padding: 20 }}>
-                    <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Tidak Ada Data Mata Kuliah" />
-                  </div>
-                )
-              )}
-          </div>
+      </div>
+
+      {/* Tabs */}
+      <div className="dashboard-tabs px-4">
+        <div className="tab-container mb-4">
+          <Title level={4}>
+            {tabItems.find((tab) => tab.key === selectedTab)?.label || "Pilih Menu"}
+          </Title>
+          <Radio.Group value={selectedTab} onChange={(e) => setSelectedTab(e.target.value)} wrap>
+            {tabItems.map((tab) => (
+              <Radio.Button key={tab.key} value={tab.key}>
+                {tab.label}
+              </Radio.Button>
+            ))}
+          </Radio.Group>
         </div>
-        </>
-        )}
-      </DefaultLayout>
+
+        <div className="bg-white rounded shadow p-4">
+          {curriculumData && Object.keys(curriculumData).length > 0 ? (
+            tabItems.find((tab) => tab.key === selectedTab)?.content
+          ) : (
+            <div className="text-center py-8">
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="Tidak Ada Data" />
+            </div>
+          )}
+        </div>
+      </div>
+    </>
+  )}
+</DefaultLayout>
+
     </>
   );  
 };

@@ -8,10 +8,10 @@ import {
 	importTeknologi,
 } from "../../service/AnalisisKonsideran/Ipteks";
 import { AuthContext } from "../../context/AuthProvider";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 export const useTeknologi = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [data, setData] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [saving, setSaving] = useState(false);

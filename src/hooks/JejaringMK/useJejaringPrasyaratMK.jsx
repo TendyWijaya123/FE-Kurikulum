@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { getJejaringPrasyarat } from "../../service/JejaringMataKuliah/JejaringMataKuliahService";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 
 const useJejaringPrasyaratMK = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [mataKuliahData, setMataKuliahData] = useState({});
 	const [jejaringData, setJejaringData] = useState([]);
 	const [loading, setLoading] = useState(false);

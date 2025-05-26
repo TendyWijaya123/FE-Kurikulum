@@ -3,11 +3,11 @@ import {
 	getMatrixCplP,
 	updateMatrixCplP,
 } from "../../service/ModelKonstruksi/Matrix/MatrixCplPService";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import { message } from "antd";
 
 const useMatrixCplP = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [cpls, setCpls] = useState([]);
 	const [ps, setPs] = useState([]);
 	const [matrixData, setMatrixData] = useState([]);

@@ -3,7 +3,7 @@ import { AuthContext } from "../context/AuthProvider";
 import { useNavigate } from "react-router-dom";
 
 export const useLoginForm = () => {
-	const [email, setEmail] = useState("");
+	const [userName, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const { user, login, loginRps } = useContext(AuthContext);
 	const navigate = useNavigate();
@@ -20,7 +20,7 @@ export const useLoginForm = () => {
 		setLoading(true);
 
 		try {
-			await login(email, password);
+			await login(userName, password);
 			setIsLoggedIn(true);
 		} catch (error) {
 			console.error("Login failed:", error.response?.data || error.message);
@@ -44,7 +44,7 @@ export const useLoginForm = () => {
 		setLoading(true);
 
 		try {
-			await loginRps(email, password);
+			await loginRps(userName, password);
 			navigate("/mata-kuliah-pengampu");
 		} catch (error) {
 			console.error("Login failed:", error.response?.data || error.message);
@@ -54,8 +54,8 @@ export const useLoginForm = () => {
 		}
 	};
 
-	const handleChangeEmail = (e) => {
-		setEmail(e.target.value);
+	const handleChangeUserName = (e) => {
+		setUsername(e.target.value);
 	};
 
 	const handleChangePassword = (e) => {
@@ -64,11 +64,11 @@ export const useLoginForm = () => {
 
 	return {
 		handleSubmit,
-		email,
+		userName,
 		password,
 		loading,
 		handleChangePassword,
-		handleChangeEmail,
+		handleChangeUserName,
 		handleSubmitRps,
 	};
 };

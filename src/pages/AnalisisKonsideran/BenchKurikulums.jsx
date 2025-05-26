@@ -23,11 +23,12 @@ import { useBCData } from "../../hooks/AnalisisKonsideran/useBCData";
 import { useContext, useState } from "react";
 import ImportModal from "../../components/Modal/ImportModal";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
+import ProgresButton from "../../components/Button/ProgresButton";
 
 const BenchKurikulums = () => {
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId,  currendKurikulum, handleTandaiSelesai } =
+		useContext(AppDataContext);
 	const {
 		dataSource,
 		loading,
@@ -45,6 +46,11 @@ const BenchKurikulums = () => {
 		handleExportTemplateBenchKurikulum,
 	} = useBCData();
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
+	const [statusBK, setStatusBK] = useState(`${currendKurikulum?.data.is_bk}`);
+	const handleChangeStatusBK = (newStatus) => {
+		setStatusBK(newStatus);
+		handleTandaiSelesai("is_bk", newStatus);
+	};
 
 	const colums = [
 		{
@@ -249,59 +255,67 @@ const BenchKurikulums = () => {
 					}))}
 					defaultValue={selectedProdiId}
 					onChange={(value) => handleChangeSelectedProdiId(value)}
-					style={{ width: 250 }}
+					style={{ width: 250, marginBottom: 10 }}
 					allowClear
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
 			</VisibleMenu>
 			<div style={{ padding: "24px", background: "#fff", minHeight: "100%" }}>
-				<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
-					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-						<Button
-							icon={<DownloadOutlined />}
-							onClick={handleExportTemplateBenchKurikulum}
-							type="primary">
-							Download Template BK
-						</Button>
-						<Button
-							icon={<UploadOutlined />}
-							onClick={() => setIsModalImportOpen(true)}
-							type="default">
-							Import BK
-						</Button>
-						<ImportModal
-							isOpen={isModalImportOpen}
-							setIsOpen={setIsModalImportOpen}
-							handleImport={handleImportBenchKurikulum}
-							title="Import Bench  Kurikulum"
-						/>
-						<Button
-							icon={<PlusOutlined />}
-							onClick={handleAddRow}
-							type="primary">
-							Tambah Baris
-						</Button>
-						<Button
-							icon={<SaveOutlined />}
-							style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
-							onClick={handleSaveData}
-							type="primary"
-							loading={saving}>
-							Simpan Data
-						</Button>
-					</VisibleMenu>
-					{selectedRowKeys.length > 0 && (
-						<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+				<div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+					<div className="flex flex-wrap gap-2">
+						<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 							<Button
-								onClick={handleDeleteBenchKurikulums}
+								icon={<DownloadOutlined />}
+								onClick={handleExportTemplateBenchKurikulum}
+								type="primary">
+								Download Template BK
+							</Button>
+							<Button
+								icon={<UploadOutlined />}
+								onClick={() => setIsModalImportOpen(true)}
+								type="default">
+								Import BK
+							</Button>
+							<ImportModal
+								isOpen={isModalImportOpen}
+								setIsOpen={setIsModalImportOpen}
+								handleImport={handleImportBenchKurikulum}
+								title="Import Bench  Kurikulum"
+							/>
+							<Button
+								icon={<PlusOutlined />}
+								onClick={handleAddRow}
+								type="primary">
+								Tambah Baris
+							</Button>
+							<Button
+								icon={<SaveOutlined />}
+								style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
+								onClick={handleSaveData}
 								type="primary"
-								danger
-								style={{ marginBottom: "16px" }}
-								loading={loading}>
-								Hapus benchKurikulums Terpilih
+								loading={saving}>
+								Simpan Data
 							</Button>
 						</VisibleMenu>
-					)}
+						{selectedRowKeys.length > 0 && (
+							<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+								<Button
+									onClick={handleDeleteBenchKurikulums}
+									type="primary"
+									danger
+									style={{ marginBottom: "16px" }}
+									loading={loading}>
+									Hapus benchKurikulums Terpilih
+								</Button>
+							</VisibleMenu>
+						)}
+					</div>
+
+					<div className="ml-auto">
+						<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+							<ProgresButton status={statusBK} onChange={handleChangeStatusBK} />
+						</VisibleMenu>
+					</div>
 				</div>
 				{loading ? (
 					<div

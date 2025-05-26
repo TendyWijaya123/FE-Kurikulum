@@ -4,12 +4,18 @@ import { InfoCircleOutlined, SaveOutlined } from "@ant-design/icons";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { useMatriksMpPMkData } from "../../hooks/useMatriksMpPMkData";
 import { useNavigate } from "react-router-dom";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
+import ProgresButton from "../../components/Button/ProgresButton";
 
 const MatriksMpPMk = () => {
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId, handleTandaiSelesai, currendKurikulum } =
+				useContext(AppDataContext);
+	const [status, setStatus] = useState(`${currendKurikulum?.data.is_matriks_p_mp_mk}`);
+	const handleChangeStatus = (newStatus) => {
+		setStatus(newStatus);
+		handleTandaiSelesai("is_matriks_p_mp_mk", newStatus);
+	}
 	const {
 		updating,
 		dataSource,
@@ -158,12 +164,17 @@ const MatriksMpPMk = () => {
 					}))}
 					defaultValue={selectedProdiId}
 					onChange={(value) => handleChangeSelectedProdiId(value)}
-					style={{ width: 250 }}
+					style={{ width: 250, marginBottom: 10 }}
 					allowClear
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
 			</VisibleMenu>
 			<div className="p-2 bg-white w-full overflow-x-auto">
+				<div className="ml-auto ">
+					<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+						<ProgresButton status={status} onChange={handleChangeStatus} />
+					</VisibleMenu>
+				</div>
 				<div style={{ marginBottom: "10px", display: "flex", gap: "5px" }}>
 					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 						<Button

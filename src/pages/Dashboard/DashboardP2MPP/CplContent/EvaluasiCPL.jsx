@@ -57,9 +57,9 @@ const EvaluasiCPL = ({data, prodiData}) => {
             color: "#007bff", // Biru untuk benar
           },
           {
-            name: "Perlu Perbaikan",
+            name: "Terdeteksi kurang sesuai",
             data: salahData,
-            color: "#ff4d4f", // Merah untuk salah
+            color: "#ffc107",
           },
         ],
         options: {

@@ -22,11 +22,13 @@ import { useSKSUData } from "../../hooks/AnalisisKonsideran/useSKSUData";
 import { useContext, useState } from "react";
 import ImportModal from "../../components/Modal/ImportModal";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
+import ProgresButton from "../../components/Button/ProgresButton";
+import { AuthContext } from "../../context/AuthProvider";
 
 const SKSU = () => {
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId, handleTandaiSelesai, currendKurikulum } =
+		useContext(AppDataContext);
 	const {
 		dataSource,
 		loading,
@@ -45,7 +47,14 @@ const SKSU = () => {
 		handleImportSksu,
 		handleExportTemplateSksu,
 	} = useSKSUData();
+
+
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
+	const [statusSksu, setStatusSksu] = useState(`${currendKurikulum?.data.is_sksu}`);
+	const handleChangeStatusSksu = (newStatus) => {
+		setStatusSksu(newStatus);
+		handleTandaiSelesai("is_sksu", newStatus);
+	};
 
 	const columns = [
 		{
@@ -238,14 +247,16 @@ const SKSU = () => {
 					}))}
 					defaultValue={selectedProdiId}
 					onChange={(value) => handleChangeSelectedProdiId(value)}
-					style={{ width: 250 }}
+					style={{ width: 250, marginBottom: 10 }}
 					allowClear
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
 			</VisibleMenu>
 			<div className="p-5 min-h-full bg-white overflow-x-auto">
-				<div className="mb-4 grid grid-cols-2 gap-2 md:flex md:flex-wrap">
-					<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+				<div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+					{/* Kiri: Tombol-tombol utama */}
+					<div className="flex flex-wrap gap-2">
+						<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
 						<Button
 							icon={<DownloadOutlined />}
 							onClick={handleExportTemplateSksu}
@@ -286,21 +297,30 @@ const SKSU = () => {
 							className="text-sm p-2 w-full md:w-auto">
 							Simpan Data
 						</Button>
-					</VisibleMenu>
+						</VisibleMenu>
 
-					{selectedRowKeys.length > 0 && (
+						{selectedRowKeys.length > 0 && (
 						<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
 							<Button
-								onClick={handleDeleteSksus}
-								type="primary"
-								danger
-								loading={loading}
-								className="text-sm p-2 w-full md:w-auto">
-								Hapus SKSU Terpilih
+							onClick={handleDeleteSksus}
+							type="primary"
+							danger
+							loading={loading}
+							className="text-sm p-2 w-full md:w-auto">
+							Hapus SKSU Terpilih
 							</Button>
 						</VisibleMenu>
-					)}
+						)}
+					</div>
+
+					{/* ProgresButton dipindahkan ke sisi kanan */}
+					<div className="ml-auto">
+						<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+							<ProgresButton status={statusSksu} onChange={handleChangeStatusSksu} />
+						</VisibleMenu>
+					</div>
 				</div>
+
 
 				{loading ? (
 					<div

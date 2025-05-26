@@ -8,10 +8,10 @@ const { Option } = Select;
 
 const Login = () => {
 	const {
-		email,
+		userName,
 		password,
 		loading,
-		handleChangeEmail,
+		handleChangeUserName,
 		handleChangePassword,
 		handleSubmit,
 		handleSubmitRps,
@@ -54,14 +54,14 @@ const Login = () => {
 						</Select>
 					</Form.Item>
 					<Form.Item
-						label="Email"
-						name="email"
+						label="UserName"
+						name="username"
 						rules={[{ required: true, message: "Please enter your email" }]}>
 						<Input
-							type="email"
-							value={email}
-							onChange={(e) => handleChangeEmail(e)}
-							placeholder="Enter your email"
+							type="string"
+							value={userName}
+							onChange={(e) => handleChangeUserName(e)}
+							placeholder="Enter your username"
 							disabled={isDisabled}
 						/>
 					</Form.Item>

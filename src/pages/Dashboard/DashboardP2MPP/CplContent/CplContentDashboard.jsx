@@ -22,7 +22,7 @@ const CplContentDashboard = ({ prodi, dataChart }) => {
                 <Card
                     hoverable
                     title={`Evaluasi CPL per Prodi`}
-                    style={{ flex: 1, minHeight: 100 }}x
+                    style={{ flex: 1, minHeight: 100 }}
                     extra={
                         <Button type="primary" onClick={showModal}>
                             Lihat Detail

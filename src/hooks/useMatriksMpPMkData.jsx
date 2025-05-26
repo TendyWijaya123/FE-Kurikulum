@@ -5,10 +5,10 @@ import {
 } from "../service/ModelKonstruksi/Matrix/MatrixMpPMkService";
 import { message } from "antd";
 import { AuthContext } from "../context/AuthProvider";
-import { ProdiContext } from "../context/ProdiProvider";
+import { AppDataContext } from "../context/AppDataProvider";
 
 export const useMatriksMpPMkData = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const { user } = useContext(AuthContext);
 	const [matrix, setMatrix] = useState([]);
 	const [loading, setLoading] = useState(false);

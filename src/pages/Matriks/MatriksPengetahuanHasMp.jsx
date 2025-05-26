@@ -2,13 +2,19 @@ import React, { useContext, useState } from "react";
 import { Table, Button, Checkbox, Select, Tooltip } from "antd";
 import DefaultLayout from "../../layouts/DefaultLayout";
 import { useMatriksPengetahuanMpData } from "../../hooks/useMatrixPengetahuanMp";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
 import { SaveOutlined } from "@ant-design/icons";
+import ProgresButton from "../../components/Button/ProgresButton";
 
 const MatriksPHasMp = () => {
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(ProdiContext);
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId, handleTandaiSelesai, currendKurikulum } =
+			useContext(AppDataContext);
+	const [status, setStatus] = useState(`${currendKurikulum?.data.is_matriks_p_mp}`);
+	const handleChangeStatus = (newStatus) => {
+		setStatus(newStatus);
+		handleTandaiSelesai("is_matriks_p_mp", newStatus);
+	}
 	const {
 		loading,
 		dataSource,
@@ -94,12 +100,17 @@ const MatriksPHasMp = () => {
 					}))}
 					defaultValue={selectedProdiId}
 					onChange={(value) => handleChangeSelectedProdiId(value)}
-					style={{ width: 250 }}
+					style={{ width: 250, marginBottom: 10 }}
 					allowClear
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
 			</VisibleMenu>
 			<div className="w-full bg-white overflow-auto p-2">
+				<div className="ml-auto ">
+					<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+						<ProgresButton status={status} onChange={handleChangeStatus} />
+					</VisibleMenu>
+				</div>
 				<div style={{ marginBottom: "10px", display: "flex", gap: "5px" }}>
 					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 						<Button

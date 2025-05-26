@@ -20,9 +20,8 @@ export const fetchProdi = async () => {
     }
 };
 
-export const fetchCurriculumData = async () => {
+export const prosesCurriculumData = async () => {
     try {
-        await api.get('dashboard/refresh-curriculum-data');
         const response = await api.get(`/dashboard/proses-curriculum-data`);
         return response.data;
     } catch (error) {

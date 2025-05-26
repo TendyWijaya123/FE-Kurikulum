@@ -5,11 +5,11 @@ import {
 	deleteMisiJurusan,
 	updateVmtJurusan,
 } from "../../service/api";
-import { ProdiContext } from "../../context/ProdiProvider";
+import { AppDataContext } from "../../context/AppDataProvider";
 import { message } from "antd";
 
 const useVmtJurusan = () => {
-	const { selectedProdiId } = useContext(ProdiContext);
+	const { selectedProdiId } = useContext(AppDataContext);
 	const [loading, setLoading] = useState(false);
 	const [alert, setAlert] = useState(null);
 	const [vmtJurusan, setVmtJurusan] = useState("");
