@@ -5,12 +5,18 @@ import Accordion from "../../components/Accordion/Accordion";
 import JejaringMKTable from "../../components/Common/JejaringMK/JejaringMKTable";
 import JejaringMKDiagram from "../../components/Common/JejaringMK/JejaringMKDiagram";
 import { AppDataContext } from "../../context/AppDataProvider";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
+import ProgresButton from "../../components/Button/ProgresButton";
 
 const JejaringMK = () => {
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(AppDataContext);
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId, handleTandaiSelesai, currendKurikulum } =
+					useContext(AppDataContext);
+	const [status, setStatus] = useState(`${currendKurikulum?.data.is_jejaring_mata_kuliah}`);
+	const handleChangeStatus = (newStatus) => {
+		setStatus(newStatus);
+		handleTandaiSelesai("is_jejaring_mata_kuliah", newStatus);
+	}
 	return (
 		<DefaultLayout title="Jejaring Mata Kuliah">
 			<VisibleMenu allowedRoles={["P2MPP"]}>
@@ -22,19 +28,26 @@ const JejaringMK = () => {
 					}))}
 					defaultValue={selectedProdiId}
 					onChange={(value) => handleChangeSelectedProdiId(value)}
-					style={{ width: 250 }}
+					style={{ width: 250, marginBottom: 10 }}
 					allowClear
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
 			</VisibleMenu>
-			<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-				<Accordion title="Tabel Prasyarat">
-					<JejaringMKTable />
+			<div className="p-2 bg-white w-full overflow-x-auto">
+				<div className="ml-auto ">
+					<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+						<ProgresButton status={status} onChange={handleChangeStatus} />
+					</VisibleMenu>
+				</div>
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<Accordion title="Tabel Prasyarat">
+						<JejaringMKTable />
+					</Accordion>
+				</VisibleMenu>
+				<Accordion title="Jejaring MataKuliah">
+					<JejaringMKDiagram />
 				</Accordion>
-			</VisibleMenu>
-			<Accordion title="Jejaring MataKuliah">
-				<JejaringMKDiagram />
-			</Accordion>
+			</div>
 		</DefaultLayout>
 	);
 };

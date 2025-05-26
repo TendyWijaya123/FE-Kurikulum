@@ -11,29 +11,40 @@ import Accordion from "../../components/Accordion/Accordion";
 import { AppDataContext } from "../../context/AppDataProvider";
 import { Select } from "antd";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
+import ProgresButton from "../../components/Button/ProgresButton";
 
 const VMT = () => {
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId, handleTandaiSelesai, currendKurikulum } =
 		useContext(AppDataContext);
+	
+	const [status, setStatus] = useState(`${currendKurikulum?.data.is_vmt}`);
+	const handleChangeStatus = (newStatus) => {
+		setStatus(newStatus);
+		handleTandaiSelesai("is_vmt", newStatus);
+	};
 
 	return (
 		<DefaultLayout title="Visi, Misi dan Tujuan">
-			<div className="font-semibold">
-				<VisibleMenu allowedRoles={"P2MPP"}>
-					<Select
-						placeholder="Pilih Program Studi"
-						options={prodiDropdown.map((prodi) => ({
-							label: prodi.name,
-							value: prodi.id,
-						}))}
-						defaultValue={selectedProdiId}
-						onChange={(value) => handleChangeSelectedProdiId(value)}
-						style={{ width: 250 }}
-						allowClear
-						onClear={() => handleChangeSelectedProdiId(null)}
-					/>
-				</VisibleMenu>
-				<br />
+			<VisibleMenu allowedRoles={"P2MPP"}>
+				<Select
+					placeholder="Pilih Program Studi"
+					options={prodiDropdown.map((prodi) => ({
+						label: prodi.name,
+						value: prodi.id,
+					}))}
+					defaultValue={selectedProdiId}
+					onChange={(value) => handleChangeSelectedProdiId(value)}
+					style={{ width: 250, marginBottom: 10 }}
+					allowClear
+					onClear={() => handleChangeSelectedProdiId(null)}
+				/>
+			</VisibleMenu>
+			<div className="bg-white font-semibold">
+				<div className="ml-auto ">
+					<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+						<ProgresButton status={status} onChange={handleChangeStatus} />
+					</VisibleMenu>
+				</div>
 				<Accordion title="Visi Polban">
 					<VisiPolban />
 				</Accordion>

@@ -8,10 +8,11 @@ import { AuthContext } from "./context/AuthProvider";
 function App() {
 	const { fetchCurrendKurikulum } = useContext(AppDataContext);
   	const { user } = useContext(AuthContext);
-
 	useEffect(() => {
-		if (user) {
-			fetchCurrendKurikulum();
+		if((!Array.isArray(user?.roles)) !== true) {
+			if (user && !user?.roles.includes("P2MPP")) {
+				fetchCurrendKurikulum();
+			}
 		}
 	}, [user]);
 

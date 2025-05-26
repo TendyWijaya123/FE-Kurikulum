@@ -247,14 +247,15 @@ const SKSU = () => {
 					}))}
 					defaultValue={selectedProdiId}
 					onChange={(value) => handleChangeSelectedProdiId(value)}
-					style={{ width: 250 }}
+					style={{ width: 250, marginBottom: 10 }}
 					allowClear
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
 			</VisibleMenu>
 			<div className="p-5 min-h-full bg-white overflow-x-auto">
-				<div className="mb-4 flex flex-wrap items-start justify-between gap-2">
-					<div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap">
+				<div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+					{/* Kiri: Tombol-tombol utama */}
+					<div className="flex flex-wrap gap-2">
 						<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
 						<Button
 							icon={<DownloadOutlined />}
@@ -318,7 +319,7 @@ const SKSU = () => {
 							<ProgresButton status={statusSksu} onChange={handleChangeStatusSksu} />
 						</VisibleMenu>
 					</div>
-					</div>
+				</div>
 
 
 				{loading ? (

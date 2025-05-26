@@ -11,6 +11,8 @@ import { AuthContext } from "./AuthProvider";
 export const AppDataContext = createContext();
 
 const AppDataProvider = ({ children }) => {
+  const {user} = useContext(AuthContext);
+
   const [currendKurikulum, setCurrendKurikulum] = useState(
     JSON.parse(localStorage.getItem("currendKurikulum")) || null
   );
@@ -31,10 +33,12 @@ const AppDataProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!currendKurikulum) fetchCurrendKurikulum();
-    if (prodiDropdown.length === 0) fetchProdiDropdown();
-    if (jurusanDropdown.length === 0) fetchJurusanDropdown();
-  }, []);
+    if ((!Array.isArray(user?.roles)) !== true){
+      if (!currendKurikulum && user?.id && !user.roles.includes("P2MPP")) fetchCurrendKurikulum();
+      if (prodiDropdown.length === 0 && user?.id) fetchProdiDropdown();
+      if (jurusanDropdown.length === 0 && user?.id) fetchJurusanDropdown();
+    }
+  }, [user]);
 
   const fetchCurrendKurikulum = async () => {
     setLoading(true);
@@ -50,22 +54,28 @@ const AppDataProvider = ({ children }) => {
   };
 
   const fetchProdiDropdown = async () => {
+    setLoading(true);
     try {
       const data = await getProdiDropdown();
       setProdiDropdown(data);
       localStorage.setItem("prodiDropdown", JSON.stringify(data));
     } catch (error) {
       console.error("Error fetching prodi dropdown:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchJurusanDropdown = async () => {
+    setLoading(true);
     try {
       const data = await getJurusanDropdown();
       setJurusanDropdown(data);
       localStorage.setItem("jurusanDropdown", JSON.stringify(data));
     } catch (error) {
       console.error("Error fetching jurusan dropdown:", error);
+    } finally {
+      setLoading(false);
     }
   };
 

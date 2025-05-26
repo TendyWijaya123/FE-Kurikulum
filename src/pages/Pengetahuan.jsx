@@ -26,11 +26,12 @@ import { AuthContext } from "../context/AuthProvider";
 import ImportModal from "../components/Modal/ImportModal";
 import VisibleMenu from "../components/Menu/VisibleMenu";
 import { AppDataContext } from "../context/AppDataProvider";
+import ProgresButton from "../components/Button/ProgresButton";
 
 const Pengetahuan = () => {
 	const { user } = useContext(AuthContext);
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId, handleTandaiSelesai, currendKurikulum } =
 		useContext(AppDataContext);
 	const {
 		pengetahuanData,
@@ -48,6 +49,12 @@ const Pengetahuan = () => {
 		handleSaveAll,
 		handleDeleteRow,
 	} = usePengetahuan();
+
+	const [status, setStatus] = useState(`${currendKurikulum?.data.is_matriks_cpl_iea}`);
+	const handleChangeStatus = (newStatus) => {
+		setStatus(newStatus);
+		handleTandaiSelesai("is_matriks_cpl_iea", newStatus);
+	}
 
 	const columns = [
 		{
@@ -119,50 +126,57 @@ const Pengetahuan = () => {
 					}))}
 					defaultValue={selectedProdiId}
 					onChange={(value) => handleChangeSelectedProdiId(value)}
-					style={{ width: 250 }}
+					style={{ width: 250, marginBottom: 10 }}
 					allowClear
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
 			</VisibleMenu>
-			<div style={{ padding: "15px", background: "#fff", minHeight: "100%" }}>
-				<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
-					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-						<Button
-							onClick={handleExportTemplatePengetahuan}
-							icon={<DownloadOutlined />}
-							type="primary">
-							Download Template
-						</Button>
-						<Button
-							onClick={() => setIsModalImportOpen(true)}
-							icon={<ImportOutlined />}
-							type="default">
-							Import
-						</Button>
-						<Button
-							onClick={() => handleAddRow()}
-							icon={<PlusOutlined />}
-							type="primary">
-							Tambah Baris
-						</Button>
-						<Button
-							onClick={handleSaveAll}
-							icon={<SaveOutlined />}
-							type="primary"
-							loading={saving}
-							style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
-							Simpan Data
-						</Button>
-
-						{selectedRowKeys.length > 0 && (
+			<div className="p-5 min-h-full bg-white overflow-x-auto">
+				<div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+					<div className="flex flex-wrap gap-2">
+						<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 							<Button
-								onClick={() => handleMultiDelete(selectedRowKeys)}
-								type="primary"
-								danger>
-								Hapus Terpilih
+								onClick={handleExportTemplatePengetahuan}
+								icon={<DownloadOutlined />}
+								type="primary">
+								Download Template
 							</Button>
-						)}
-					</VisibleMenu>
+							<Button
+								onClick={() => setIsModalImportOpen(true)}
+								icon={<ImportOutlined />}
+								type="default">
+								Import
+							</Button>
+							<Button
+								onClick={() => handleAddRow()}
+								icon={<PlusOutlined />}
+								type="primary">
+								Tambah Baris
+							</Button>
+							<Button
+								onClick={handleSaveAll}
+								icon={<SaveOutlined />}
+								type="primary"
+								loading={saving}
+								style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}>
+								Simpan Data
+							</Button>
+
+							{selectedRowKeys.length > 0 && (
+								<Button
+									onClick={() => handleMultiDelete(selectedRowKeys)}
+									type="primary"
+									danger>
+									Hapus Terpilih
+								</Button>
+							)}
+						</VisibleMenu>
+					</div>
+					<div className="ml-auto">
+						<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+							<ProgresButton status={status} onChange={handleChangeStatus} />
+						</VisibleMenu>
+					</div>
 				</div>
 
 				<ImportModal

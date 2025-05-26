@@ -5,10 +5,16 @@ import { useMatriksCplIeaData } from "../../hooks/useMatriksCplIeaData";
 import { AppDataContext } from "../../context/AppDataProvider";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
 import { SaveOutlined } from "@ant-design/icons";
+import ProgresButton from "../../components/Button/ProgresButton";
 
 const MatriksCplHasIea = () => {
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(AppDataContext);
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId, handleTandaiSelesai, currendKurikulum } =
+			useContext(AppDataContext);
+	const [status, setStatus] = useState(`${currendKurikulum?.data.is_matriks_cpl_iea}`);
+	const handleChangeStatus = (newStatus) => {
+		setStatus(newStatus);
+		handleTandaiSelesai("is_matriks_cpl_iea", newStatus);
+	}
 	const {
 		loading,
 		dataSource,
@@ -81,25 +87,28 @@ const MatriksCplHasIea = () => {
 					}))}
 					defaultValue={selectedProdiId}
 					onChange={(value) => handleChangeSelectedProdiId(value)}
-					style={{ width: 250 }}
+					style={{ width: 250, marginBottom: 10 }}
 					allowClear
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
 			</VisibleMenu>
-			<div className="w-full overflow-x-auto bg-white p-3">
-				<div style={{ marginBottom: "10px", display: "flex", gap: "5px" }}>
-					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-						<Button
-							icon={<SaveOutlined />}
-							onClick={handleUpdateMatrix}
-							type="primary"
-							style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
-							loading={updating}>
-							Simpan Perubahan
-						</Button>
-						`
+			<div className="bg-white font-semiboldx">
+				<div className="ml-auto ">
+					<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+						<ProgresButton status={status} onChange={handleChangeStatus} />
 					</VisibleMenu>
 				</div>
+				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+					<Button
+						icon={<SaveOutlined />}
+						onClick={handleUpdateMatrix}
+						type="primary"
+						style={{ backgroundColor: "#52c41a", borderColor: "#52c41a", marginLeft: 10, marginBottom: 10 }}
+						loading={updating}>
+						Simpan Perubahan
+					</Button>
+					`
+				</VisibleMenu>
 				<Table
 					loading={loading}
 					dataSource={dataSource}
@@ -107,7 +116,7 @@ const MatriksCplHasIea = () => {
 					pagination={false}
 					bordered
 					scroll={{ x: "max-content" }}
-				/>
+					/>
 			</div>
 		</DefaultLayout>
 	);

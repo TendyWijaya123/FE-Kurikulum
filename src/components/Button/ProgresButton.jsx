@@ -7,9 +7,9 @@ import debounce from "lodash.debounce";
 const { Step } = Steps;
 
 const statusList = [
-  { value: "belum", label: "Belum" },
-  { value: "progres", label: "Progres" },
-  { value: "selesai", label: "Selesai" },
+  { value: "belum", label: "📄 Belum" },
+  { value: "progres", label: "🔄 Progres" },
+  { value: "selesai", label: "✅ Selesai" },
 ];
 
 const statusToIndex = {
@@ -31,7 +31,6 @@ const ProgressButtons = ({ status, onChange }) => {
     };
   }, [debouncedOnChange]);
 
-  // Fungsi untuk handle klik step, hanya jika beda status
   const handleStepClick = (index) => {
     const newStatus = statusList[index].value;
     if (newStatus !== status) {
@@ -41,28 +40,46 @@ const ProgressButtons = ({ status, onChange }) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 3 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.1 }}
-      style={{ maxWidth: 400, margin: "0 auto", padding: "10px 0" }}
+      initial={{ opacity: 0, y: -20, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      style={{ maxWidth: 500, margin: "0 auto", padding: "10px 0" }}
     >
       <Steps
         current={statusToIndex[status]}
         size="small"
-        progressDot={false}
         onChange={handleStepClick}
-        style={{ cursor: "pointer", background: "#fff4ff", borderRadius: 30, padding: 10 }}
+        style={{
+          cursor: "pointer",
+          background: "#faf5ff",
+          borderRadius: 30,
+          padding: 16,
+        }}
       >
-        {statusList.map(({ label }, idx) => (
-          <Step
-            key={idx}
-            title={label}
-            style={{
-              fontWeight: idx === statusToIndex[status] ? "700" : "500",
-              color: idx <= statusToIndex[status] ? "#722ed1" : "rgba(0,0,0,0.25)",
-            }}
-          />
-        ))}
+        {statusList.map(({ label }, idx) => {
+          const isActive = idx === statusToIndex[status];
+          const isCompleted = idx < statusToIndex[status];
+          return (
+            <Step
+              key={idx}
+              title={
+                <span
+                  style={{
+                    fontWeight: isActive ? "700" : "500",
+                    color: isActive
+                      ? "#722ed1"
+                      : isCompleted
+                      ? "#52c41a"
+                      : "rgba(0,0,0,0.25)",
+                    transition: "color 0.3s, font-weight 0.3s",
+                  }}
+                >
+                  {label}
+                </span>
+              }
+            />
+          );
+        })}
       </Steps>
     </motion.div>
   );

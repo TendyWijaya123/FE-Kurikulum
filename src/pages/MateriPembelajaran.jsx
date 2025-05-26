@@ -23,10 +23,11 @@ import { useContext, useState } from "react";
 import ImportModal from "../components/Modal/ImportModal";
 import { AppDataContext } from "../context/AppDataProvider";
 import VisibleMenu from "../components/Menu/VisibleMenu";
+import ProgresButton from "../components/Button/ProgresButton";
 
 const MateriPembelajaran = () => {
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId } =
-		useContext(AppDataContext);
+	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId, handleTandaiSelesai, currendKurikulum } =
+			useContext(AppDataContext);
 	const {
 		knowledgeDropdown,
 		loading,
@@ -46,6 +47,11 @@ const MateriPembelajaran = () => {
 		handleExportTemplateMateriPembelajaran,
 	} = useMPData();
 
+	const [status, setStatus] = useState(`${currendKurikulum?.data.is_materi_pembelajaran}`);
+	const handleChangeStatus = (newStatus) => {
+		setStatus(newStatus);
+		handleTandaiSelesai("is_materi_pembelajaran", newStatus);
+	}
 	const [isModalImportOpen, setIsModalImportOpen] = useState(false);
 
 	const columns = [
@@ -185,64 +191,71 @@ const MateriPembelajaran = () => {
 					}))}
 					defaultValue={selectedProdiId}
 					onChange={(value) => handleChangeSelectedProdiId(value)}
-					style={{ width: 250 }}
+					style={{ width: 250, marginBottom: 10 }}
 					allowClear
 					onClear={() => handleChangeSelectedProdiId(null)}
 				/>
 			</VisibleMenu>
 			<div style={{ padding: "15px", background: "#fff9", minHeight: "100%" }}>
-				<div style={{ marginBottom: "16px", display: "flex", gap: "8px" }}>
-					<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-						<Button
-							onClick={handleExportTemplateMateriPembelajaran}
-							type="primary"
-							icon={<DownloadOutlined />}>
-							Download Template MP
-						</Button>
-						<Button
-							icon={<UploadOutlined />}
-							onClick={() => setIsModalImportOpen(true)}
-							type="default">
-							Import MP
-						</Button>
-						<ImportModal
-							isOpen={isModalImportOpen}
-							setIsOpen={setIsModalImportOpen}
-							handleImport={handleImportMateriPembelajaran}
-							title="Import Materi Pembelajaran"
-						/>
-						<Button
-							icon={<PlusOutlined />}
-							onClick={handleAddRow}
-							type="primary">
-							Tambah MP
-						</Button>
-						<Button
-							icon={<SaveOutlined />}
-							onClick={handleSaveData}
-							type="primary"
-							style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
-							loading={saving}>
-							Simpan Data
-						</Button>
-						<Tooltip title="Undo">
+				<div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+					<div style={{ marginBottom: "10px", display: "flex", gap: "8px" }}>
+						<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 							<Button
-								onClick={handleUndo}
-								type="default"
-								icon={<UndoOutlined />}
+								onClick={handleExportTemplateMateriPembelajaran}
+								type="primary"
+								icon={<DownloadOutlined />}>
+								Download Template MP
+							</Button>
+							<Button
+								icon={<UploadOutlined />}
+								onClick={() => setIsModalImportOpen(true)}
+								type="default">
+								Import MP
+							</Button>
+							<ImportModal
+								isOpen={isModalImportOpen}
+								setIsOpen={setIsModalImportOpen}
+								handleImport={handleImportMateriPembelajaran}
+								title="Import Materi Pembelajaran"
 							/>
-						</Tooltip>
-					</VisibleMenu>
-					{selectedRowKeys.length > 0 && (
-						<Button
-							onClick={handleDeleteMateriPembelajarans}
-							type="primary"
-							danger
-							style={{ marginBottom: "16px" }}
-							loading={loading}>
-							Hapus MP Terpilih
-						</Button>
-					)}
+							<Button
+								icon={<PlusOutlined />}
+								onClick={handleAddRow}
+								type="primary">
+								Tambah MP
+							</Button>
+							<Button
+								icon={<SaveOutlined />}
+								onClick={handleSaveData}
+								type="primary"
+								style={{ backgroundColor: "#52c41a", borderColor: "#52c41a" }}
+								loading={saving}>
+								Simpan Data
+							</Button>
+							<Tooltip title="Undo">
+								<Button
+									onClick={handleUndo}
+									type="default"
+									icon={<UndoOutlined />}
+								/>
+							</Tooltip>
+						</VisibleMenu>
+						{selectedRowKeys.length > 0 && (
+							<Button
+								onClick={handleDeleteMateriPembelajarans}
+								type="primary"
+								danger
+								style={{ marginBottom: "16px" }}
+								loading={loading}>
+								Hapus MP Terpilih
+							</Button>
+						)}
+					</div>
+					<div className="ml-auto">
+						<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+							<ProgresButton status={status} onChange={handleChangeStatus} />
+						</VisibleMenu>
+					</div>
 				</div>
 				{loading ? (
 					<div
