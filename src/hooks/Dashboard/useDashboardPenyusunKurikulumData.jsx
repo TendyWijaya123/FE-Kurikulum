@@ -123,15 +123,18 @@ export const useDashboardPenyusunKurikulumData = () => {
 
     const excludedKeys = ['is_active', 'is_other_field']; // tambahkan jika perlu
 
-    Object.entries(dataProgres).forEach(([key, value]) => {
-      if (key.startsWith('is_') && !excludedKeys.includes(key)) {
-        const normalizedValue = String(value).toLowerCase();
+    console.log(typeof dataProgres);
+    if (typeof dataProgres === 'object') {
+      Object.entries(dataProgres).forEach(([key, value]) => {
+        if (key.startsWith('is_') && !excludedKeys.includes(key)) {
+          const normalizedValue = String(value).toLowerCase();
 
-        if (normalizedValue === 'belum') statusCounter.Belum += 1;
-        else if (normalizedValue === 'progres') statusCounter.Progres += 1;
-        else if (normalizedValue === 'selesai') statusCounter.Selesai += 1;
-      }
-    });
+          if (normalizedValue === 'belum') statusCounter.Belum += 1;
+          else if (normalizedValue === 'progres') statusCounter.Progres += 1;
+          else if (normalizedValue === 'selesai') statusCounter.Selesai += 1;
+        }
+      });
+    }
 
     const pieData = [
       statusCounter.Belum,
@@ -224,11 +227,13 @@ export const useDashboardPenyusunKurikulumData = () => {
       'selesai': 'Selesai'
     };
 
-    // Generate data untuk tabel
-    const tableData = Object.entries(dataProgres)
+    const safeDataProgres = dataProgres || {};
+    const safeDataKurikulum = Array.isArray(dataKurikulum) ? dataKurikulum : [];
+
+    const tableData = Object.entries(safeDataProgres)
       .filter(([key]) => key.startsWith('is_') && !excludedKeys.includes(key))
       .map(([key, value], index) => {
-        const meta = dataKurikulum.find(item => item.type === key);
+        const meta = safeDataKurikulum.find(item => item.type === key);
         return {
           key: index,
           aspek: key.replace('is_', '').replace(/_/g, ' ').toUpperCase(),
@@ -239,7 +244,7 @@ export const useDashboardPenyusunKurikulumData = () => {
       })
       .filter(item => statusFilter === 'all' || item.status.toLowerCase() === statusFilter.toLowerCase());
 
-    const uniqueCategories = [...new Set(dataKurikulum.map(item => item.kategori))];
+    const uniqueCategories = [...new Set(safeDataKurikulum.map(item => item.kategori))];
 
     const columns = [
       {
