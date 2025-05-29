@@ -20,9 +20,9 @@ export const storeRps = async (data) => {
 	}
 };
 
-export const updateRps = async (id, data) => {
+export const updateRps = async (data) => {
 	try {
-		const response = await api.put(`rps/${id}`, data);
+		const response = await api.post(`rps/bulk-update`, data);
 		return response.data;
 	} catch (error) {
 		throw error;
@@ -38,7 +38,7 @@ export const deleteRps = async (id) => {
 	}
 };
 
-export const generateRpsPdf = async (id, payload) => {
+export const generateRpsPdf = async (id) => {
 	try {
 		const response = await api.get(`rps-pdf/${id}`, {
 			responseType: "blob",
@@ -58,3 +58,31 @@ export const generateRpsPdf = async (id, payload) => {
 		throw error;
 	}
 };
+
+export const saveTujuanBelajar = async (data) => {
+	try{
+		console.log(data);
+		const response = await api.post('rps/tujuan-belajar', data);
+		return response.data;
+	} catch(error){
+		throw error;
+	}
+}
+
+export const removeTujuanBelajar = async (id) => {
+	try{
+		const response = await api.delete(`rps/remove-tujuan-belajar/${id}`);
+		return response.data;
+	}catch(error){
+		throw error;
+	}
+}
+
+export const saveDetailMataKuliahRps = async (data) => {
+	try {
+		const response = await api.post("rps/detail-mk", data);
+		return response.data;
+	} catch (error) {
+		throw error;
+	}
+}

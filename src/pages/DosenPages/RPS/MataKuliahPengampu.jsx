@@ -108,14 +108,9 @@ const MataKuliahPengampu = () => {
 		},
 		{
 			title: "Materi Pembelajaran",
-			dataIndex: "materi_pembelajarans",
-			key: "materi_pembelajarans",
-			render: (items) =>
-				items && items.length > 0 ? (
-					items.map((item) => item.description).join("; ")
-				) : (
-					<Tag color="error">Tidak ada</Tag>
-				),
+			dataIndex: "materi_pembelajaran",
+			key: "materi_pembelajaran",
+			render: (text) => (text ? text : <Tag color="error">Belum diisi</Tag>),
 		},
 		{
 			title: "Materi Pembelajaran (Inggris)",

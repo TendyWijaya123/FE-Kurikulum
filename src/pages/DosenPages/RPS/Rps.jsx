@@ -14,10 +14,17 @@ import {
 	Table,
 	Tag,
 	message,
+	Tooltip,
+	Typography,
+	Space
 } from "antd";
+const { Text } = Typography;
 import Accordion from "../../../components/Accordion/Accordion";
 import { useEffect, useState } from "react";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusOutlined, ZoomInOutlined, ZoomOutOutlined } from "@ant-design/icons";
+import FormValidasiModal from "./FormValidasiModal";
+import EditRpsModal from "./EditRpsModal";
+import InlineEditableTextArea from "../../../components/Form/InlineEditableTextArea";
 
 const Rps = () => {
 	const { mata_kuliah_id } = useParams();
@@ -26,15 +33,30 @@ const Rps = () => {
 		mataKuliahData,
 		loading,
 		kemampuanAkhirDropdown,
+		tujuanBelajarRPS,
 		tujuanBelajarDropdown,
 		cplDropdown,
+		detailMataKuliahRps,
+		editedData,
+		pembobotanData,
+		totalPersentase,
 		handleCreate,
 		handleDelete,
 		handleUpdate,
-		editedData,
 		handleOnEdit,
 		handleDownloadPdf,
+		handleAddRowTujuanBelajar,
+		handleSaveTujuanBelajar,
+		handleDeskripsiChange,
+		handleRemoveTujuanBelajar,
+		handleDetailMkChange,
+		handleSaveDetailMKRps,
+		handleEditRpsChange,
+		handleAddRowRps,
+		handlePembobotanChange
 	} = useRps(mata_kuliah_id);
+
+	const [zoom, setZoom] = useState(1);
 	const [form] = Form.useForm();
 	const [isCreateModalVisible, setIsModalCreateVisible] = useState(false);
 	const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -44,7 +66,7 @@ const Rps = () => {
 	useEffect(() => {
 		if (kategori !== undefined) {
 			form.setFieldsValue({
-				kemampuan_akhir_id: null,
+				kemampuan_akhir_id: '',
 				pokok_bahasan: null,
 				modalitas_bentuk_strategi_metodepembelajaran: null,
 				instrumen_penilaian: null,
@@ -69,12 +91,13 @@ const Rps = () => {
 		form.setFieldsValue(record);
 	};
 
-	const handleOk = async () => {
+	const handleOk = async (kategori) => {
 		try {
-			const values = await form.validateFields();
-			const formData = { ...values, mata_kuliah_id };
-			await handleCreate(formData);
-
+			if (kategori !== "Reguler") {
+				const values = await form.validateFields();
+				const formData = { ...values, mata_kuliah_id };
+				await handleCreate(formData);
+			}
 			setIsModalCreateVisible(false);
 		} catch (error) {
 			console.error("Error during creation:", error);
@@ -85,12 +108,27 @@ const Rps = () => {
 	const handleEditOk = async () => {
 		try {
 			const values = await form.validateFields();
-
 			await handleUpdate(editedData.id, values);
-
 			setIsEditModalVisible(false);
 		} catch (error) {}
 	};
+
+	const bentukOptions = [
+		"Kuliah", "tutorial", "seminar/konferensi", "praktikum/studio/bengkel",
+		"praktik lapangan", "praktik kerja", "magang", "kkn", "kewirausahaan",
+		"penelitian", "perancangan/pengembangan", "pameran/lokakarya"
+	];
+
+	const strategiOptions = [
+		"Ekspositori", "Inkuiri", "berbasis masalah", "peningkatan kemampuan berpikir",
+		"kooperatif", "kontekstual", "afektif"
+	];
+
+	const metodeOptions = [
+		"Diskusi Kelompok", "Simulasi/Role Play", "Studi Kasus", "Pembelajaran Kolaboratif",
+		"Pembelajaran Kooperatif", "Pembelajaran Berbasis project", 
+		"Pembelajaran berbasis masalah", "pembelajaran berbasis produk"
+	];
 
 	const mataKuliahColumn = [
 		{
@@ -141,7 +179,6 @@ const Rps = () => {
 			dataIndex: "keterangan",
 			key: "keterangan",
 		},
-
 		{
 			title: "Level Of Learning",
 			dataIndex: ["pivot", "kategori"],
@@ -154,11 +191,29 @@ const Rps = () => {
 			title: "Kode",
 			dataIndex: "kode",
 			key: "kode",
+			width: 100
 		},
 		{
 			title: "Deskripsi",
 			dataIndex: "deskripsi",
 			key: "deskripsi",
+			render: (_, record, index) => (
+				<InlineEditableTextArea
+					key={index}
+					value={record.deskripsi}
+					onSave={(newValue) => handleDeskripsiChange(index, newValue)}
+				/>
+			),
+		},
+		{
+			title: "Aksi",
+			key: "action",
+			width: 100,
+			render: (_, __, index) => (
+				<Button danger type="text" onClick={() => handleRemoveTujuanBelajar(index)}>
+					Hapus
+				</Button>
+			),
 		},
 	];
 
@@ -171,7 +226,7 @@ const Rps = () => {
 		},
 		{
 			title: "Kemampuan Akhir yang Direncanakan(KAD)",
-			dataIndex: ["kemampuan_akhir", "deskripsi"],
+			dataIndex: "kemampuan_akhir",
 			key: "kemampuan_akhir",
 			width: 350,
 			onCell: (record) => {
@@ -180,14 +235,16 @@ const Rps = () => {
 				}
 				return {};
 			},
-			render: (_, record) => {
+			render: (_, record, index) => {
 				if (record.kategori === "ETS" || record.kategori === "EAS") {
 					return null;
 				}
 				return (
-					record.kemampuan_akhir?.deskripsi || (
-						<Tag color="error">Belum Diisi</Tag>
-					)
+					<InlineEditableTextArea
+						key={index}
+						value={record.kemampuan_akhir || "belum diisi"}
+						onSave={(newValue) => handleEditRpsChange(index, newValue, 'kemampuan_akhir')}
+					/>
 				);
 			},
 		},
@@ -199,45 +256,129 @@ const Rps = () => {
 			onCell: (record) => {
 				if (record.kategori === "ETS" || record.kategori === "EAS") {
 					return {
-						colspan: 9,
+						colSpan: 9,
 						style: { backgroundColor: "yellow", textAlign: "center" },
 					};
 				}
 				return {};
 			},
-			render: (text, record) => {
+			render: ( _, record, index, text,) => {
 				if (record.kategori === "ETS" || record.kategori === "EAS") {
 					return <strong>{record.kategori}</strong>;
 				}
-				return text;
+				return (
+					<InlineEditableTextArea
+						key={index}
+						value={record.pokok_bahasan || "belum diisi"}
+						onSave={(newValue) => handleEditRpsChange(index, newValue, 'pokok_bahasan')}
+					/>
+				);
 			},
 		},
 		{
-			title:
-				"Modalitas, Bentuk, Strategi, dan Metode Pembelajaran (Media dan Sumber Belajar)",
+			title: "Modalitas, Bentuk, Strategi, dan Metode Pembelajaran (Media dan Sumber Belajar)",
 			dataIndex: "modalitas_bentuk_strategi_metodepembelajaran",
 			key: "modalitas_bentuk_strategi_metodepembelajaran",
-			width: 350,
+			width: 400,
 			onCell: (record) => {
 				if (record.kategori === "ETS" || record.kategori === "EAS") {
 					return { colSpan: 0 };
 				}
 				return {};
 			},
-			render: (_, record) => {
+			render: (_, record, index) => {
 				if (record.kategori === "ETS" || record.kategori === "EAS") {
 					return null;
 				}
 				return (
-					record.modalitas_bentuk_strategi_metodepembelajaran || (
-						<Tag color="error">Belum Diisi</Tag>
-					)
+					<Space direction="vertical" size={4} style={{ width: "100%" }}>
+						<Text strong>Modalitas:</Text>
+						<Select
+							value={record.modalitas_pembelajaran}
+							onChange={(value) =>
+								handleEditRpsChange(index, value, "modalitas_pembelajaran")
+							}
+							style={{ width: "100%" }}
+							placeholder="Pilih Modalitas"
+						>
+							<Option value="luring">Luring</Option>
+							<Option value="daring">Daring</Option>
+							<Option value="hybrid">Hybrid</Option>
+						</Select>
+
+						<Text strong>Bentuk Pembelajaran:</Text>
+						<Select
+							mode="multiple"
+							value={record.bentuk_pembelajaran?.split(", ") || []}
+							onChange={(values) =>
+								handleEditRpsChange(
+									index,
+									values.join(", "),
+									"bentuk_pembelajaran"
+								)
+							}
+							style={{ width: "100%" }}
+							placeholder="Pilih Bentuk Pembelajaran"
+						>
+							{bentukOptions.map((item) => (
+								<Option key={item} value={item}>
+									{item}
+								</Option>
+							))}
+						</Select>
+
+						<Text strong>Strategi:</Text>
+						<Select
+							mode="multiple"
+							value={record.strategi_pembelajaran?.split(", ") || []}
+							onChange={(values) =>
+								handleEditRpsChange(index, values.join(", "), "strategi_pembelajaran")
+							}
+							style={{ width: "100%" }}
+							placeholder="Pilih Strategi"
+						>
+							{strategiOptions.map((item) => (
+								<Option key={item} value={item}>
+									{item}
+								</Option>
+							))}
+						</Select>
+
+						<Text strong>Metode:</Text>
+						<Select
+							mode="multiple"
+							value={record.metode_pembelajaran?.split(", ") || []}
+							onChange={(values) =>
+								handleEditRpsChange(index, values.join(", "), "metode_pembelajaran")
+							}
+							style={{ width: "100%" }}
+							placeholder="Pilih Metode"
+						>
+							{metodeOptions.map((item) => (
+								<Option key={item} value={item}>
+									{item}
+								</Option>
+							))}
+						</Select>
+
+						<Text strong>Media:</Text>
+						<InlineEditableTextArea
+							value={record.media_pembelajaran || "belum diisi"}
+							onSave={(newValue) => handleEditRpsChange(index, newValue, 'media_pembelajaran')}
+						/>
+
+						<Text strong>Sumber Belajar:</Text>
+						<InlineEditableTextArea
+							value={record.sumber_belajar || "belum diisi"}
+							onSave={(newValue) => handleEditRpsChange(index, newValue, 'sumber_belajar')}
+						/>
+					</Space>
 				);
 			},
 		},
 		{
 			title: "Beban Belajar Mahasiswa",
-			dataIndex: "",
+			dataIndex: "beban_belajar",
 			key: "beban_belajar",
 			width: 250,
 			onCell: (record) => {
@@ -267,7 +408,7 @@ const Rps = () => {
 		},
 		{
 			title: "Instrumen Penilaian",
-			dataIndex: "instrumen_penilaians",
+			dataIndex: "instrumen_penilaian",
 			key: "instrumen_penilaian",
 			width: 250,
 			onCell: (record) => {
@@ -276,22 +417,24 @@ const Rps = () => {
 				}
 				return {};
 			},
-			render: (_, record) => {
-				const instrumenList = record.instrumen_penilaians;
-
-				if (!instrumenList || instrumenList.length === 0) {
-					return <Tag color="error">Belum Diisi</Tag>;
-				}
-
+			render: (_, record, index) => {
+				const instrumenList = record.instrumen_penilaian;
 				return (
-					<div>
-						{instrumenList.map((item, index) => (
-							<div key={index} style={{ marginBottom: 8 }}>
-								<div style={{ fontWeight: "bold" }}>{item.jenis_evaluasi}</div>
-								<div>{item.deskripsi}</div>
-							</div>
-						))}
-					</div>
+					<Select
+						value={instrumenList}
+						onChange={(value) =>
+							handleEditRpsChange(index, value, "instrumen_penilaian")
+						}
+						style={{ width: "100%" }}
+						placeholder="Pilih Instrumen"
+					>
+						<Option value="Project">Project</Option>
+						<Option value="Quiz">Quiz</Option>
+						<Option value="Case Study">Case Study</Option>
+						<Option value="Tugas">Tugas</Option>
+						<Option value="ETS">ETS</Option>
+						<Option value="EAS">EAS</Option>
+					</Select>
 				);
 			},
 		},
@@ -306,14 +449,19 @@ const Rps = () => {
 				}
 				return {};
 			},
-			render: (_, record) => {
-				return record.hasil_belajar || <Tag color="error">Belum Diisi</Tag>;
+			render: (_, record, index) => {
+				return (
+					<InlineEditableTextArea
+						value={record.hasil_belajar || "belum diisi"}
+						onSave={(newValue) => handleEditRpsChange(index, newValue, 'hasil_belajar')}
+					/>
+				)
 			},
 		},
 		{
 			title: "Capaian Pembelajaran Lulusan",
-			key: "cpl",
-			dataIndex: "cpl",
+			key: "cpl_id",
+			dataIndex: "cpl_id",
 			width: 100,
 			onCell: (record) => {
 				if (record.kategori === "ETS" || record.kategori === "EAS") {
@@ -321,8 +469,25 @@ const Rps = () => {
 				}
 				return {};
 			},
-			render: (_, record) => {
-				return record.cpl?.kode || <Tag color="error">Belum Diisi</Tag>;
+			render: (_, record, index) => {
+				return (
+					<>
+						<Select
+							value={record.cpl_id}
+							onChange={(value) =>
+								handleEditRpsChange(index, value, "cpl_id")
+							}
+							style={{ width: "100%" }}
+							placeholder="Pilih cpl"
+						>
+							{cplDropdown.map((item) => (
+								<Select.Option key={item.id} value={item.id}>
+									{item.kode}
+								</Select.Option>
+							))}
+						</Select>
+					</>
+				)
 			},
 		},
 		{
@@ -336,9 +501,24 @@ const Rps = () => {
 				}
 				return {};
 			},
-			render: (_, record) => {
+			render: (_, record, index) => {
 				return (
-					record.tujuan_belajar?.kode || <Tag color="error">Belum Diisi</Tag>
+					<>
+						<Select
+							value={record.tujuan_belajar_id}
+							onChange={(value) =>
+								handleEditRpsChange(index, value, "tujuan_belajar_id")
+							}
+							style={{ width: "100%" }}
+							placeholder="Pilih Tujuan Belajar"
+						>
+							{tujuanBelajarDropdown.map((item) => (
+								<Select.Option key={item.id} value={item.id}>
+									{item.kode}
+								</Select.Option>
+							))}
+						</Select>
+					</>
 				);
 			},
 		},
@@ -353,8 +533,21 @@ const Rps = () => {
 				}
 				return {};
 			},
-			render: (_, record) => {
-				return record.bobot_penilaian || <Tag color="error">Belum Diisi</Tag>;
+			render: (_, record, index) => {
+				return (
+					<InputNumber
+						min={0}
+						max={100}
+						value={record.bobot_penilaian}
+						onChange={(value) =>
+							handleEditRpsChange(index, value, "bobot_penilaian")
+						}
+						style={{ width: "100%" }}
+						placeholder="Masukkan bobot"
+						formatter={(value) => `${value}%`}
+						parser={(value) => value.replace('%', '')}
+					/>
+				);
 			},
 		},
 		{
@@ -363,9 +556,6 @@ const Rps = () => {
 			width: 150,
 			render: (_, record) => (
 				<>
-					<Button onClick={() => handleEdit(record)} type="primary">
-						<EditOutlined />
-					</Button>
 					<Popconfirm
 						title="Are you sure to delete this RPS?"
 						onConfirm={() => handleDelete(record.id)}>
@@ -378,9 +568,60 @@ const Rps = () => {
 		},
 	];
 
+	const ringkasanPembobotanPenilaian = [
+		{
+			title: "Jenis Evaluasi",
+			dataIndex: "jenis",
+			key: "jenis",
+			width: 160,
+			onCell: (record, index) => {
+				const rowSpanConfig = {
+					0: { rowSpan: 1 },  
+					1: { rowSpan: 1 },  
+					2: { rowSpan: 4 },  
+					3: { rowSpan: 0 },  
+					4: { rowSpan: 0 },  
+					5: { rowSpan: 0 },  
+					6: { rowSpan: 1 }, 
+				};
+				return {
+					rowSpan: rowSpanConfig[index]?.rowSpan || 0,
+				};
+				},
+			},
+		{
+			title: "Instrumen",
+			dataIndex: "instrumen",
+			key: "instrumen",
+			width: 220,
+		},
+		{
+			title: "Persentase",
+			dataIndex: "persentase",
+			key: "persentase",
+			width: 180,
+			render: (_, record, index) => {
+				return (
+					<InputNumber
+						min={0}
+						max={100}
+						value={record.persentase}
+						onChange={(value) =>
+							handlePembobotanChange(index, value, "persentase")
+						}
+						style={{ width: "100%" }}
+						placeholder="Masukkan presentase"
+						formatter={(value) => `${value}%`}
+						parser={(value) => value.replace('%', '')}
+					/>
+				);
+			},
+		},
+	]
+
 	return (
 		<DefaultLayout title="RPS">
-			<Button type="primary" onClick={() => handleDownloadPdf(mata_kuliah_id)}>
+			<Button type="primary" onClick={() => handleDownloadPdf(mata_kuliah_id)} style={{ marginBottom: 16 }}>
 				Generate RPS PDF
 			</Button>
 			<Table
@@ -396,7 +637,7 @@ const Rps = () => {
 			<Accordion title="Capaian Pembelajaran Lulusan">
 				<Table
 					columns={cplColumn}
-					dataSource={loading ? [] : mataKuliahData?.cpls || []} // Pastikan data ada sebelum dipakai
+					dataSource={loading ? [] : mataKuliahData?.cpls || []}
 					loading={loading}
 					pagination={false}
 					scroll={{ x: "max-content" }}
@@ -404,24 +645,57 @@ const Rps = () => {
 				/>
 			</Accordion>
 
-			<Accordion title="Tujuan Belajar">
+			<Accordion title={"Tujuan Belajar"}>
+				<div style={{ marginBottom: 10, display: "flex", gap: "8px" }}>
+					<Tooltip title="Tambah Tujuan">
+						<Button
+							type="primary"
+							icon={<PlusOutlined />}
+							onClick={handleAddRowTujuanBelajar}
+						>
+							Tambah Tujuan
+						</Button>
+					</Tooltip>
+					<Button
+						type="primary"
+						style={{ backgroundColor: "green", borderColor: "green" }}
+						onClick={() => handleSaveTujuanBelajar(tujuanBelajarRPS)}
+					>
+						Simpan Tujuan
+					</Button>
+				</div>
 				<Table
 					columns={tujuanBelajarColumn}
-					dataSource={loading ? [] : mataKuliahData?.tujuan_belajars || []}
+					dataSource={loading ? [] : tujuanBelajarRPS || []}
 					loading={loading}
 					pagination={false}
 					scroll={{ x: "max-content" }}
 					locale={{ emptyText: "" }}
+					rowKey={(record, index) => index}
 				/>
 			</Accordion>
 
 			<Accordion title="Detail Mata Kuliah">
 				<Spin spinning={loading}>
-					<Descriptions bordered column={1}>
+					<Button 
+						type="primary"
+						style={{ backgroundColor: "green", borderColor: "green", marginBottom: 10 }}
+						onClick={() => handleSaveDetailMKRps(detailMataKuliahRps)}
+					>
+						Simpan Detail MK
+					</Button>
+					<Descriptions
+						bordered
+						column={1}
+						labelStyle={{ width: 300, fontWeight: "bold" }}
+						contentStyle={{ width: 600 }}
+					>
 						<Descriptions.Item label="Deskripsi Singkat MK">
-							{mataKuliahData.deskripsi_singkat ||
-								"Belum Mengisikan Deskripsi Singkat"}
-							{mataKuliahData.deskripsi_singkat_inggris && (
+							<InlineEditableTextArea
+								value={detailMataKuliahRps?.deskripsi_singkat || ""}
+								onSave={(newValue) => handleDetailMkChange("deskripsi_singkat", newValue)}
+							/>
+							{mataKuliahData?.deskripsi_singkat_inggris && (
 								<>
 									<br />
 									<br />
@@ -429,13 +703,13 @@ const Rps = () => {
 								</>
 							)}
 						</Descriptions.Item>
-
 						<Descriptions.Item label="Bahan Kajian/Materi Pembelajaran">
-							{mataKuliahData?.materi_pembelajarans &&
-								mataKuliahData.materi_pembelajarans.length > 0 &&
-								mataKuliahData.materi_pembelajarans
-									.map((materi) => materi.description)
-									.join("; ")}
+							<InlineEditableTextArea
+								value={detailMataKuliahRps?.materi_pembelajaran || ""}
+								onSave={(newValue) =>
+									handleDetailMkChange("materi_pembelajaran", newValue)
+								}
+							/>
 							{mataKuliahData?.materi_pembelajaran_inggris && (
 								<>
 									<br />
@@ -444,10 +718,8 @@ const Rps = () => {
 								</>
 							)}
 						</Descriptions.Item>
-
 						<Descriptions.Item label="Daftar Referensi">
-							{mataKuliahData?.buku_referensis &&
-							mataKuliahData.buku_referensis.length > 0 ? (
+							{mataKuliahData?.buku_referensis?.length > 0 ? (
 								<ul className="list-disc pl-5 space-y-2">
 									{mataKuliahData.buku_referensis.map((buku, index) => {
 										const parts = [
@@ -463,14 +735,11 @@ const Rps = () => {
 								<Tag color="error">Tidak ada referensi</Tag>
 							)}
 						</Descriptions.Item>
-
 						<Descriptions.Item label="Nama Dosen">
-							{mataKuliahData?.dosens && mataKuliahData.dosens.length > 0 ? (
+							{mataKuliahData?.dosens?.length > 0 ? (
 								<ul className="list-disc pl-5 space-y-2">
 									{mataKuliahData.dosens.map((dosen, index) => (
-										<li key={index} className="">
-											{dosen.nama}
-										</li>
+										<li key={index}>{dosen.nama}</li>
 									))}
 								</ul>
 							) : (
@@ -485,426 +754,217 @@ const Rps = () => {
 				<Button
 					className="mb-2"
 					type="primary"
-					onClick={() => setIsModalCreateVisible(true)}>
+					onClick={() => setIsModalCreateVisible(true)}
+				>
 					Tambah RPS
 				</Button>
-				<Table
-					columns={rpsColumn}
-					dataSource={rpsData || []}
-					loading={loading}
-					pagination={false}
-					scroll={{ x: "max-content" }}
-				/>
+				<Button
+					type="primary"
+					style={{ backgroundColor: "green", borderColor: "green", marginBottom: 10, marginLeft: 8 }}
+					onClick={() => handleUpdate(rpsData)}
+				>
+					Simpan RPS
+				</Button>
+				<Button
+					icon={<ZoomInOutlined />}
+					onClick={() => setZoom(zoom + 0.1)}
+					style={{ marginLeft: 10 }}
+				>
+				</Button>
+
+				<Button
+					icon={<ZoomOutOutlined />}
+					onClick={() => setZoom(zoom - 0.1)}
+					disabled={zoom <= 0.5}
+					style={{ marginLeft: 10 }}
+				>
+				</Button>
+				<div style={{ overflowX: "auto", width: "100%" }}>
+					<div style={{
+						display: "inline-block",
+						transform: `scale(${zoom})`,
+						transformOrigin: "top left",
+					}}>
+						<Table
+						columns={rpsColumn}
+						dataSource={rpsData || []}
+						loading={loading}
+						pagination={false}
+						scroll={{ x: "max-content" }}
+						/>
+					</div>
+					</div>
 			</Accordion>
 
-			<Modal
-				title="Form Validasi"
-				open={isCreateModalVisible}
+			<Accordion title={"Ringkasan"}>
+				<div style={{ width: "100%", display: "block" }}>
+					{/* Tabel Evaluasi */}
+					<Table
+						bordered
+						pagination={false}
+						style={{ width: "100%", marginBottom: 24 }}
+						columns={ringkasanPembobotanPenilaian}
+						dataSource={pembobotanData}
+						showHeader={true}
+						summary={() => (
+							<Table.Summary.Row>
+								<Table.Summary.Cell index={0} colSpan={2} style={{ textAlign: 'right', fontWeight: 'bold' }}>
+								Total
+								</Table.Summary.Cell>
+								<Table.Summary.Cell index={2} style={{ fontWeight: 'bold' }}>
+								{totalPersentase}% 
+								</Table.Summary.Cell>
+							</Table.Summary.Row>
+							)}
+					/>
+					
+
+					{/* Tabel CPL */}
+					<Table
+						bordered
+						pagination={false}
+						style={{ width: "100%" }}
+						columns={[
+							{
+								title: (
+									<div style={{ textAlign: "center", fontWeight: "bold" }}>
+										Capaian Pembelajaran Lulusan
+									</div>
+								),
+								children: [
+									{
+										title: (
+											<div style={{ textAlign: "center", fontWeight: "bold" }}>
+												CPL Prodi
+											</div>
+										),
+										dataIndex: "cpl",
+										key: "cpl",
+										width: 100,
+										align: "center",
+									},
+									{
+										title: (
+											<div style={{ textAlign: "center", fontWeight: "bold" }}>
+												Tujuan Belajar
+											</div>
+										),
+										children: [
+											{
+												title: "TB",
+												dataIndex: "tb",
+												key: "tb",
+												width: 80,
+												align: "center",
+											},
+											{
+												title: "Instrumen pengukur",
+												dataIndex: "instrumen",
+												key: "instrumen",
+												width: 220,
+											},
+										],
+									},
+									{
+										title: (
+											<div style={{ textAlign: "center", fontWeight: "bold" }}>
+												Persentase
+											</div>
+										),
+										dataIndex: "persentase",
+										key: "persentase",
+										width: 80,
+										align: "center",
+									},
+									{
+										title: (
+											<div style={{ textAlign: "center", fontWeight: "bold" }}>
+												Total Persentase CPL Prodi
+											</div>
+										),
+										dataIndex: "total",
+										key: "total",
+										width: 120,
+										align: "center",
+									},
+								],
+							},
+						]}
+						dataSource={[
+							{
+								key: 1,
+								cpl: "CPL 3",
+								tb: "TB 1",
+								instrumen: "Quiz 1 No 1",
+								persentase: "5%",
+								total: "",
+							},
+							{
+								key: 2,
+								cpl: "",
+								tb: "",
+								instrumen: "Quiz 2 No 1-3",
+								persentase: "5%",
+								total: "",
+							},
+							{
+								key: 3,
+								cpl: "CPL 4",
+								tb: "TB 2",
+								instrumen: "Project based/case method",
+								persentase: "50%",
+								total: "",
+							},
+						]}
+						showHeader={true}
+						rowClassName={(record, index) => {
+							if (index === 0) return "cpl3-row";
+							if (index === 2) return "cpl4-row";
+							return "";
+						}}
+						components={{
+							body: {
+								cell: (props) => {
+									const { children, ...restProps } = props;
+									if (restProps["data-row-key"] === 1 && restProps["data-col-key"] === "cpl") {
+										return <td rowSpan={2} {...restProps}>{children}</td>;
+									}
+									if (restProps["data-row-key"] === 2 && restProps["data-col-key"] === "cpl") {
+										return null;
+									}
+									if (restProps["data-row-key"] === 3 && restProps["data-col-key"] === "cpl") {
+										return <td rowSpan={1} {...restProps}>{children}</td>;
+									}
+									return <td {...restProps}>{children}</td>;
+								},
+							},
+						}}
+					/>
+				</div>
+			</Accordion>
+
+			<FormValidasiModal
+				isVisible={isCreateModalVisible}
 				onOk={handleOk}
 				onCancel={handleCancel}
-				okText="Submit"
-				cancelText="Cancel"
-				width={800}>
-				<Form
-					form={form}
-					layout="vertical"
-					initialValues={{
-						mata_kuliah_id: "",
-						kemampuan_akhir_id: "",
-						minggu: "",
-						pokok_bahasan: "",
-						modalitas_bentuk_strategi_metodepembelajaran: "",
-						instrumen_penilaian: "",
-						hasil_belajar: "",
-						tujuan_belajar_id: "",
-						cpl_id: "",
-						bobot_penilaian: "",
-					}}>
-					<Form.Item
-						label="Kategori"
-						name="kategori"
-						rules={[{ required: true, message: "Kategori wajib diisi!" }]}>
-						<Select placeholder="Pilih Kategori" allowClear>
-							<Select.Option value="ETS">ETS</Select.Option>
-							<Select.Option value="EAS">EAS</Select.Option>
-							<Select.Option value="Reguler">Reguler</Select.Option>
-						</Select>
-					</Form.Item>
+				form={form}
+				kemampuanAkhirDropdown={kemampuanAkhirDropdown}
+				tujuanBelajarDropdown={tujuanBelajarDropdown}
+				cplDropdown={cplDropdown}
+				handleAddRowRps={handleAddRowRps}
+				statusModal={setIsModalCreateVisible}
+			/>
 
-					<Form.Item shouldUpdate>
-						{() => {
-							const kategori = form.getFieldValue("kategori");
-
-							if (!kategori) return null;
-
-							return (
-								<>
-									{kategori === "Reguler" && (
-										<>
-											<Form.Item
-												label="Kemampuan Akhir"
-												name="kemampuan_akhir_id">
-												<Select placeholder="Pilih Kemampuan Akhir" allowClear>
-													{kemampuanAkhirDropdown.map((item) => (
-														<Select.Option key={item.id} value={item.id}>
-															{item.deskripsi}
-														</Select.Option>
-													))}
-												</Select>
-											</Form.Item>
-
-											<Form.Item
-												label="Tujuan Belajar"
-												name="tujuan_belajar_id">
-												<Select placeholder="Pilih Tujuan Belajar" allowClear>
-													{tujuanBelajarDropdown.map((item) => (
-														<Select.Option key={item.id} value={item.id}>
-															{item.kode}
-														</Select.Option>
-													))}
-												</Select>
-											</Form.Item>
-
-											<Form.Item label="CPL" name="cpl_id">
-												<Select placeholder="Pilih CPL" allowClear>
-													{cplDropdown.map((item) => (
-														<Select.Option key={item.id} value={item.id}>
-															{item.kode}
-														</Select.Option>
-													))}
-												</Select>
-											</Form.Item>
-
-											<Form.Item
-												label="Pokok Bahasan"
-												name="pokok_bahasan"
-												rules={[
-													{
-														required: true,
-														message: "Pokok bahasan wajib diisi!",
-													},
-												]}>
-												<Input.TextArea rows={3} />
-											</Form.Item>
-
-											<Form.Item
-												label="Modalitas, Bentuk Strategi, dan Metode Pembelajaran"
-												name="modalitas_bentuk_strategi_metodepembelajaran">
-												<Input.TextArea rows={3} />
-											</Form.Item>
-
-											<Form.Item label="Hasil Belajar" name="hasil_belajar">
-												<Input.TextArea rows={3} />
-											</Form.Item>
-										</>
-									)}
-
-									<Form.Item
-										label="Minggu"
-										name="minggu"
-										rules={[
-											{ required: true, message: "Minggu wajib diisi!" },
-										]}>
-										<InputNumber className="w-full" />
-									</Form.Item>
-
-									<Form.Item label="Bobot Penilaian" name="bobot_penilaian">
-										<InputNumber className="w-full" />
-									</Form.Item>
-
-									{kategori === "Reguler" && (
-										<div className="mt-6 border-t border-gray-200 pt-4">
-											<p className="font-semibold mb-2">Instrumen Penilaian</p>
-											<Form.List name="instrumen_penilaians">
-												{(fields, { add, remove }) => (
-													<>
-														{fields.map(({ key, name, ...restField }) => (
-															<div
-																key={key}
-																className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4 items-center">
-																<Form.Item
-																	{...restField}
-																	name={[name, "jenis_evaluasi"]}
-																	rules={[
-																		{
-																			required: true,
-																			message: "Jenis evaluasi wajib diisi",
-																		},
-																	]}>
-																	<Select placeholder="Jenis Evaluasi">
-																		<Select.Option value="Quiz">
-																			Quiz
-																		</Select.Option>
-																		<Select.Option value="Project">
-																			Project
-																		</Select.Option>
-																		<Select.Option value="Case Study">
-																			Case Study
-																		</Select.Option>
-																		<Select.Option value="Tugas">
-																			Tugas
-																		</Select.Option>
-																	</Select>
-																</Form.Item>
-
-																<Form.Item
-																	{...restField}
-																	name={[name, "deskripsi"]}
-																	rules={[
-																		{
-																			required: true,
-																			message: "Deskripsi wajib diisi",
-																		},
-																	]}>
-																	<Input placeholder="Deskripsi" />
-																</Form.Item>
-
-																<Form.Item
-																	{...restField}
-																	name={[name, "bobot_penilaian"]}
-																	rules={[
-																		{
-																			required: true,
-																			message: "Bobot wajib diisi",
-																		},
-																	]}>
-																	<InputNumber
-																		className="w-full"
-																		placeholder="Bobot"
-																		min={0}
-																	/>
-																</Form.Item>
-
-																<div className="flex justify-end">
-																	<Button
-																		type="link"
-																		onClick={() => remove(name)}
-																		danger>
-																		Hapus
-																	</Button>
-																</div>
-															</div>
-														))}
-
-														<Form.Item>
-															<Button type="dashed" onClick={() => add()} block>
-																+ Tambah Instrumen Penilaian
-															</Button>
-														</Form.Item>
-													</>
-												)}
-											</Form.List>
-										</div>
-									)}
-								</>
-							);
-						}}
-					</Form.Item>
-				</Form>
-			</Modal>
-
-			<Modal
-				title={
-					<span className="text-xl font-semibold text-gray-800">Edit RPS</span>
-				}
-				open={isEditModalVisible}
+			<EditRpsModal
+				isVisible={isEditModalVisible}
 				onOk={handleEditOk}
 				onCancel={handleCancel}
-				okText="Update"
-				cancelText="Cancel"
-				className="rounded-xl"
-				width={800}>
-				<div className="p-2">
-					<Form form={form} layout="vertical" initialValues={editedData}>
-						<Form.Item
-							label="Kategori"
-							name="kategori"
-							rules={[{ required: true, message: "Kategori wajib diisi!" }]}>
-							<Select placeholder="Pilih Kategori" allowClear>
-								<Select.Option value="ETS">ETS</Select.Option>
-								<Select.Option value="EAS">EAS</Select.Option>
-								<Select.Option value="Reguler">Reguler</Select.Option>
-							</Select>
-						</Form.Item>
-
-						<Form.Item shouldUpdate>
-							{() => {
-								const kategori = form.getFieldValue("kategori");
-
-								if (!kategori) return null;
-
-								return (
-									<>
-										{kategori === "Reguler" && (
-											<>
-												<Form.Item
-													label="Kemampuan Akhir"
-													name="kemampuan_akhir_id">
-													<Select
-														placeholder="Pilih Kemampuan Akhir"
-														allowClear>
-														{kemampuanAkhirDropdown.map((item) => (
-															<Select.Option key={item.id} value={item.id}>
-																{item.deskripsi}
-															</Select.Option>
-														))}
-													</Select>
-												</Form.Item>
-
-												<Form.Item
-													label="Tujuan Belajar"
-													name="tujuan_belajar_id">
-													<Select placeholder="Pilih Tujuan Belajar" allowClear>
-														{tujuanBelajarDropdown.map((item) => (
-															<Select.Option key={item.id} value={item.id}>
-																{item.kode}
-															</Select.Option>
-														))}
-													</Select>
-												</Form.Item>
-
-												<Form.Item label="CPL" name="cpl_id">
-													<Select placeholder="Pilih CPL" allowClear>
-														{cplDropdown.map((item) => (
-															<Select.Option key={item.id} value={item.id}>
-																{item.kode}
-															</Select.Option>
-														))}
-													</Select>
-												</Form.Item>
-												<Form.Item
-													label="Pokok Bahasan"
-													name="pokok_bahasan"
-													rules={[
-														{
-															required: true,
-															message: "Pokok bahasan wajib diisi!",
-														},
-													]}>
-													<Input.TextArea rows={3} />
-												</Form.Item>
-
-												<Form.Item
-													label="Modalitas, Bentuk Strategi, dan Metode Pembelajaran"
-													name="modalitas_bentuk_strategi_metodepembelajaran">
-													<Input.TextArea rows={3} />
-												</Form.Item>
-
-												<Form.Item label="Hasil Belajar" name="hasil_belajar">
-													<Input.TextArea rows={3} />
-												</Form.Item>
-											</>
-										)}
-
-										<Form.Item
-											label="Minggu"
-											name="minggu"
-											rules={[
-												{ required: true, message: "Minggu wajib diisi!" },
-											]}>
-											<InputNumber className="w-full" />
-										</Form.Item>
-
-										<Form.Item label="Bobot Penilaian" name="bobot_penilaian">
-											<InputNumber className="w-full" />
-										</Form.Item>
-
-										{kategori === "Reguler" && (
-											<div className="mt-6 border-t border-gray-200 pt-4">
-												<p className="font-semibold mb-2">
-													Instrumen Penilaian
-												</p>
-												<Form.List name="instrumen_penilaians">
-													{(fields, { add, remove }) => (
-														<>
-															{fields.map(({ key, name, ...restField }) => (
-																<div
-																	key={key}
-																	className="grid grid-cols-1 md:grid-cols-4 gap-2 mb-4 items-center">
-																	<Form.Item
-																		{...restField}
-																		name={[name, "jenis_evaluasi"]}
-																		rules={[
-																			{
-																				required: true,
-																				message: "Jenis evaluasi wajib diisi",
-																			},
-																		]}>
-																		<Select placeholder="Jenis Evaluasi">
-																			<Select.Option value="Quiz">
-																				Quiz
-																			</Select.Option>
-																			<Select.Option value="Project">
-																				Project
-																			</Select.Option>
-																			<Select.Option value="Case Study">
-																				Case Study
-																			</Select.Option>
-																			<Select.Option value="Tugas">
-																				Tugas
-																			</Select.Option>
-																		</Select>
-																	</Form.Item>
-
-																	<Form.Item
-																		{...restField}
-																		name={[name, "deskripsi"]}
-																		rules={[
-																			{
-																				required: true,
-																				message: "Deskripsi wajib diisi",
-																			},
-																		]}>
-																		<Input placeholder="Deskripsi" />
-																	</Form.Item>
-
-																	<Form.Item
-																		{...restField}
-																		name={[name, "bobot_penilaian"]}
-																		rules={[
-																			{
-																				required: true,
-																				message: "Bobot wajib diisi",
-																			},
-																		]}>
-																		<InputNumber
-																			className="w-full"
-																			placeholder="Bobot"
-																			min={0}
-																		/>
-																	</Form.Item>
-
-																	<div className="flex justify-end">
-																		<Button
-																			type="link"
-																			onClick={() => remove(name)}
-																			danger>
-																			Hapus
-																		</Button>
-																	</div>
-																</div>
-															))}
-
-															<Form.Item>
-																<Button
-																	type="dashed"
-																	onClick={() => add()}
-																	block>
-																	+ Tambah Instrumen Penilaian
-																</Button>
-															</Form.Item>
-														</>
-													)}
-												</Form.List>
-											</div>
-										)}
-									</>
-								);
-							}}
-						</Form.Item>
-					</Form>
-				</div>
-			</Modal>
+				form={form}
+				editedData={editedData}
+				kemampuanAkhirDropdown={kemampuanAkhirDropdown}
+				tujuanBelajarDropdown={tujuanBelajarDropdown}
+				cplDropdown={cplDropdown}
+			/>
 		</DefaultLayout>
 	);
 };
