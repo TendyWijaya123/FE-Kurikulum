@@ -71,7 +71,7 @@ Aplikasi akan berjalan di: `http://localhost:5173`
 
 ---
 
-## 🔐 Konfigurasi API dan Firebase
+## 🔐 Konfigurasi API
 
 ### 1. API Endpoint
 Pastikan backend sudah aktif di salah satu URL berikut, dan sesuaikan `.env`:
