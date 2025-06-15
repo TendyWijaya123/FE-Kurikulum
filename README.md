@@ -83,13 +83,6 @@ Pastikan backend sudah aktif di salah satu URL berikut, dan sesuaikan `.env`:
 
 ```
 
-
-## 🧪 Testing (Opsional)
-
-Belum tersedia unit testing saat ini. Akan ditambahkan pada pengembangan berikutnya.
-
----
-
 ## 🧭 Struktur Direktori (Ringkasan)
 
 ```
