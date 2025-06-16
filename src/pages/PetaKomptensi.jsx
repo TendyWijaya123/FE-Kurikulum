@@ -17,6 +17,8 @@ import { UploadOutlined, DeleteOutlined } from "@ant-design/icons";
 import DefaultLayout from "../layouts/DefaultLayout";
 import { usePetaKompetensi } from "../hooks/usePetaKompetensi";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
+import VisibleMenu from "../components/Menu/VisibleMenu";
+
 
 const { Title, Text } = Typography;
 const API_URL = import.meta.env.VITE_REACT_APP_API_URL || "http://localhost:8001";
