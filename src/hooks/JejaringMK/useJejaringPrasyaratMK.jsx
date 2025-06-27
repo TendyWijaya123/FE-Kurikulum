@@ -6,6 +6,7 @@ const useJejaringPrasyaratMK = () => {
 	const { selectedProdiId } = useContext(AppDataContext);
 	const [mataKuliahData, setMataKuliahData] = useState({});
 	const [jejaringData, setJejaringData] = useState([]);
+	const [prodiData, setProdiData] = useState({});
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState(null);
 
@@ -13,9 +14,9 @@ const useJejaringPrasyaratMK = () => {
 		setLoading(true);
 		try {
 			const data = await getJejaringPrasyarat(prodiId);
-
 			setMataKuliahData(data.data.matakuliah || {});
 			setJejaringData(data.data.jejaring || []);
+			setProdiData(data.data.prodi || {});
 		} catch (error) {
 			setError(error);
 		} finally {
@@ -26,7 +27,13 @@ const useJejaringPrasyaratMK = () => {
 	useEffect(() => {
 		fetchJejaringPrasyarat(selectedProdiId);
 	}, [selectedProdiId]);
-	return { loading, jejaringData, mataKuliahData, fetchJejaringPrasyarat };
+	return {
+		loading,
+		jejaringData,
+		mataKuliahData,
+		prodiData,
+		fetchJejaringPrasyarat,
+	};
 };
 
 export default useJejaringPrasyaratMK;

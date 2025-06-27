@@ -1,5 +1,5 @@
 import React from "react";
-import { StepEdge, useNodes } from "@reactflow/core";
+import { StepEdge, useEdges, useNodes } from "@reactflow/core";
 import {
 	SmartEdge,
 	pathfindingAStarDiagonal,
@@ -19,21 +19,38 @@ const StepConfiguration = (getRandomPadding) => {
 		gridRatio: 2,
 		drawEdge: svgDrawStraightLinePath,
 		generatePath: pathfindingJumpPointNoDiagonal,
-		// fallback: StepEdge,
 	};
 };
 
 const SmartStepEdge = (props) => {
 	const nodes = useNodes();
 	const stepConfiguration = StepConfiguration(getRandomPadding());
+
 	const customNodes = nodes.filter((node) => node.type === "custom");
+
+	const getNodeById = (id) => customNodes.find((node) => node.id === id);
+
+	const sourceNode = getNodeById(props.source);
+	const targetNode = getNodeById(props.target);
+
+	const sourceSemester = sourceNode?.data?.semester;
+	const targetSemester = targetNode?.data?.semester;
+
+	let sourcePosition = "bottom";
+	let targetPosition = "top";
+
+	if (sourceSemester !== undefined && sourceSemester === targetSemester) {
+		sourcePosition = "top";
+		targetPosition = "top";
+	}
+
 	return (
 		<SmartEdge
 			{...props}
 			options={stepConfiguration}
 			nodes={customNodes}
-			sourcePosition="bottom"
-			targetPosition="top"
+			sourcePosition={sourcePosition}
+			targetPosition={targetPosition}
 		/>
 	);
 };

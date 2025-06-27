@@ -42,7 +42,6 @@ function SaveButton() {
 
 			const blob = await fetch(dataUrl).then((res) => res.blob());
 
-			// Konversi Blob ke File agar nama file dikirim ke backend
 			const file = new File([blob], "jejaring-mata-kuliah.png", {
 				type: "image/png",
 			});
@@ -61,7 +60,9 @@ function SaveButton() {
 
 	return (
 		<Panel position="top-left">
-			<button className="save-btn bg-green-300" onClick={onClick}>
+			<button
+				className="font-semibold border border-green-500 bg-green-300 hover:bg-green-400 px-4 py-2 rounded-md shadow-sm transition"
+				onClick={onClick}>
 				Save Gambar
 			</button>
 		</Panel>

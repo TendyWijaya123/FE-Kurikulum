@@ -130,6 +130,8 @@ const useMataKuliah = () => {
 			nama: mataKuliah.nama,
 			kode: mataKuliah.kode,
 			kategori: mataKuliah.kategori,
+			kategori_mata_kuliah_prodi: mataKuliah.kategori_mata_kuliah_prodi,
+			kategori_mata_kuliah_polban: mataKuliah.kategori_mata_kuliah_polban,
 			tujuan: mataKuliah.tujuan,
 			semester: mataKuliah.semester,
 			teori_bt: mataKuliah.teori_bt,
@@ -156,10 +158,13 @@ const useMataKuliah = () => {
 	const handleCreateSave = async (newData) => {
 		setErrors(null);
 		try {
+			console.log(newData);
 			const requestData = {
 				kode: newData.kode,
 				nama: newData.nama,
 				kategori: newData.kategori,
+				kategori_mata_kuliah_polban: newData.kategori_mata_kuliah_polban,
+				kategori_mata_kuliah_prodi: newData.kategori_mata_kuliah_prodi,
 				tujuan: newData.tujuan,
 				semester: newData.semester,
 				teori_bt: newData.teori_bt,
@@ -181,7 +186,12 @@ const useMataKuliah = () => {
 			};
 			await createMataKuliah(requestData);
 			setIsModalCreateVisible(false);
-			fetchData();
+			fetchData({
+				prodiId: selectedProdiId,
+				nama: filters.nama,
+				kategori: filters.kategori,
+				semester: filters.semester,
+			});
 			message.success("Mata Kuliah created successfully!");
 		} catch (error) {
 			setErrors(
@@ -202,6 +212,8 @@ const useMataKuliah = () => {
 				kode: editedData.kode,
 				nama: editedData.nama,
 				kategori: editedData.kategori,
+				kategori_mata_kuliah_polban: editedData.kategori_mata_kuliah_polban,
+				kategori_mata_kuliah_prodi: editedData.kategori_mata_kuliah_prodi,
 				tujuan: editedData.tujuan,
 				semester: editedData.semester,
 				teori_bt: editedData.teori_bt,
@@ -224,7 +236,12 @@ const useMataKuliah = () => {
 
 			await updateMataKuliah(editedData.id, requestData);
 			setIsModalUpdateVisible(false);
-			fetchData();
+			fetchData({
+				prodiId: selectedProdiId,
+				nama: filters.nama,
+				kategori: filters.kategori,
+				semester: filters.semester,
+			});
 			message.success("Mata Kuliah updated successfully!");
 		} catch (error) {
 			setErrors(

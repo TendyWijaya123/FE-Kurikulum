@@ -1,6 +1,12 @@
 import { Button, Form, Input, Modal, Select, message } from "antd";
 import { useState } from "react";
 import { createMataKuliah } from "../../../service/MataKuliah/MataKuliahService";
+import {
+	KategoriMataKuliahEnum,
+	KategoriMataKuliahEnumValues,
+} from "../../../enums/KategoriMataKuliahEnum";
+import { KategoriMataKuliahProdiEnumValues } from "../../../enums/KategoriMataKuliahProdiEnum";
+import { KategoriMataKuliahPolbanEnumValues } from "../../../enums/KategoriMataKuliahPolbanEnum";
 
 const ModalCreateMataKuliah = ({
 	isOpen,
@@ -15,6 +21,8 @@ const ModalCreateMataKuliah = ({
 		nama: "",
 		kode: "",
 		kategori: "",
+		kategori_mata_kuliah_prodi: "",
+		kategori_mata_kuliah_polban: "",
 		tujuan: "",
 		semester: null,
 		teori_bt: 0,
@@ -77,6 +85,8 @@ const ModalCreateMataKuliah = ({
 			nama: "",
 			kode: "",
 			kategori: "",
+			kategori_mata_kuliah_prodi: "",
+			kategori_mata_kuliah_polban: "",
 			tujuan: "",
 			semester: null,
 			teori_bt: 0,
@@ -102,6 +112,8 @@ const ModalCreateMataKuliah = ({
 				nama: "",
 				kode: "",
 				kategori: "",
+				kategori_mata_kuliah_polban: "",
+				kategori_mata_kuliah_prodi: "",
 				tujuan: "",
 				semester: null,
 				teori_bt: 0,
@@ -169,15 +181,66 @@ const ModalCreateMataKuliah = ({
 						<Select
 							allowClear
 							placeholder="Pilih Kategori"
-							onChange={(value) => setNewData({ ...newData, kategori: value })}
-							options={[
-								{ value: "Institusi", label: "Institusi" },
-								{ value: "Prodi", label: "Prodi" },
-								{ value: "Nasional", label: "Nasional" },
-							]}
+							value={newData.kategori}
+							onChange={(value) => {
+								setNewData({
+									...newData,
+									kategori: value,
+									kategori_mata_kuliah_prodi: undefined,
+									kategori_mata_kuliah_polban: undefined,
+								});
+							}}
+							options={KategoriMataKuliahEnumValues.map((val) => ({
+								value: val,
+								label: val,
+							}))}
 							className="w-full mt-2"
 						/>
 					</Form.Item>
+
+					{/* Jika kategori = Institusi, tampilkan dropdown Polban */}
+					{newData.kategori === KategoriMataKuliahEnum.INSTITUSI && (
+						<Form.Item
+							label="Kategori Mata Kuliah Polban"
+							validateStatus={
+								errors?.kategori_mata_kuliah_polban ? "error" : ""
+							}
+							help={errors?.kategori_mata_kuliah_polban || ""}>
+							<Select
+								placeholder="Pilih Kategori Polban"
+								value={newData.kategori_mata_kuliah_polban}
+								onChange={(value) =>
+									setNewData({ ...newData, kategori_mata_kuliah_polban: value })
+								}
+								options={KategoriMataKuliahPolbanEnumValues.map((val) => ({
+									value: val,
+									label: val,
+								}))}
+								className="w-full"
+							/>
+						</Form.Item>
+					)}
+
+					{/* Jika kategori = Prodi, tampilkan dropdown Prodi */}
+					{newData.kategori === KategoriMataKuliahEnum.PRODI && (
+						<Form.Item
+							label="Kategori Mata Kuliah Prodi"
+							validateStatus={errors?.kategori_mata_kuliah_prodi ? "error" : ""}
+							help={errors?.kategori_mata_kuliah_prodi || ""}>
+							<Select
+								placeholder="Pilih Kategori Prodi"
+								value={newData.kategori_mata_kuliah_prodi}
+								onChange={(value) =>
+									setNewData({ ...newData, kategori_mata_kuliah_prodi: value })
+								}
+								options={KategoriMataKuliahProdiEnumValues.map((val) => ({
+									value: val,
+									label: val,
+								}))}
+								className="w-full"
+							/>
+						</Form.Item>
+					)}
 				</div>
 				<div>
 					<h3 className="text-lg font-semibold">Tujuan</h3>
