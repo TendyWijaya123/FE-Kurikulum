@@ -44,8 +44,10 @@ function DownloadButton() {
 
 	return (
 		<Panel position="top-right">
-			<button className="download-btn" onClick={onClick}>
-				Download Image
+			<button
+				className="font-semibold border border-blue-500 bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-md shadow-sm transition"
+				onClick={onClick}>
+				Download Gambar
 			</button>
 		</Panel>
 	);

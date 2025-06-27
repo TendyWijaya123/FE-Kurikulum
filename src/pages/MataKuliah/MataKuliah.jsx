@@ -33,15 +33,26 @@ import ImportModal from "../../components/Modal/ImportModal";
 import { AppDataContext } from "../../context/AppDataProvider";
 import VisibleMenu from "../../components/Menu/VisibleMenu";
 import ProgresButton from "../../components/Button/ProgresButton";
+import {
+	KategoriMataKuliahEnum,
+	KategoriMataKuliahEnumValues,
+} from "../../enums/KategoriMataKuliahEnum";
 
 const MataKuliah = () => {
-	const { prodiDropdown, handleChangeSelectedProdiId, selectedProdiId, handleTandaiSelesai, currendKurikulum } =
-		useContext(AppDataContext);
-	const [status, setStatus] = useState(`${currendKurikulum?.data.is_mata_kuliah}`);
+	const {
+		prodiDropdown,
+		handleChangeSelectedProdiId,
+		selectedProdiId,
+		handleTandaiSelesai,
+		currendKurikulum,
+	} = useContext(AppDataContext);
+	const [status, setStatus] = useState(
+		`${currendKurikulum?.data.is_mata_kuliah}`
+	);
 	const handleChangeStatus = (newStatus) => {
 		setStatus(newStatus);
 		handleTandaiSelesai("is_mata_kuliah", newStatus);
-	}
+	};
 	const {
 		mataKuliahData,
 		formulasiCpaDropdown,
@@ -88,9 +99,9 @@ const MataKuliah = () => {
 			width: 120,
 			render: (text) => {
 				const categoryColors = {
-					Institusi: "blue",
-					Prodi: "green",
-					Nasional: "gold",
+					[KategoriMataKuliahEnum.INSTITUSI]: "blue",
+					[KategoriMataKuliahEnum.PRODI]: "green",
+					[KategoriMataKuliahEnum.NASIONAL]: "gold",
 				};
 
 				return text ? (
@@ -106,12 +117,45 @@ const MataKuliah = () => {
 				);
 			},
 		},
+		{
+			title: "Sub Kategori",
+			key: "subKategori",
+			width: 150,
+			render: (_, record) => {
+				const {
+					kategori,
+					kategori_mata_kuliah_prodi,
+					kategori_mata_kuliah_polban,
+				} = record;
 
+				let subKategoriValue = "";
+
+				if (
+					kategori === KategoriMataKuliahEnum.INSTITUSI &&
+					kategori_mata_kuliah_polban
+				) {
+					subKategoriValue = kategori_mata_kuliah_polban;
+				}
+
+				if (
+					kategori === KategoriMataKuliahEnum.PRODI &&
+					kategori_mata_kuliah_prodi
+				) {
+					subKategoriValue = kategori_mata_kuliah_prodi;
+				}
+
+				return subKategoriValue ? (
+					<Tag color="cyan" className="px-2 py-1 rounded-md">
+						{subKategoriValue}
+					</Tag>
+				) : null;
+			},
+		},
 		{
 			title: "Tujuan Belajar",
 			dataIndex: "tujuan",
 			key: "tujuan",
-			width: 400, // Lebar lebih besar
+			width: 400,
 			render: (text) =>
 				text ? (
 					text
@@ -315,43 +359,45 @@ const MataKuliah = () => {
 					</div>
 				) : (
 					<>
-					<div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+						<div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+							<div className="mb-4 grid grid-cols-2 gap-2 md:flex md:flex-wrap">
+								<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
+									<Button
+										type="primary"
+										icon={<DownloadOutlined />}
+										className="text-sm p-2 w-full md:w-auto"
+										onClick={handleExportTemplateMataKuliah}>
+										Download Template
+									</Button>
 
-						<div className="mb-4 grid grid-cols-2 gap-2 md:flex md:flex-wrap">
-							<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
-								<Button
-									type="primary"
-									icon={<DownloadOutlined />}
-									className="text-sm p-2 w-full md:w-auto"
-									onClick={handleExportTemplateMataKuliah}>
-									Download Template
-								</Button>
+									<Button
+										type="default"
+										icon={<UploadOutlined />}
+										className="text-sm p-2 w-full md:w-auto"
+										onClick={() => setIsModalImportVisible(true)}>
+										Import Mata Kuliah
+									</Button>
 
-								<Button
-									type="default"
-									icon={<UploadOutlined />}
-									className="text-sm p-2 w-full md:w-auto"
-									onClick={() => setIsModalImportVisible(true)}>
-									Import Mata Kuliah
-								</Button>
-
-								<Button
-									type="primary"
-									icon={<PlusOutlined />}
-									className="text-sm p-2 w-full md:w-auto"
-									onClick={() => {
-										setIsModalCreateVisible(true);
-									}}>
-									Tambah Mata Kuliah
-								</Button>
-							</VisibleMenu>
+									<Button
+										type="primary"
+										icon={<PlusOutlined />}
+										className="text-sm p-2 w-full md:w-auto"
+										onClick={() => {
+											setIsModalCreateVisible(true);
+										}}>
+										Tambah Mata Kuliah
+									</Button>
+								</VisibleMenu>
+							</div>
+							<div className="ml-auto">
+								<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
+									<ProgresButton
+										status={status}
+										onChange={handleChangeStatus}
+									/>
+								</VisibleMenu>
+							</div>
 						</div>
-						<div className="ml-auto">
-							<VisibleMenu allowedRoles={"Penyusun Kurikulum"}>
-								<ProgresButton status={status} onChange={handleChangeStatus} />
-							</VisibleMenu>
-						</div>
-					</div>
 
 						<div className="mb-4 grid grid-cols-1 md:grid-cols-4 gap-2">
 							<Input
@@ -368,9 +414,12 @@ const MataKuliah = () => {
 								allowClear>
 								<Select.Option value="">Semua</Select.Option>
 								<Select.Option value="null">Belum Diisi</Select.Option>
-								<Select.Option value="Nasional">Nasional</Select.Option>
-								<Select.Option value="Institusi">Institusi</Select.Option>
-								<Select.Option value="Prodi">Prodi</Select.Option>
+
+								{KategoriMataKuliahEnumValues.map((val) => (
+									<Select.Option key={val} value={val}>
+										{val}
+									</Select.Option>
+								))}
 							</Select>
 
 							<Select

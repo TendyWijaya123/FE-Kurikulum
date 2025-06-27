@@ -8,6 +8,8 @@ import DownloadButton from "./DownloadButton";
 import SaveButton from "./SaveButton";
 import { Button, Spin } from "antd";
 import { UndoOutlined } from "@ant-design/icons";
+import GroupNode from "./GroupNode";
+import { KategoriMataKuliahEnum } from "../../../enums/KategoriMataKuliahEnum";
 
 const getRandomColor = () => {
 	const letters = "0123456789ABCDEF";
@@ -18,7 +20,7 @@ const getRandomColor = () => {
 	return color;
 };
 
-const generateNodes = (mataKuliahData) => {
+const generateNodes = (mataKuliahData, prodiData) => {
 	if (!mataKuliahData || Object.keys(mataKuliahData).length === 0) return [];
 
 	const newNodes = [];
@@ -26,33 +28,65 @@ const generateNodes = (mataKuliahData) => {
 		...Object.values(mataKuliahData).map((mk) => mk.length)
 	);
 
-	Object.entries(mataKuliahData).forEach(([semester, mataKuliahs]) => {
-		const semesterNumber = Number(semester);
-		const semesterId = `semester-${semester}`;
-
-		newNodes.push({
-			id: semesterId,
-			type: "group",
-			data: { label: semester ? `Semester ${semester}` : null },
-			position: { x: 0, y: semesterNumber * 300 },
-			style: {
-				width: maxMKPerSemester * 240 + 300,
-				height: 250,
-				zIndex: -1,
-			},
-		});
-
-		mataKuliahs.forEach((mk, index) => {
-			const nodeId = `mk-${mk.id}`;
+	const widthMataKuliahNodes = 176;
+	const widthGapMataKuliahNodes = 64;
+	const heightSemesterNodes = 250;
+	const heightgapSemesterNodes = 50;
+	const gapMataKuliahToTopSemester = 50;
+	const widhtSemesterNodes =
+		maxMKPerSemester * (widthMataKuliahNodes + widthGapMataKuliahNodes) + 300;
+	maxMKPerSemester *
+		Object.entries(mataKuliahData).forEach(([semester, mataKuliahs]) => {
+			const semesterNumber = Number(semester);
+			const semesterId = `semester-${semester}`;
 
 			newNodes.push({
-				id: nodeId,
-				type: "custom",
-				data: { label: mk.nama, kategori: mk.kategori, sks: mk.sks },
-				position: { x: index * 240 + 200, y: semesterNumber * 300 + 50 },
+				id: semesterId,
+				type: "group",
+				data: {
+					label: semester ? `Semester ${semester}` : null,
+					semester: semesterNumber,
+					jenjangProdi: prodiData.jenjang || "",
+				},
+				position: {
+					x: 0,
+					y: semesterNumber * (heightSemesterNodes + heightgapSemesterNodes),
+				},
+				style: {
+					width: widhtSemesterNodes,
+					height: heightSemesterNodes,
+					zIndex: -1,
+				},
+			});
+
+			mataKuliahs.forEach((mk, index) => {
+				const nodeId = `${mk.id}`;
+				newNodes.push({
+					id: nodeId,
+					type: "custom",
+					data: {
+						label: mk.nama,
+						kategori: mk.kategori,
+						sks: mk.sks,
+						width: widthMataKuliahNodes,
+						semester: semesterNumber,
+						jenjangProdi: prodiData.jenjang || "",
+						subKategori:
+							mk.kategori === KategoriMataKuliahEnum.INSTITUSI
+								? mk.kategori_mata_kuliah_polban
+								: mk.kategori === KategoriMataKuliahEnum.PRODI
+								? mk.kategori_mata_kuliah_prodi
+								: undefined,
+					},
+					position: {
+						x: index * (widthMataKuliahNodes + widthGapMataKuliahNodes) + 200,
+						y:
+							semesterNumber * (heightSemesterNodes + heightgapSemesterNodes) +
+							gapMataKuliahToTopSemester,
+					},
+				});
 			});
 		});
-	});
 
 	return newNodes;
 };
@@ -62,8 +96,8 @@ const generateEdges = (jejaringData) => {
 
 	return jejaringData.map(({ from_id, to_id }) => ({
 		id: `edge-${from_id}-${to_id}`,
-		source: `mk-${from_id}`,
-		target: `mk-${to_id}`,
+		source: `${from_id}`,
+		target: `${to_id}`,
 		type: "smart",
 		sourceHandle: `source-mk${from_id}-mk${to_id}`,
 		targetHandle: `target-mk${to_id}-mk${from_id}`,
@@ -78,24 +112,19 @@ const edgeTypes = {
 	smart: SmartStepEdge,
 };
 
-const JejaringMKDiagram = () => {
-	const nodeTypes = {
-		custom: CustomNode,
-		group: ({ data }) => (
-			<div className="w-full h-full flex items-center border border-gray-400 bg-white">
-				<h2
-					className={`h-full text-lg font-bold border-r border-gray-400 flex items-center leading-none ${
-						data.label ? "bg-yellow-300" : "bg-red-500 text-white"
-					}`}>
-					{data.label ?? "Semester Belum diisi"}
-				</h2>
-				<div className="flex-1"></div>
-			</div>
-		),
-	};
+const nodeTypes = {
+	custom: CustomNode,
+	group: GroupNode,
+};
 
-	const { loading, jejaringData, mataKuliahData, fetchJejaringPrasyarat } =
-		useJejaringPrasyaratMK();
+const JejaringMKDiagram = () => {
+	const {
+		loading,
+		jejaringData,
+		mataKuliahData,
+		prodiData,
+		fetchJejaringPrasyarat,
+	} = useJejaringPrasyaratMK();
 
 	if (loading)
 		return (
@@ -104,11 +133,34 @@ const JejaringMKDiagram = () => {
 			</div>
 		);
 
-	const nodes = generateNodes(mataKuliahData);
+	const nodes = generateNodes(mataKuliahData, prodiData);
 	const edges = generateEdges(jejaringData);
 
 	return (
 		<div className="w-full h-[1000px]">
+			<h3 className="font-semibold text-lg mb-2">Legenda Mata Kuliah</h3>
+			<div className="flex flex-wrap gap-3 mb-4">
+				<div className="flex items-center gap-2">
+					<div className="w-4 h-4 rounded bg-[#ed7d31]" />
+					<span className="text-sm">Prodi - Wajib</span>
+				</div>
+				<div className="flex items-center gap-2">
+					<div className="w-4 h-4 rounded bg-[#70ad46]" />
+					<span className="text-sm">Prodi - Pilihan</span>
+				</div>
+				<div className="flex items-center gap-2">
+					<div className="w-4 h-4 rounded bg-[#bf9100]" />
+					<span className="text-sm">Nasional</span>
+				</div>
+				<div className="flex items-center gap-2">
+					<div className="w-4 h-4 rounded bg-[#01b0f1]" />
+					<span className="text-sm">Institusi - Polban</span>
+				</div>
+				<div className="flex items-center gap-2">
+					<div className="w-4 h-4 rounded bg-[#c55b11]" />
+					<span className="text-sm">Institusi - Polban P/F</span>
+				</div>
+			</div>
 			<Button
 				icon={<UndoOutlined />}
 				onClick={() => fetchJejaringPrasyarat()}

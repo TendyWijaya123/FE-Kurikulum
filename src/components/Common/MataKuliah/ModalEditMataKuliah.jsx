@@ -1,5 +1,14 @@
 import { Button, Modal, Input, Select, Form } from "antd";
 import { useEffect, useState } from "react";
+import {
+	KategoriMataKuliahEnum,
+	KategoriMataKuliahEnumValues,
+} from "../../../enums/KategoriMataKuliahEnum";
+import {
+	KategoriMataKuliahProdiEnum,
+	KategoriMataKuliahProdiEnumValues,
+} from "../../../enums/KategoriMataKuliahProdiEnum";
+import { KategoriMataKuliahPolbanEnumValues } from "../../../enums/KategoriMataKuliahPolbanEnum";
 
 const ModalEditMataKuliah = ({
 	isOpen,
@@ -122,16 +131,68 @@ const ModalEditMataKuliah = ({
 						<Select
 							value={editedData.kategori}
 							onChange={(value) =>
-								setEditedData({ ...editedData, kategori: value })
+								setEditedData({
+									...editedData,
+									kategori: value,
+									kategori_mata_kuliah_prodi: undefined,
+									kategori_mata_kuliah_polban: undefined,
+								})
 							}
-							options={[
-								{ value: "Institusi", label: "Institusi" },
-								{ value: "Prodi", label: "Prodi" },
-								{ value: "Nasional", label: "Nasional" },
-							]}
+							options={KategoriMataKuliahEnumValues.map((val) => ({
+								value: val,
+								label: val,
+							}))}
 							className="w-full mt-2"
 						/>
 					</Form.Item>
+
+					{/* Dropdown Polban */}
+					{editedData.kategori === KategoriMataKuliahEnum.INSTITUSI && (
+						<Form.Item
+							label="Kategori Mata Kuliah Polban"
+							validateStatus={
+								errors?.kategori_mata_kuliah_polban ? "error" : ""
+							}
+							help={errors?.kategori_mata_kuliah_polban || ""}>
+							<Select
+								value={editedData.kategori_mata_kuliah_polban}
+								onChange={(value) =>
+									setEditedData({
+										...editedData,
+										kategori_mata_kuliah_polban: value,
+									})
+								}
+								options={KategoriMataKuliahPolbanEnumValues.map((val) => ({
+									value: val,
+									label: val,
+								}))}
+								className="w-full"
+							/>
+						</Form.Item>
+					)}
+
+					{/* Dropdown Prodi */}
+					{editedData.kategori === KategoriMataKuliahEnum.PRODI && (
+						<Form.Item
+							label="Kategori Mata Kuliah Prodi"
+							validateStatus={errors?.kategori_mata_kuliah_prodi ? "error" : ""}
+							help={errors?.kategori_mata_kuliah_prodi || ""}>
+							<Select
+								value={editedData.kategori_mata_kuliah_prodi}
+								onChange={(value) =>
+									setEditedData({
+										...editedData,
+										kategori_mata_kuliah_prodi: value,
+									})
+								}
+								options={KategoriMataKuliahProdiEnumValues.map((val) => ({
+									value: val,
+									label: val,
+								}))}
+								className="w-full"
+							/>
+						</Form.Item>
+					)}
 				</div>
 				<div>
 					<h3 className="text-lg font-semibold">Tujuan</h3>
