@@ -38,7 +38,8 @@ const SeniTable = () => {
 			key: "deskripsi",
 			width: "70%",
 			render: (text, record, index) => {
-				const errorMsg = errors?.[`${index}.deskripsi`]?.[0];
+				const realIndex = record.originalIndex;
+				const errorMsg = errors?.[`${realIndex}.deskripsi`]?.[0];
 
 				return (
 					<Form.Item
@@ -47,7 +48,7 @@ const SeniTable = () => {
 						style={{ marginBottom: 0 }}>
 						<Input.TextArea
 							value={text}
-							onChange={(e) => handleSave(index, "deskripsi", e.target.value)}
+							onChange={(e) => handleSave(realIndex, "deskripsi", e.target.value)}
 							autoSize={{ minRows: 3 }}
 						/>
 					</Form.Item>
@@ -60,7 +61,8 @@ const SeniTable = () => {
 			key: "link_sumber",
 			width: "25%",
 			render: (text, record, index) => {
-				const errorMsg = errors?.[`${index}.link_sumber`]?.[0];
+				const realIndex = record.originalIndex;
+				const errorMsg = errors?.[`${realIndex}.link_sumber`]?.[0];
 
 				return (
 					<Form.Item
@@ -69,7 +71,7 @@ const SeniTable = () => {
 						style={{ marginBottom: 0 }}>
 						<Input
 							value={text}
-							onChange={(e) => handleSave(index, "link_sumber", e.target.value)}
+							onChange={(e) => handleSave(realIndex, "link_sumber", e.target.value)}
 						/>
 					</Form.Item>
 				);
@@ -83,7 +85,7 @@ const SeniTable = () => {
 				<VisibleMenu allowedRoles={["Penyusun Kurikulum"]}>
 					<Popconfirm
 						title="Yakin ingin menghapus?"
-						onConfirm={() => handleDelete(index)}
+						onConfirm={() => handleDelete(record.originalIndex)}
 						okText="Ya"
 						cancelText="Tidak">
 						<Button type="primary" danger icon={<DeleteOutlined />} />
@@ -146,7 +148,11 @@ const SeniTable = () => {
 			<Table
 				rowSelection={rowSelection}
 				columns={columns}
-				dataSource={data.map((item, index) => ({ ...item, key: index }))}
+				dataSource={data.map((item, index) => ({ 
+					...item, 
+					key: item.id || `new-${index}`,
+					originalIndex: index 
+				}))}
 				pagination={{ pageSize: 5 }}
 				bordered
 				loading={loading}
