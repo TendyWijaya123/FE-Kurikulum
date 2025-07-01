@@ -101,22 +101,35 @@ export const useIlmuPengetahuan = () => {
 
 	const handleMultiDelete = async () => {
 		try {
-			const idsToDelete = selectedRowKeys
+			const indicesToDelete = selectedRowKeys
+				.map((key) => {
+					return data.findIndex((item, index) => {
+						const itemKey = item.id || `new-${index}`;
+						return itemKey === key;
+					});
+				})
+				.filter((index) => index !== -1)
+				.sort((a, b) => b - a); 
+
+			const idsToDelete = indicesToDelete
 				.map((index) => data[index]?.id)
 				.filter((id) => id && !id.toString().startsWith("new-"));
 
 			if (idsToDelete.length > 0) {
 				await Promise.all(idsToDelete.map((id) => deleteIlmuPengetahuan(id)));
-
-				await fetchData();
 			}
+
+			const updatedData = [...data];
+			indicesToDelete.forEach((index) => {
+				updatedData.splice(index, 1);
+			});
+			setData(updatedData);
 
 			message.success(`${selectedRowKeys.length} data berhasil dihapus`);
 		} catch (error) {
 			message.error("Gagal menghapus data");
 			console.error(error);
 		} finally {
-			// Reset selectedRowKeys setelah selesai
 			setSelectedRowKeys([]);
 		}
 	};

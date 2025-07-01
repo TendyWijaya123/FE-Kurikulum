@@ -102,23 +102,35 @@ export const useSeni = () => {
 
 	const handleMultiDelete = async () => {
 		try {
-			const idsToDelete = selectedRowKeys
-				.map((index) => data[index]?.id) // Ambil ID berdasarkan index
-				.filter((id) => id && !id.toString().startsWith("new-")); // Pastikan ID valid
+			const indicesToDelete = selectedRowKeys
+				.map((key) => {
+					return data.findIndex((item, index) => {
+						const itemKey = item.id || `new-${index}`;
+						return itemKey === key;
+					});
+				})
+				.filter((index) => index !== -1)
+				.sort((a, b) => b - a); 
+
+			const idsToDelete = indicesToDelete
+				.map((index) => data[index]?.id)
+				.filter((id) => id && !id.toString().startsWith("new-"));
 
 			if (idsToDelete.length > 0) {
 				await Promise.all(idsToDelete.map((id) => deleteSeni(id)));
-
-				// Ambil data terbaru
-				await fetchData();
 			}
+
+			const updatedData = [...data];
+			indicesToDelete.forEach((index) => {
+				updatedData.splice(index, 1);
+			});
+			setData(updatedData);
 
 			message.success(`${selectedRowKeys.length} data berhasil dihapus`);
 		} catch (error) {
 			message.error("Gagal menghapus data");
 			console.error(error);
 		} finally {
-			// Reset selectedRowKeys setelah selesai
 			setSelectedRowKeys([]);
 		}
 	};
