@@ -71,10 +71,7 @@ const isValidSemester = (kategori, subKategori, semester, jenjangProdi) => {
 		} else if (semester === 7) {
 			allowed = [{ kategori: PRODI, subKategori: PILIHAN }];
 		} else if (semester === 8) {
-			allowed = [
-				{ kategori: PRODI, subKategori: "Tugas Akhir" },
-				{ kategori: NASIONAL },
-			];
+			allowed = [{ kategori: PRODI }, { kategori: NASIONAL }];
 		}
 	}
 
@@ -82,7 +79,7 @@ const isValidSemester = (kategori, subKategori, semester, jenjangProdi) => {
 		if ([1, 2].includes(semester)) {
 			allowed = [
 				{ kategori: KategoriMataKuliahEnum.INSTITUSI },
-				{ kategori: KategoriMataKuliahEnum.NASIONAL },
+				{ kategori: KategoriMataKuliahEnum.PRODI },
 			];
 		} else if ([3, 4].includes(semester)) {
 			allowed = [{ kategori: KategoriMataKuliahEnum.PRODI }];

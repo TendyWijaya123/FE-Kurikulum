@@ -9,6 +9,13 @@ import { AppDataContext } from "../../context/AppDataProvider";
 
 const useJejaringMK = () => {
 	const { selectedProdiId } = useContext(AppDataContext);
+
+	const [filters, setFilters] = useState({
+		semester: null,
+		kategori: "",
+		nama: "",
+	});
+
 	const [matakuliahData, setMataKuliahData] = useState([]);
 	const [matakuliahDropdown, setMatakuliahDropdown] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -16,12 +23,11 @@ const useJejaringMK = () => {
 	const [editingId, setEditingId] = useState(null);
 	const [editedPrasyarat, setEditedPrasyarat] = useState({});
 
-	const fetchMataKuliahData = async (prodiId = null) => {
+	const fetchMataKuliahData = async (prodiId = null, filters = {}) => {
 		setLoading(true);
 		setError(null);
-
 		try {
-			const data = await getJejaringMataKuliah(prodiId);
+			const data = await getJejaringMataKuliah(prodiId, filters);
 			setMataKuliahData(data.data);
 		} catch (error) {
 			setError(error);
@@ -44,9 +50,9 @@ const useJejaringMK = () => {
 	};
 
 	useEffect(() => {
-		fetchMataKuliahData(selectedProdiId);
+		fetchMataKuliahData(selectedProdiId, filters);
 		fetchMataKuliahDropdown();
-	}, [selectedProdiId]);
+	}, [selectedProdiId, filters]);
 
 	const startEdit = (id, prasyaratIds) => {
 		setEditingId(id);
@@ -64,10 +70,10 @@ const useJejaringMK = () => {
 			await updateJejaringMataKuliah(id, {
 				prasyarat_ids: editedPrasyarat[id],
 			});
-			fetchMataKuliahData();
+			fetchMataKuliahData(selectedProdiId, filters);
 			setEditingId(null);
 			setEditedPrasyarat({});
-			message.success("Prasyarat Berhasil di update");
+			message.success("Prasyarat berhasil diupdate");
 		} catch (error) {
 			setError(error);
 		} finally {
@@ -85,6 +91,8 @@ const useJejaringMK = () => {
 		cancelEdit,
 		saveEdit,
 		setEditedPrasyarat,
+		filters,
+		setFilters,
 	};
 };
 
