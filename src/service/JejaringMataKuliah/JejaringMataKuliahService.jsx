@@ -1,8 +1,14 @@
 import api from "../../utils/axiosInstance";
 
-export const getJejaringMataKuliah = async (prodiId = null) => {
+export const getJejaringMataKuliah = async (prodiId = null, filters = {}) => {
 	try {
-		const params = prodiId ? { prodiId } : {};
+		const params = {
+			...(prodiId ? { prodiId } : {}),
+			...Object.fromEntries(
+				Object.entries(filters).filter(([_, val]) => val !== null && val !== "")
+			),
+		};
+
 		const response = await api.get("/jejaring-matakuliah", { params });
 		return response.data;
 	} catch (error) {
@@ -10,9 +16,17 @@ export const getJejaringMataKuliah = async (prodiId = null) => {
 	}
 };
 
-export const getJejaringPrasyarat = async (prodiId = null) => {
+export const getJejaringPrasyarat = async (prodiId = null, filters = {}) => {
 	try {
-		const params = prodiId ? { prodiId } : {};
+		const cleanFilters = Object.fromEntries(
+			Object.entries(filters).filter(([_, val]) => val !== null || val !== "")
+		);
+
+		const params = {
+			...(prodiId ? { prodiId } : {}),
+			...cleanFilters,
+		};
+		console.log("Params yang dikirim ke API:", params);
 		const response = await api.get("/jejaring-matakuliah/jejaring-prasyarat", {
 			params,
 		});

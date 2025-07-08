@@ -1,15 +1,27 @@
 import React from "react";
 import useJejaringPrasyaratMK from "../../../hooks/JejaringMK/useJejaringPrasyaratMK";
-import { ReactFlow, Background, Controls, ReactFlowProvider } from "reactflow";
+import {
+	ReactFlow,
+	Background,
+	Controls,
+	ReactFlowProvider,
+	BezierEdge,
+	StraightEdge,
+} from "reactflow";
 import "reactflow/dist/style.css";
 import CustomNode from "./CustomNode";
 import SmartStepEdge from "./SmartStepEdge";
 import DownloadButton from "./DownloadButton";
 import SaveButton from "./SaveButton";
-import { Button, Spin } from "antd";
+import { Button, Select, Spin } from "antd";
 import { UndoOutlined } from "@ant-design/icons";
 import GroupNode from "./GroupNode";
-import { KategoriMataKuliahEnum } from "../../../enums/KategoriMataKuliahEnum";
+import {
+	KategoriMataKuliahEnum,
+	KategoriMataKuliahEnumValues,
+} from "../../../enums/KategoriMataKuliahEnum";
+import { KategoriMataKuliahPolbanEnumValues } from "../../../enums/KategoriMataKuliahPolbanEnum";
+import { KategoriMataKuliahProdiEnumValues } from "../../../enums/KategoriMataKuliahProdiEnum";
 
 const getRandomColor = () => {
 	const letters = "0123456789ABCDEF";
@@ -124,7 +136,15 @@ const JejaringMKDiagram = () => {
 		mataKuliahData,
 		prodiData,
 		fetchJejaringPrasyarat,
+		filters,
+		setFilters,
 	} = useJejaringPrasyaratMK();
+
+	const allKategoriOptions = [
+		...KategoriMataKuliahEnumValues,
+		...KategoriMataKuliahPolbanEnumValues,
+		...KategoriMataKuliahProdiEnumValues,
+	];
 
 	if (loading)
 		return (
@@ -153,13 +173,52 @@ const JejaringMKDiagram = () => {
 					<span className="text-sm">Nasional</span>
 				</div>
 				<div className="flex items-center gap-2">
-					<div className="w-4 h-4 rounded bg-[#01b0f1]" />
+					<div className="w-4 h-4 rounded bg-[#6f7375]" />
 					<span className="text-sm">Institusi - Polban</span>
 				</div>
 				<div className="flex items-center gap-2">
 					<div className="w-4 h-4 rounded bg-[#c55b11]" />
 					<span className="text-sm">Institusi - Polban P/F</span>
 				</div>
+			</div>
+			<div className="flex gap-3 mb-4 items-center">
+				<Select
+					placeholder="Semester"
+					style={{ width: 120 }}
+					allowClear
+					value={filters.semester}
+					onChange={(val) => setFilters((prev) => ({ ...prev, semester: val }))}
+					options={[...Array(8)].map((_, i) => ({
+						label: `Semester ${i + 1}`,
+						value: i + 1,
+					}))}
+				/>
+				<Select
+					placeholder="Kategori"
+					style={{ width: 160 }}
+					allowClear
+					value={filters.kategori}
+					onChange={(val) => setFilters((prev) => ({ ...prev, kategori: val }))}
+					options={allKategoriOptions.map((kategori) => ({
+						label: kategori,
+						value: kategori,
+					}))}
+				/>
+				<input
+					type="text"
+					placeholder="Cari Nama Mata Kuliah"
+					value={filters.nama}
+					onChange={(e) =>
+						setFilters((prev) => ({ ...prev, nama: e.target.value }))
+					}
+					className="border px-2 py-1 rounded w-60"
+				/>
+				<Button
+					onClick={() =>
+						setFilters({ semester: null, kategori: "", nama: "" })
+					}>
+					Reset
+				</Button>
 			</div>
 			<Button
 				icon={<UndoOutlined />}
