@@ -180,6 +180,49 @@ const MataKuliah = () => {
 				),
 		},
 		{
+			title: "SKS",
+			children: [
+				{
+					title: "Teori",
+					width: 100,
+					dataIndex: "total_teori",
+					key: "total_teori",
+				},
+				{
+					title: "Praktek",
+					width: 100,
+					dataIndex: "total_praktek",
+					key: "total_praktek",
+				},
+				{
+					title: "Total",
+					width: 100,
+					key: "total_sks",
+					render: (_, record) => {
+						const total =
+							(record.total_teori || 0) + (record.total_praktek || 0);
+						const expected = record.sks || 0;
+
+						let warningText = "";
+						if (total < expected) {
+							warningText = " (Kurang)";
+						} else if (total > expected) {
+							warningText = " (Lebih)";
+						}
+
+						const isWarning = warningText !== "";
+
+						return (
+							<span style={{ color: isWarning ? "#faad14" : "inherit" }}>
+								{total}
+								{warningText}
+							</span>
+						);
+					},
+				},
+			],
+		},
+		{
 			title: "Beban Belajar (Menit/Minggu)",
 			children: [
 				{
@@ -241,17 +284,7 @@ const MataKuliah = () => {
 				</div>
 			),
 		},
-		{
-			title: "SKS",
-			dataIndex: "sks",
-			key: "sks",
-			width: 60,
-		},
-		{
-			title: "Total Beban Belajar",
-			width: 150,
-			render: (_, record) => record.sks * 45,
-		},
+
 		{
 			title: "Aksi",
 			key: "aksi",
@@ -461,6 +494,16 @@ const MataKuliah = () => {
 												dataSource={record.kemampuan_akhir}
 												pagination={false}
 												rowKey="id"
+												summary={() => (
+													<Table.Summary.Row>
+														<Table.Summary.Cell index={0} colSpan={2}>
+															<strong>Total SKS:</strong>
+														</Table.Summary.Cell>
+														<Table.Summary.Cell index={2}>
+															{record.sks}
+														</Table.Summary.Cell>
+													</Table.Summary.Row>
+												)}
 											/>
 
 											<h3 className="text-lg font-semibold text-green-600 mt-6 mb-2">

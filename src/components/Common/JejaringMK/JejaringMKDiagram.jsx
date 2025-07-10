@@ -146,13 +146,6 @@ const JejaringMKDiagram = () => {
 		...KategoriMataKuliahProdiEnumValues,
 	];
 
-	if (loading)
-		return (
-			<div className="flex justify-center items-center h-40">
-				<Spin size="large" />
-			</div>
-		);
-
 	const nodes = generateNodes(mataKuliahData, prodiData);
 	const edges = generateEdges(jejaringData);
 
@@ -224,27 +217,35 @@ const JejaringMKDiagram = () => {
 				icon={<UndoOutlined />}
 				onClick={() => fetchJejaringPrasyarat()}
 			/>
-			<ReactFlowProvider>
-				<ReactFlow
-					nodes={nodes}
-					edges={edges}
-					nodeTypes={nodeTypes}
-					edgeTypes={edgeTypes}
-					panOnDrag={true}
-					zoomOnScroll={false}
-					zoomOnDoubleClick
-					panOnScroll={false}
-					defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
-					minZoom={0.5}
-					maxZoom={2}
-					fitView
-					style={{ backgroundColor: "lightgray" }}>
-					<Background />
-					<Controls />
-					<DownloadButton />
-					<SaveButton />
-				</ReactFlow>
-			</ReactFlowProvider>
+			<div className="relative h-[600px] w-full bg-gray-100">
+				{loading && (
+					<div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70 backdrop-blur-sm">
+						<Spin tip="Memuat Diagram..." size="large" />
+					</div>
+				)}
+
+				<ReactFlowProvider>
+					<ReactFlow
+						nodes={nodes}
+						edges={edges}
+						nodeTypes={nodeTypes}
+						edgeTypes={edgeTypes}
+						panOnDrag={true}
+						zoomOnScroll={false}
+						zoomOnDoubleClick
+						panOnScroll={false}
+						defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
+						minZoom={0.5}
+						maxZoom={2}
+						fitView
+						className="h-full">
+						<Background />
+						<Controls />
+						<DownloadButton />
+						<SaveButton />
+					</ReactFlow>
+				</ReactFlowProvider>
+			</div>
 		</div>
 	);
 };
