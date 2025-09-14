@@ -57,8 +57,8 @@ export const useBCData = () => {
 					programStudi: item.program_studi,
 					kategori: item.kategori,
 					prodiId: user.prodiId,
-					cpl: item.bk_cpls?.length ? item.bk_cpls.map((k) => k.cpl) : [],
-					ppm: item.bk_ppms?.length ? item.bk_ppms.map((k) => k.ppm) : [],
+					cpl: item.cpl,
+					ppm: item.ppm,
 				}))
 			);
 		} else {
@@ -143,8 +143,8 @@ export const useBCData = () => {
 			_id: null,
 			programStudi: "",
 			kategori: "",
-			cpl: [],
-			ppm: [],
+			cpl: "",
+			ppm: "",
 			prodiId: selectedProdi || user.prodiId,
 		};
 

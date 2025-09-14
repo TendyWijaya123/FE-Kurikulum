@@ -5,12 +5,11 @@ import { useNavigate } from "react-router-dom";
 export const useLoginForm = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const { login } = useContext(AuthContext);
+	const { login, loginRps } = useContext(AuthContext);
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = async (e) => {
-		e.preventDefault();
 		setLoading(true);
 
 		try {
@@ -24,6 +23,23 @@ export const useLoginForm = () => {
 			setLoading(false);
 		}
 	};
+
+	const handleSubmitRps = async (e) => {
+		console.log(e)
+		setLoading(true);
+
+		try {
+			console.log({ email, password });
+			await loginRps(email, password);
+			navigate("/dashboard");
+		} catch (error) {
+			console.error("Login failed:", error.response?.data || error.message);
+			alert("Login failed, please try again.");
+		} finally {
+			setLoading(false);
+		}
+	};
+
 
 	const handleChangeEmail = (e) => {
 		setEmail(e.target.value);
@@ -40,5 +56,6 @@ export const useLoginForm = () => {
 		loading,
 		handleChangePassword,
 		handleChangeEmail,
+		handleSubmitRps
 	};
 };

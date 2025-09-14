@@ -33,6 +33,7 @@ export const postSksu = async (data) => {
         const token = localStorage.getItem("authToken");
 
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        console.log(data);
         const response = await api.post(`/sksu`, data, {headers});
 
         return response.data;

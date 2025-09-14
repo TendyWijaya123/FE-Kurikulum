@@ -129,17 +129,6 @@ export const getProdiDropdown = async () => {
 	}
 };
 
-/* ----------------------------------Role API------------------------------------ */
-export const getRoleDropdown = async () => {
-	try {
-		const response = await api.get("/role/dropdown");
-		return response.data;
-	} catch (error) {
-		console.error("Error fetching Role dropdown:", error);
-		throw error;
-	}
-};
-
 /* -----------------------------Jurusan API----------------------------- */
 export const getJurusans = async (page) => {
 	try {
@@ -288,21 +277,21 @@ export const updateVmtJurusan = async (id, vmtJurusanData) => {
 /* -----------------------------IPTEKS API----------------------------- */
 export const getIpteks = async (prodiId) => {
 	try {
-	  const token = localStorage.getItem("authToken");
-	  const response = await api.get('/ipteks', {
-		headers: {
-		  Authorization: `Bearer ${token}`
-		},
-		params: { prodiId }
-	  });
-	  return response.data;
+		const token = localStorage.getItem("authToken");
+		const response = await api.get("/ipteks", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			params: { prodiId },
+		});
+		return response.data;
 	} catch (error) {
-	  console.error("Error fetching IPTEKS data:", error);
-	  throw error;
+		console.error("Error fetching IPTEKS data:", error);
+		throw error;
 	}
-  };
-  
-  export const createIpteks = async (data) => {
+};
+
+export const createIpteks = async (data) => {
 	try {
 	  const token = localStorage.getItem("authToken");
 	  const response = await api.post('/ipteks', data, {
@@ -313,38 +302,86 @@ export const getIpteks = async (prodiId) => {
 	  });
 	  return response.data;
 	} catch (error) {
-	  console.error("Error creating IPTEKS:", error);
+	  console.error("Error creating/updating IPTEKS:", error);
 	  throw error;
 	}
   };
-  
-  export const updateIpteks = async (id, data) => {
+
+export const updateIpteks = async (id, data) => {
+	try {
+		const token = localStorage.getItem("authToken");
+		const response = await api.put(`/ipteks/${id}`, data, {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error updating IPTEKS:", error);
+		throw error;
+	  console.error("Error creating/updating IPTEKS:", error);
+	  throw error;
+	}
+};
+
+export const deleteIpteks = async (id) => {
+	try {
+		const token = localStorage.getItem("authToken");
+		const response = await api.delete(`/ipteks/${id}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		return response.data;
+	} catch (error) {
+		console.error("Error deleting IPTEKS:", error);
+		throw error;
+	}
+};
+
+  export const getIpteksTemplate = async () => {
 	try {
 	  const token = localStorage.getItem("authToken");
-	  const response = await api.put(`/ipteks/${id}`, data, {
+	  const response = await api.get('/ipteks/template', {
 		headers: {
-		  'Content-Type': 'application/json',
 		  Authorization: `Bearer ${token}`
+		},
+		responseType: 'blob' // Important for downloading files
+	  });
+	  
+	  // Create a URL for the blob and trigger download
+	  const url = window.URL.createObjectURL(new Blob([response.data]));
+	  const link = document.createElement('a');
+	  link.href = url;
+	  link.setAttribute('download', 'ipteks-template.xlsx'); // or whatever file extension you're using
+	  document.body.appendChild(link);
+	  link.click();
+	  link.remove();
+	  window.URL.revokeObjectURL(url);
+	  
+	  return response.data;
+	} catch (error) {
+	  console.error("Error downloading IPTEKS template:", error);
+	  throw error;
+	}
+  };
+
+  export const importIpteks = async (file) => {
+	try {
+	  const token = localStorage.getItem("authToken");
+	  const formData = new FormData();
+	  formData.append('file', file);
+	  
+	  const response = await api.post('/ipteks/import', formData, {
+		headers: {
+		  Authorization: `Bearer ${token}`,
+		  'Content-Type': 'multipart/form-data'
 		}
 	  });
 	  return response.data;
 	} catch (error) {
-	  console.error("Error updating IPTEKS:", error);
-	  throw error;
-	}
-  };
-  
-  export const deleteIpteks = async (id) => {
-	try {
-	  const token = localStorage.getItem("authToken");
-	  const response = await api.delete(`/ipteks/${id}`, {
-		headers: {
-		  Authorization: `Bearer ${token}`
-		}
-	  });
-	  return response.data;
-	} catch (error) {
-	  console.error("Error deleting IPTEKS:", error);
+	  console.error("Error importing IPTEKS:", error);
 	  throw error;
 	}
   };

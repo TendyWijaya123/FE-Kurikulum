@@ -1,133 +1,139 @@
 import { useState, useEffect, useContext } from "react";
+import { message } from 'antd';
 import {
-	getIpteks,
-	deleteIpteks,
-	createIpteks,
-	updateIpteks,
+  getIpteks,
+  deleteIpteks,
+  createIpteks,
+  getIpteksTemplate,
+  importIpteks,
 } from "../service/api";
 import { AuthContext } from "../context/AuthProvider";
-import {
-	getIpteksTemplate,
-	importIpteks,
-} from "../service/Import/ImportService";
 
 export const useIpteks = () => {
-	const [ipteksData, setIpteksData] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [currentPage, setCurrentPage] = useState(1);
-	const [totalPage, setTotalPage] = useState(1);
-	const [error, setError] = useState(null);
-	const [notification, setNotification] = useState({ message: "", type: "" });
-	const { user } = useContext(AuthContext);
+  const [ipteksData, setIpteksData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  const [previousData, setPreviousData] = useState(null);
+  const { user } = useContext(AuthContext);
 
-	const showNotification = (message, type) => {
-		setNotification({ message, type });
-		setTimeout(() => {
-			setNotification({ message: "", type: "" });
-		}, 3000);
-	};
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: (newSelectedRowKeys) => {
+      setSelectedRowKeys(newSelectedRowKeys);
+    },
+  };
 
-	const fetchIpteks = async () => {
-		setLoading(true);
-		setError(null);
-		try {
-		  const response = await getIpteks(user?.prodiId);
-		  setIpteksData(response.data);
-		} catch (error) {
-		  console.error("Error fetching IPTEKS data:", error);
-		  setError("Gagal mengambil data: " + (error.response?.data?.message || error.message));
-		} finally {
-		  setLoading(false);
-		}
-	  };
-	
-	  const handleDelete = async (row) => {
-		if (!window.confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-		  return;
-		}
-		try {
-		  await deleteIpteks(row.id);
-		  await fetchIpteks();
-		  showNotification("Data berhasil dihapus", "success");
-		} catch (error) {
-		  showNotification("Gagal menghapus data", "error");
-		}
-	  };
-	
-	  const handleCreate = async (values) => {
-		try {
-		  await createIpteks(values);
-		  await fetchIpteks();
-		  showNotification("Data berhasil ditambahkan", "success");
-		  return true;
-		} catch (error) {
-		  showNotification("Gagal menambahkan data", "error");
-		  return false;
-		}
-	  };
-	
-	  const handleUpdate = async (id, values) => {
-		try {
-		  await updateIpteks(id, values);
-		  await fetchIpteks();
-		  showNotification("Data berhasil diubah", "success");
-		  return true;
-		} catch (error) {
-		  showNotification("Gagal mengubah data", "error");
-		  return false;
-		}
-	  };
+  const fetchIpteks = async () => {
+    setLoading(true);
+    try {
+      const response = await getIpteks(user?.prodiId);
+      setIpteksData(response.data);
+      setPreviousData(response.data);
+    } catch (error) {
+      message.error("Gagal mengambil data: " + (error.response?.data?.message || error.message));
+    } finally {
+      setLoading(false);
+    }
+  };
 
-	const handleExportTemplateIpteks = async () => {
-		try {
-			await getIpteksTemplate();
-		} catch (error) {
-			setAlert(`Terjadi kesalahan: ${error.message || error}`);
-		}
-	};
+  const handleSave = (updatedRecord) => {
+    const newData = ipteksData.map(item => 
+      item.id === updatedRecord.id ? updatedRecord : item
+    );
+    setIpteksData(newData);
+  };
 
-	const handleImportIpteks = async (file) => {
-		try {
-			await importIpteks(file);
-			message.success("berhasil inport data, refresh halaman!!");
-		} catch (error) {
-			message.error("Gagal mengunggah file. Coba lagi.");
-		}
-	};
+  const handleSaveData = async () => {
+    setSaving(true);
+    try {
+      await createIpteks(ipteksData);
+      message.success("Data berhasil disimpan");
+      await fetchIpteks();
+    } catch (error) {
+      message.error("Gagal menyimpan data: " + (error.response?.data?.message || error.message));
+    } finally {
+      setSaving(false);
+    }
+  };
 
-	const handleMultiDelete = async (ids) => {
-		if (!window.confirm(`Apakah Anda yakin ingin menghapus ${ids.length} data yang dipilih?`)) {
-		  return;
-		}
-		
-		try {
-		  for (const id of ids) {
-			await deleteIpteks(id);
-		  }
-		  await fetchIpteks();
-		  showNotification(`${ids.length} data berhasil dihapus`, "success");
-		} catch (error) {
-		  showNotification("Gagal menghapus data", "error");
-		}
-	  };
+  const handleCreate = () => {
+    const newId = `new-${Date.now()}`;
+    const newData = {
+      id: newId,
+      kategori: 'ilmu_pengetahuan',
+      deskripsi: '',
+      link_sumber: '',
+      key: newId
+    };
+    setIpteksData([...ipteksData, newData]);
+    return newId;
+  };
 
-	useEffect(() => {
-		fetchIpteks();
-	}, []);
+  const handleDelete = async (record) => {
+    try {
+      if (record.id.toString().startsWith('new-')) {
+        setIpteksData(ipteksData.filter(item => item.id !== record.id));
+      } else {
+        await deleteIpteks(record.id);
+        await fetchIpteks();
+      }
+      message.success("Data berhasil dihapus");
+    } catch (error) {
+      message.error("Gagal menghapus data");
+    }
+  };
 
-	return {
-		ipteksData,
-		loading,
-		error,
-		notification,
-		currentPage,
-		totalPage,
-		setCurrentPage,
-		handleDelete,
-		handleCreate,
-		handleUpdate,
-		handleExportTemplateIpteks,
-		handleImportIpteks,
-		handleMultiDelete
-	};
+  const handleMultiDelete = async (ids) => {
+    try {
+      for (const id of ids) {
+        if (!id.toString().startsWith('new-')) {
+          await deleteIpteks(id);
+        }
+      }
+      await fetchIpteks();
+      setSelectedRowKeys([]);
+      message.success(`${ids.length} data berhasil dihapus`);
+    } catch (error) {
+      message.error("Gagal menghapus data");
+    }
+  };
+
+  const handleExportTemplateIpteks = async () => {
+    try {
+      await getIpteksTemplate();
+      message.success("Template berhasil diunduh");
+    } catch (error) {
+      message.error(`Terjadi kesalahan: ${error.message || error}`);
+    }
+  };
+
+  const handleImportIpteks = async (file) => {
+    try {
+      await importIpteks(file);
+      message.success("Berhasil import data");
+      await fetchIpteks();
+    } catch (error) {
+      message.error("Gagal mengunggah file. Coba lagi.");
+    }
+  };
+
+  useEffect(() => {
+    fetchIpteks();
+  }, []);
+
+  return {
+    ipteksData,
+    loading,
+    saving,
+    selectedRowKeys,
+    rowSelection,
+    handleSave,
+    handleDelete,
+    handleCreate,
+    handleSaveData,
+    handleExportTemplateIpteks,
+    handleImportIpteks,
+    handleMultiDelete
+  };
 };

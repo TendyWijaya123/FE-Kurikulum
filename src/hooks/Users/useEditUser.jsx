@@ -2,21 +2,18 @@ import { useEffect, useState } from "react";
 import {
 	getUserById,
 	getProdiDropdown,
-	getRoleDropdown,
 	updateUser,
 } from "../../service/api";
 
 const useEditUser = (userId) => {
 	const [loading, setLoading] = useState(false);
 	const [prodiList, setProdiList] = useState([]);
-	const [roleList, setRoleList] = useState([]);
 	const [alert, setAlert] = useState(null);
 	const [formData, setFormData] = useState({
 		name: "",
 		email: "",
 		password: "",
 		prodi_id: "",
-		role_id: "",
 	});
 
 	useEffect(() => {
@@ -28,17 +25,13 @@ const useEditUser = (userId) => {
 					name: userResponse.user.name,
 					email: userResponse.user.email,
 					prodi_id: userResponse.user.prodi_id,
-					role_id: userResponse.user.role_id,
 				});
 
-				// Fetch the prodi and role dropdown data
-				const [prodiResponse, roleResponse] = await Promise.all([
+				const [prodiResponse] = await Promise.all([
 					getProdiDropdown(),
-					getRoleDropdown(),
 				]);
 
 				setProdiList(prodiResponse);
-				setRoleList(roleResponse);
 			} catch (error) {
 				setAlert({ message: "Failed to fetch data.", severity: "error" });
 				console.error("Error fetching data:", error);
@@ -83,7 +76,6 @@ const useEditUser = (userId) => {
 	return {
 		loading,
 		prodiList,
-		roleList,
 		alert,
 		formData,
 		handleChangeForm,
